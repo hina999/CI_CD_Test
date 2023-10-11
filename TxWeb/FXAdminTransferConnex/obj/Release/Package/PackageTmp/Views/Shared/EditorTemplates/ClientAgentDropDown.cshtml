@@ -1,0 +1,26 @@
+﻿@using Kendo.Mvc.UI
+
+@model object
+
+
+@(Html.Kendo().DropDownListFor(m => m)
+              .OptionLabel("Select Agent")
+              .DataTextField("FullName")
+                  .DataValueField("UserId").HtmlAttributes(new { @style = "width:100% !important;" })
+              //.Events(ev => ev.Change("Binding"))
+              .DataSource(source =>
+              {
+                  source.Read(read =>
+                  {
+                      read.Action("GetAgentList", "Client");
+                  });
+              })
+
+)
+
+
+@*<script type="text/javascript">
+    function TestChange() {
+
+    }
+</script>*@

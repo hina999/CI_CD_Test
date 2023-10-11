@@ -1,0 +1,299 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+
+<style>
+    .led-green {
+        margin: 0 auto;
+        width: 10px;
+        height: 10px;
+        background-color: darkgreen;
+        border-radius: 50%;
+    }
+
+    .led-red {
+        margin: 0 auto;
+        width: 10px;
+        height: 10px;
+        background-color: red;
+        border-radius: 50%;
+    }
+</style>
+<div class="content">
+    <legend>Target Commission</legend>
+
+
+    @* Target Commission GRID HERE *@
+
+    <fieldset>
+        <legend></legend>
+        <div class="panel panel-default">
+
+
+            @(Html.Kendo().Grid<TargetCommissionModel>()
+                                                .Name("gridTargetCommission")
+                                                .Columns(columns =>
+                                                {
+                                                    columns.Bound(m => m.TargetToPerson).Title("Name");
+                                                    columns.Bound(m => m.TargetYear).Title("Year").Width(100);
+                                                    columns.Bound(m => m.TargetType).Title("Type").Width(100);
+                                                    columns.Bound(m => m.Status).Title("Status").Width(150);
+                                                    columns.Bound(m => m.IsActive).Title("Is Active?").ClientTemplate("#if(IsActive == 1){#<div class='led-green'></div>#}else{#<div class='led-red'></div>#}#").Width(100);
+                                                    // columns.Bound(m => m.TargetCommission).Format("{0:c}");
+                                                    columns.Command(command =>
+                                                    {
+                                                        if (WebHelper.CanEdit())
+                                                        {
+                                                            command.Custom("Edit").Text("<span class='k-icon k-edit-white'></span>").Click("onInsert").HtmlAttributes(new { @style = "margin:2px;background: #0833b7;color:white;" });
+                                                        }
+                                                        if (WebHelper.CanDelete())
+                                                        {
+                                                            command.Custom("Delete").Text("<span class='k-icon k-delete-white'></span>").Click("onDelete").HtmlAttributes(new { @style = "margin:2px;background:#ff1962;color:white;" });
+                                                            command.Custom("check").Text("<span class='k-icon k-mo-white'></span>").Click("onActivate").HtmlAttributes(new { @style = "margin:2px;background:#ff1962;color:white;" });
+                                                        }
+                                                    })
+                                                    .HeaderHtmlAttributes(Common.CenterColumnStyle)
+                                                    .HtmlAttributes(Common.CenterColumnStyle)
+                                                    .Title("Action")
+                                                    .Width(200);
+                                                })
+                                                .ToolBar(toolbar =>
+                                                {
+                                                    if (WebHelper.CanAdd())
+                                                    {
+                                                        toolbar.Custom().Text("Import Target Commission").HtmlAttributes(new { @class = "k-button btn-orange" });
+                                                        toolbar.Template(@<text>
+
+                                                             <button href="\\#" class="k-button btn-orange" title="Refresh" onclick="ImportTargetCommisions()">Import</button>
+                                                         </text>);
+                                                    }
+                                                })
+                                                .Editable(e => e.Mode(GridEditMode.PopUp))
+                                                .Pageable(x =>
+                                                {
+                                                    x.Refresh(true);
+                                                    x.PageSizes(new int[] { 10, 20, 50, 100 });
+                                                })
+                                                .Selectable(selectable => selectable
+                                                .Mode(GridSelectionMode.Single))
+                                                .Navigatable()
+                                                .Sortable(sortable => sortable.AllowUnsort(false))
+                                                .Filterable()
+                                                .NoRecords()
+                                                .DataSource(dataSource => dataSource
+                                                .Ajax()
+                                                .ServerOperation(false)
+                                                .PageSize(ConfigItems.GridPageSize)
+                                                .Model(model =>
+                                                {
+                                                    model.Id(d => d.TargetCommissionId);
+                                                })
+                                                .Destroy(delete => delete.Action("DeleteTargetCommission", "Commission"))
+                                                .Read(read => read.Action("GetTargetCommissionList", "Commission"))
+                                                .Events(events => events.RequestEnd("onRequestEnd"))
+                                                ))
+        </div>
+</div>
+    </fieldset>
+</div>
+<script>
+    $(document).ready(function () {
+        var havePermission ='@WebHelper.CanView()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+        kendoGridScroll();
+    });
+
+    $('#btnReset').click(function () {
+        $('#gridTargetCommission').data().kendoGrid.dataSource.page(1);
+    });
+
+    $("#search").click(function () {
+        $('#gridTargetCommission').data().kendoGrid.dataSource.page(1);
+    });
+
+    $(window).on('keypress', function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#search").click();
+        }
+    });
+
+    //Shows the notifications
+    function onRequestEnd(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridTargetCommission').data('kendoGrid').dataSource.read();
+        }
+        DisplayResponseMessage(para);
+    }
+
+    function onInsert(e) {
+        var TargetCommissionId = 0;
+
+        if (e != 0) {
+            e.preventDefault();
+            var tr = $(e.target).closest("tr");
+            var data = this.dataItem(tr);
+
+            if (data != null) {
+                TargetCommissionId = data.TargetCommissionId;
+            }
+        }
+        var urllink = '@Url.Action("ManageTargetCommission", "Commission")';
+        window.location.href = urllink + "?TargetCommissionId=" + TargetCommissionId;
+    }
+
+    function onDelete(e) {
+        var current = this;
+        bootbox.confirm("Are you sure you want to delete this record?",
+            function(result) {
+                if (result) {
+                    var targetCommissionId = 0;
+
+                    if (e != 0) {
+                        e.preventDefault();
+                        var tr = $(e.target).closest("tr");
+                        var data = current.dataItem(tr);
+
+                        if (data != null) {
+                            targetCommissionId = data.TargetCommissionId;
+
+                            $.ajax({
+                                type: "POST",
+                                url: encodeURI('@Url.Action("DeleteTargetCommission", "Commission")'),
+                                data: { targetCommissionId: targetCommissionId },
+                                cache: false,
+                                async: false,
+                                error: function (jqXHR, exception) {
+                                },
+                                success: function (data) {
+                                    if (data) {
+                                        DisplayResponseMessageForAjax(data);
+                                        $('#gridTargetCommission').data('kendoGrid').dataSource.read();
+                                    }
+                                }
+
+                            });
+                        }
+                    }
+
+
+                }
+            });
+
+    }
+
+
+    function onActivate(e) {
+
+        var current = this;
+        var IsAlreadyActivate = 0;
+        e.preventDefault();
+        var tr = $(e.target).closest("tr");
+        var data = current.dataItem(tr);
+        IsAlreadyActivate = data.IsActive;
+
+
+        if (IsAlreadyActivate == true) {
+            bootbox.confirm("Are you sure you want to DeActivate this record?",
+                function (result) {
+                    if (result) {
+                        var targetCommissionId = 0;
+
+                        if (e != 0) {
+                            e.preventDefault();
+                            var tr = $(e.target).closest("tr");
+                            var data = current.dataItem(tr);
+
+                            if (data != null) {
+                                targetCommissionId = data.TargetCommissionId;
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: encodeURI('@Url.Action("ActivateDeActivateCommision", "Commission")'),
+                                    data: { targetCommissionId: targetCommissionId },
+                                    cache: false,
+                                    async: false,
+                                    error: function (jqXHR, exception) {
+                                    },
+                                    success: function (data) {
+                                        if (data) {
+                                            DisplayResponseMessageForAjax(data);
+                                            $('#gridTargetCommission').data('kendoGrid').dataSource.read();
+                                        }
+                                    }
+
+                                });
+                            }
+                        }
+
+
+                    }
+                });
+        }
+        else {
+            bootbox.confirm("Are you sure you want to Active this record?",
+                function (result) {
+                    if (result) {
+                        var targetCommissionId = 0;
+
+                        if (e != 0) {
+                            e.preventDefault();
+                            var tr = $(e.target).closest("tr");
+                            var data = current.dataItem(tr);
+
+                            if (data != null) {
+                                targetCommissionId = data.TargetCommissionId;
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: encodeURI('@Url.Action("ActivateDeActivateCommision", "Commission")'),
+                                    data: { targetCommissionId: targetCommissionId },
+                                    cache: false,
+                                    async: false,
+                                    error: function (jqXHR, exception) {
+                                    },
+                                    success: function (data) {
+                                        if (data) {
+                                            DisplayResponseMessageForAjax(data);
+                                            $('#gridTargetCommission').data('kendoGrid').dataSource.read();
+                                        }
+                                    }
+
+                                });
+                            }
+                        }
+
+
+                    }
+                });
+        }
+
+
+
+    }
+
+
+    function ImportTargetCommisions() {
+          $.ajax({
+                type: "GET",
+                url: encodeURI('@Url.Action("ImportTargetCommission", "Commission")'),
+                cache: false,
+                async: false,
+                error: function (jqXHR, exception) {
+                },
+                success: function (data) {
+                    if (data) {
+                        DisplayResponseMessageForAjax(data);
+                        $('#gridTargetCommission').data('kendoGrid').dataSource.read();
+                    }
+                }
+
+            });
+
+    }
+</script>

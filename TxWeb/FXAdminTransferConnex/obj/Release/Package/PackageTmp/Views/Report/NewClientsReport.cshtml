@@ -1,0 +1,396 @@
+﻿@using FXAdminTransferConnexApp
+@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@{
+    ViewBag.Title = "NewClientsReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <legend>
+        New Clients Report
+    </legend>
+    <div class="panel panel-default">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Select Month:</label>
+                                @(Html.Kendo().DropDownList().Name("ddMonth").OptionLabel("-- Select Month--").HtmlAttributes(new { style = "width:100%;" }).DataTextField("MonthName").DataValueField("MonthNo").DataSource(source => { source.Read(read => { read.Action("GetMonthList", "Common"); }); }) )
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Select Year:</label>
+                                @(Html.Kendo().DropDownList().Name("ddYear").OptionLabel("-- Select Year --").HtmlAttributes(new { style = "width:100%;" }).DataTextField("Year").DataValueField("Year").DataSource(source => { source.Read(read => { read.Action("GetYearList", "Common"); }); }) )
+                            </div>
+                        </div>
+                        <div class="col-sm-3" id="radio">
+                            <div class="form-group">
+                                <label class="control-label">Select Trader/SalesPerson/Junior SalesPerson:</label><br />
+
+                                @Html.RadioButton("rbChartType", "Trader", false) @Html.Label("Trader")
+                                @Html.RadioButton("rbChartType", "SalesPerson", false) @Html.Label("SalesPerson")
+                                @Html.RadioButton("rbChartType", "JuniorSalesPerson", false) @Html.Label("JuniorSalesPerson")
+                                @*@(Html.Kendo().DropDownList().Name("TraderId").HtmlAttributes(new { style = "width:100%;" }).OptionLabel("Select Trader").DataTextField("Text").DataValueField("Value").DataSource(source => { source.Read(read => { read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.Trader.GetHashCode() }); }); }) )*@
+                            </div>
+                        </div>
+                        <div class="col-sm-3" id="trader_drop">
+                            <div class="form-group">
+                                <label class="control-label">Select Trader:</label>
+                                @(Html.Kendo().DropDownList().Name("TraderId").HtmlAttributes(new { style = "width:100%;" }).OptionLabel("Select Trader").DataTextField("Text").DataValueField("Value").DataSource(source => { source.Read(read => { read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.Trader.GetHashCode() }); }); }) )
+                            </div>
+                        </div>
+                        <div class="col-sm-3" id="salesperson_drop">
+                            <div class="form-group">
+                                <label class="control-label">Select SalesPerson:</label>
+                                @(Html.Kendo().DropDownList().Name("SalesPersonId").HtmlAttributes(new { style = "width:100%;" }).OptionLabel("Select SalesPerson").DataTextField("Text").DataValueField("Value").DataSource(source => { source.Read(read => { read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode() }); }); }) )
+                            </div>
+                        </div>
+                        <div class="col-sm-3" id="juniorsalesperson_drop">
+                            <div class="form-group">
+                                <label class="control-label">Select Junior SalesPerson:</label>
+                                @(Html.Kendo().DropDownList().Name("JuniorSalesPersonId").HtmlAttributes(new { style = "width:100%;" }).OptionLabel("Select JuniorSalesPerson").DataTextField("Text").DataValueField("Value").DataSource(source => { source.Read(read => { read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode() }); }); }) )
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-sm-12 text-right right">
+                            <div class="form-group pt-30">
+                                <button id="btnmembersearch" type="button" class="k-button btn-orange" onclick="loadReport()">Search</button>
+                                <button id="btnReset" type="button" class="k-button btn-orange" onclick="resetSearch()">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <fieldset>
+        <legend></legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <table class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th style="padding:10px 10px;border: 1px solid black">Total New Clients Registered in selected Month</th>
+                                    <th style="padding:10px 10px;border: 1px solid black"><span id="spnClientCount"></span></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="display" style="width:100%">
+                            <tbody>
+                                <tr>
+                                    <th></th>
+                                    <td style="padding:10px 10px;border: 1px solid black">
+                                        Count on first 30 Days
+                                    </td>
+                                    <td style="padding:10px 10px;border: 1px solid black"><span id="spnCount30Day"></span></td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <td style="padding:10px 10px;border: 1px solid black">
+                                        Count on first 180 Days
+                                    </td>
+                                    <td style="padding:10px 10px;border: 1px solid black"><span id="spnCount180Day"></span></td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <td style="padding:10px 10px;border: 1px solid black">
+                                        Average Monthly Count (180 Days)
+                                    </td>
+                                    <td style="padding:10px 10px;border: 1px solid black"><span id="spnAvg180Day"></span></td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <td style="padding:10px 10px;border: 1px solid black">
+                                        Count on first year
+                                    </td>
+                                    <td style="padding:10px 10px;border: 1px solid black"><span id="spnCount1Year"></span></td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <td style="padding:10px 10px;border: 1px solid black">
+                                        Monthly Count (1 Year)
+                                    </td>
+                                    <td style="padding:10px 10px;border: 1px solid black"><span id="spnAvg1Year"></span></td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <td style="padding:10px 10px;border: 1px solid black">
+                                        Count Till Today
+                                    </td>
+                                    <td style="padding:10px 10px;border: 1px solid black"><span id="spnCountTillToday"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="display" style="width:100%">
+                            <tbody>
+                                <tr>
+                                    <th></th>
+                                    <td style="padding:10px 10px;border: 1px solid black">
+                                        Profit on first 30 Days
+                                    </td>
+                                    <td style="padding:10px 10px;border: 1px solid black"><span id="spnProfit30Day"></span></td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <td style="padding:10px 10px;border: 1px solid black">
+                                        Profit on first 180 Days
+                                    </td>
+                                    <td style="padding:10px 10px;border: 1px solid black"><span id="spnProfit180Day"></span></td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <td style="padding:10px 10px;border: 1px solid black">
+                                        Average Monthly Profit (180 Days)
+                                    </td>
+                                    <td style="padding:10px 10px;border: 1px solid black"><span id="spnAvgProfit180Day"></span></td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <td style="padding:10px 10px;border: 1px solid black">
+                                        Profit on first year
+                                    </td>
+                                    <td style="padding:10px 10px;border: 1px solid black"><span id="spnProfit1Year"></span></td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <td style="padding:10px 10px;border: 1px solid black">
+                                        Monthly Profit (first year)
+                                    </td>
+                                    <td style="padding:10px 10px;border: 1px solid black"><span id="spnAvgProfit1Year"></span></td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <td style="padding:10px 10px;border: 1px solid black">
+                                        Profit till Today
+                                    </td>
+                                    <td style="padding:10px 10px;border: 1px solid black"><span id="spnProfitTillToday"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+               
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-4">
+                        <table class="display" style="width:100%">
+                            <tbody>
+                                <tr>
+                                    <th></th>
+                                    <td style="padding:10px 10px;border: 1px solid black">
+                                        Clients Stopped Trading in 6 Months
+                                    </td>
+                                    <td style="padding:10px 10px;border: 1px solid black"><span id="spnTradeCountAfter6MO"></span></td>
+                                </tr>
+                                <tr>
+                                    <th></th>   
+                                    <td style="padding:10px 10px;border: 1px solid black">
+                                        Clients Stopped Trading in 12 Months
+                                    </td>
+                                    <td style="padding:10px 10px;border: 1px solid black"><span id="spnTradeCountAfter1Y"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+
+    <fieldset id="clientGrid">
+        <legend></legend>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                @(Html.Kendo().Grid<ClientMasterModel>()
+
+                .Name("gridClient")
+                .AutoBind(false)
+                .Columns(columns =>
+                {
+                    columns.Bound(m => m.FullName).Visible(true).ClientTemplate(
+
+                    "<a class='active restrictCall' href='" + Url.Action("ManageClient", "Client") + "?ClientId=#=ClientId #'>" + "#=FullName#" + "</a>"
+
+                    ).Width(140);
+                    //columns.Bound(m => m.FullName).Width(140);
+                    columns.Bound(m => m.CompanyName).Width(140);
+                    columns.Bound(m => m.TraderName).Width(140);
+                    columns.Bound(m => m.newclientReport.Count30Day).Title("Count on first 30 Days").ClientTemplate(" #= (newclientReport != null ? newclientReport.Count30Day : 0) # ").Format("{0:n2}").Width(140);
+                    columns.Bound(m => m.newclientReport.Count180Day).Title("Count on first 180 Days").ClientTemplate(" #= (newclientReport != null ? newclientReport.Count180Day : 0) # ").Format("{0:n2}").Width(140);
+                    //columns.Bound(m => m.newclientReport.Avg180Day).Format("{0:c2}").Title(" Average Monthly count(180 Days)").ClientTemplate(" #= (newclientReport != null ? newclientReport.Avg180Day : 0) # ").Width(140);
+                    columns.Bound(m => m.newclientReport.Avg180Day).Format("{0:n2}").Title(" Average Monthly count(180 Days)").ClientTemplate(" #= (newclientReport != null ? kendo.toString(newclientReport.Avg180Day,'0.00') : 0) # ").Width(120);
+                    columns.Bound(m => m.newclientReport.Count1Year).Title("Count on first year").ClientTemplate(" #= (newclientReport != null ? newclientReport.Count1Year : 0) # ").Format("{0:n2}").Width(140);
+                    columns.Bound(m => m.newclientReport.Avg1Year).Title("Monthly Count (1 Year)").ClientTemplate(" #= (newclientReport != null ? kendo.toString(newclientReport.Avg1Year,'0.00') : 0) # ").Format("{0:n2}").Width(120);
+                    columns.Bound(m => m.newclientReport.CountTillToday).Title("Count Till Today").ClientTemplate(" #= (newclientReport != null ? newclientReport.CountTillToday : 0) # ").Format("{0:n2}").Width(140);
+                    columns.Bound(m => m.newclientReport.TradeCountAfter6MO).Title("Clients Stopped Trading in 6 Months").ClientTemplate(" #= (newclientReport.TradeCountAfter6MO == 1 ? 'Yes' : 'No') # ").Width(140);
+                    columns.Bound(m => m.newclientReport.TradeCountAfter1Y).Title("Clients Stopped Trading in 12 Months").ClientTemplate(" #= (newclientReport.TradeCountAfter1Y == 1 ? 'Yes' : 'No') # ").Width(140);
+                    columns.Bound(m => m.AccountNo).Width(150);
+                    columns.Bound(m => m.SalesPersonName).Width(140);
+                    columns.Bound(m => m.RegiterDate).Format("{0:dd/MM/yyyy}").Width(140);
+
+                })
+                .Resizable(rl => rl.Columns(true))
+                .Pageable(x =>
+                {
+                    x.Refresh(false);
+                    x.PageSizes(new int[] { 10, 20, 50, 100 });
+                })
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                .Navigatable()
+                .Sortable(sortable => sortable.AllowUnsort(true))
+                .Filterable(filter => filter.Mode(GridFilterMode.Menu))
+                .NoRecords()
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .ServerOperation(false)
+                .PageSize(ConfigItems.GridPageSize)
+                .Read(read => read.Action("GetNewClientListbyId", "Report").Data("paraClientId"))
+                ))
+
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script>
+    var client_arr;
+    $(document).ready(function () {
+        $('#trader_drop').hide();
+        $('#salesperson_drop').hide();
+        $('#juniorsalesperson_drop').hide();
+        $("#clientGrid").hide();
+
+        var havePermission ='@WebHelper.CanView()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+
+        /*kendoGridScroll();*/
+
+    });
+
+
+    $(function () {
+
+        $("input:radio").on("change", function () {
+
+            if ($(this).val() == "Trader") {
+                $('#trader_drop').show();
+                $('#salesperson_drop').hide();
+                $('#juniorsalesperson_drop').hide();
+            }
+            else if ($(this).val() == "SalesPerson") {
+                $('#trader_drop').hide();
+                $('#salesperson_drop').show();
+                $('#juniorsalesperson_drop').hide();
+            }
+            else {
+                $('#trader_drop').hide();
+                $('#salesperson_drop').hide();
+                $('#juniorsalesperson_drop').show();
+            }
+        });
+
+    });
+
+
+
+    function loadReport() {
+
+        var month = (new Date()).getMonth() + 1;
+        var year = (new Date()).getFullYear();
+        var trader = $("#TraderId").data("kendoDropDownList").value();
+        var salesperson = $("#SalesPersonId").data("kendoDropDownList").value();
+        var juniorsalesperson = $("#JuniorSalesPersonId").data("kendoDropDownList").value();
+        if (trader == '') {
+            trader = 0;
+        }
+        if (salesperson == '') {
+            salesperson = 0;
+        }
+        if (juniorsalesperson == '') {
+            juniorsalesperson = 0;
+        }
+        if ($("#ddMonth").val() != '' && $("#ddYear").val() != '') {
+            month = $("#ddMonth").val();
+            year = $("#ddYear").val();
+        }
+        $.ajax({
+            data: { Month: month, Year: year, TraderId: trader, SalesPersonId: salesperson, JuniorSalesPersonId: juniorsalesperson },
+            type: "GET",
+            url: '@Url.Action("GetNewClientsReportList", "Report")'
+        }).done(function (data) {
+            $('.loader').hide();
+            console.log(data);
+            if (data.Success) {
+                client_arr = data.Data.client_arr;
+            /*$('#clientId').val(JSON.stringify(clientId)); */
+                /*$('#clientId').val(clientId);*/
+                $("#spnAvg180Day").html(data.Data.Avg180Day.toFixed(2));
+                $("#spnAvg1Year").html(data.Data.Avg1Year.toFixed(2));
+                $("#spnAvgProfit180Day").html(data.Data.AvgProfit180Day.toFixed(2));
+                $("#spnAvgProfit1Year").html(data.Data.AvgProfit1Year.toFixed(2));
+                $("#spnClientCount").html(data.Data.ClientCount);
+                $("#spnCount180Day").html(data.Data.Count180Day);
+                $("#spnCount1Year").html(data.Data.Count1Year);
+                $("#spnCount30Day").html(data.Data.Count30Day);
+                $("#spnCountTillToday").html(data.Data.CountTillToday);
+                $("#spnProfit180Day").html(data.Data.Profit180Day.toFixed(2));
+                $("#spnProfit1Year").html(data.Data.Profit1Year.toFixed(2));
+                $("#spnProfit30Day").html(data.Data.Profit30Day.toFixed(2));
+                $("#spnProfitTillToday").html(data.Data.ProfitTillToday.toFixed(2));
+                $("#spnTradeCountAfter1Y").html(data.Data.TradeCountAfter1Y);
+                $("#spnTradeCountAfter6MO").html(data.Data.TradeCountAfter6MO);
+                //paraClientId();
+                $("#clientGrid").show();
+                $('#gridClient').data('kendoGrid').dataSource.read({ client_arr: client_arr, Month: month, Year: year });/*, Month: month, Year: year*/
+               /* $('#gridClient').data('kendoGrid').dataSource.read();*/
+            }
+        });
+    }
+    function paraClientId() {
+        var Month = $("#ddMonth").val();
+        var Year = $("#ddYear").val();
+
+        return {
+            client_arr: client_arr,
+            Month: Month,
+            Year: Year
+        }
+    }
+    function resetSearch() {
+        $("#ddMonth").data("kendoDropDownList").value(0);
+        $("#ddYear").data("kendoDropDownList").value(0);
+        $("#TraderId").data("kendoDropDownList").value(0);
+        $("#SalesPersonId").data("kendoDropDownList").value(0);
+        $("#JuniorSalesPersonId").data("kendoDropDownList").value(0);
+        loadReport();
+    }
+    $(window).on('keypress', function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            loadReport();
+        }
+    });
+</script>

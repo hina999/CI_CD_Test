@@ -1,0 +1,255 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = "Reconciliation Team";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <legend>Sales Figures</legend>
+    <div class="panel panel-default reconciliationteam-box">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label">Date:</label>
+                                @Html.Kendo().DatePicker().Name("RecordDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:100%" })
+                                <span id="spnDateError" style="display:none;" class="field-validation-error" data-valmsg-for="RecordDate" data-valmsg-replace="true">
+                                    <span for="RecordDate" class="">Please select date.</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label">Select Trader:</label>
+                                @(Html.Kendo().DropDownList()
+                                                        .Name("SearchTrader")
+                                                        .HtmlAttributes(new { style = "width:100%;" })
+                                                        .OptionLabel("Select Trader")
+                                                        .DataTextField("Text")
+                                                        .DataValueField("Value")
+                                                        .DataSource(source =>
+                                                        {
+                                                            source.Read(read =>
+                                                            {
+                                                                read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.Trader.GetHashCode() });
+                                                            });
+                                                        })
+                                )
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <div class="form-group pt-30">
+                                <button id="btnmembersearch" type="button" class="k-button btn-orange">Search</button>
+                                <a title="Top Level Sales Figure" href="@Url.Action("TeamTopReport","ReconciliationTeam")" class="k-button btn-orange">Top Level Sales Figure</a>
+                                <a title="Sales Figure Report" href="@Url.Action("ReconciliationTeamReport","ReconciliationTeam")" type="button" class="k-button btn-orange">Sales Figure Report</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* GRID HERE *@
+
+    <fieldset>
+        <legend></legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @(Html.Kendo().Grid<ReconciliationTeamMemberModel>()
+                                .Name("gridReconciliationTeamMemberList")
+                                .Columns(columns =>
+                                {
+                                    columns.Bound(x => x.FullName).Title("Name").Width(350);
+                                    columns.Bound(x => x.LeadCount).Title("Leads").Width(250)
+                                        .ClientTemplate(@"<input type='number' class='txtLeadCount k-textbox'  value='#= LeadCount #' />")
+                                        .HtmlAttributes(WebHelper.StatusColumnStyle);
+                                    columns.Bound(x => x.RNCCount).Title("R/C").Width(250)
+                                        .ClientTemplate(@"<input type='number' class= 'txtRNCCount k-textbox'  value='#= RNCCount #' />")
+                                        .HtmlAttributes(WebHelper.StatusColumnStyle);
+                                    columns.Bound(x => x.REGCount).Title("Reg").Width(250)
+                                        .ClientTemplate(@"<input type='number' class='txtREGCount k-textbox'  value='#= REGCount #' />")
+                                        .HtmlAttributes(WebHelper.StatusColumnStyle);
+                                    columns.Bound(x => x.DingCount).Title("Dings").Width(250)
+                                        .ClientTemplate(@"<input type='number' class= 'txtDingCount k-textbox'  value='#= DingCount #' />")
+                                        .HtmlAttributes(WebHelper.StatusColumnStyle);
+                                    columns.Bound(x => x.Commission).Title("Commission").Width(250)
+                                        .ClientTemplate(@"<input type='number' class= 'txtCommission k-textbox'  value='#= Commission #' />")
+                                        .HtmlAttributes(WebHelper.StatusColumnStyle);
+                                })
+                                .Pageable(x =>
+                                {
+                                    x.Refresh(true);
+                                    x.PageSizes(new int[] { 10, 20, 50, 100 });
+                                })
+                                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                                .Pageable(x => x.Enabled(false))
+                                .NoRecords()
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .ServerOperation(false)
+                                .Batch(true)
+                                .Model(model =>
+                                {
+                                    model.Id(product => product.UserId);
+                                    model.Field(product => product.FullName).Editable(false);
+                                })
+                                .Read(read => read.Action("ManageReconciliationTeam", "ReconciliationTeam").Data("additionalInfo"))
+                                ))
+            </div>
+        </div>
+    </fieldset>
+    <div class="row" id="DivTeamSave">
+        <div class="col-md-12">
+            <button id="btnReset" type="button" class="k-button btn-orange pull-right">Reset</button>
+            <button id="btnSave" type="button" class="k-button btn-orange mr-10 pull-right" style="margin-right:5px;" onclick="SaveRecords()">Save</button>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var havePermission ='@WebHelper.CanAdd()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+        kendoGridScroll();
+        $("#RecordDate").data("kendoDatePicker").value(new Date());
+
+        $('#gridReconciliationTeamMemberList').data('kendoGrid').dataSource.read({
+            TraderId: null,
+            RecordDate: $("#RecordDate").data("kendoDatePicker").value()
+        });
+        $('#gridReconciliationTeamMemberList').data().kendoGrid.dataSource.page(1);
+
+    });
+
+    function additionalInfo() {
+        var trader = $('#SearchTrader').data("kendoDropDownList");
+        return {
+            TraderId: trader != null ? trader.value().trim() : null,
+            RecordDate: $("#RecordDate").data("kendoDatePicker").value()
+        };
+    }
+
+    function SaveRecords() {
+
+        var members = [];
+        var jsonMembers;
+
+        var table = $("#gridReconciliationTeamMemberList table");
+        table.find('tr').each(function (i) {
+            if (i != 0) {
+                //console.log($(this).find('td'));
+                var $tds = $(this).find('td'),
+                    FullName = $tds.eq(0).text(),
+                    LeadCount = $tds.eq(1).find('input').val(),
+                    RNCCount = $tds.eq(2).find('input').val(),
+                    REGCount = $tds.eq(3).find('input').val(),
+                    DingCount = $tds.eq(4).find('input').val(),
+                    Commission = $tds.eq(5).find('input').val();
+                var element = {};
+
+                element.FullName = FullName;
+                element.LeadCount = LeadCount;
+                element.RNCCount = RNCCount;
+                element.REGCount = REGCount;
+                element.DingCount = DingCount;
+                element.Commission = Commission;
+
+                members.push(element);
+            }
+        });
+
+        var gridData = $("#gridReconciliationTeamMemberList").data("kendoGrid").dataSource.data();
+        var paramValue = kendo.stringify(gridData);
+
+        if (paramValue && paramValue == "[]") {
+            ShowErrorMessage("Please serach trader team");
+        }
+        else {
+            var kendoMember = JSON.parse(paramValue);
+
+            for (var i = 0; i < kendoMember.length; i++) {
+                members[i].UserId = kendoMember[i].UserId
+            }
+
+            jsonMembers = JSON.stringify(members);
+
+            var date = new Date($("#RecordDate").data("kendoDatePicker").value());
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+
+            var finalDate = ("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year;
+
+            $('.loader').show();
+            $.ajax({
+                url: '@Url.Action("SaveReconciliationTeamData", "ReconciliationTeam")',
+                async: false,
+                type: 'POST',
+                data: { strData: jsonMembers, strRecordDate: finalDate },
+                success: function (data) {
+                    $('.loader').hide();
+                    console.log(data);
+
+                    if (data.IsSuccess) {
+                        ShowSuccessMessage("Detail Saved Successfully.");
+                        $("#btnmembersearch").click();
+                    }
+                    else {
+                        ShowErrorMessage("Something went wrong please try again later.");
+                    }
+                }
+            });
+        }
+    }
+
+    $('#btnReset').click(function () {
+        var trader = $('#SearchTrader').data("kendoDropDownList");
+        if (trader != null) {
+            $("#SearchTrader").data("kendoDropDownList").value(0);
+        }
+        $("#RecordDate").data("kendoDatePicker").value(new Date());
+
+        $('#gridReconciliationTeamMemberList').data('kendoGrid').dataSource.read({
+            TraderId: trader != null ? trader.value().trim() : null,
+            RecordDate: $("#RecordDate").data("kendoDatePicker").value()
+        });
+        $('#gridReconciliationTeamMemberList').data().kendoGrid.dataSource.page(1);
+
+    });
+
+    $("#btnmembersearch").click(function () {
+        var trader = $('#SearchTrader').data("kendoDropDownList");
+        var date = $("#RecordDate").data("kendoDatePicker").value();
+        if (date) {
+            $("#spnDateError").hide();
+        }
+        else {
+            $("#spnDateError").show();
+        }
+
+        //if ($('#txtsearch').val() !== "") {
+        $('#gridReconciliationTeamMemberList').data('kendoGrid').dataSource.read({
+            TraderId: trader != null ? trader.value().trim() : null,
+            RecordDate: date
+        });
+        $('#gridReconciliationTeamMemberList').data().kendoGrid.dataSource.page(1);
+    });
+
+    $(window).on('keypress', function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#btnmembersearch").click();
+        }
+    });
+</script>

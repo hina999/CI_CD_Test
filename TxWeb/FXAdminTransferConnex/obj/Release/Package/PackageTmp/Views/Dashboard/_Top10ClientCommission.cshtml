@@ -1,0 +1,47 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h6 class="panel-title dashboard-title">
+            TOP 10 CLIENT COMMISSION OF LAST 12 MONTHS
+        </h6>
+    </div>
+    <div class="panel-body" id="ClientCommission">
+        @(Html.Kendo().Grid<Top10ClientCommissions>()
+            .Name("gridClientCommission")
+            .Columns(columns =>
+            {
+                columns.Bound(m => m.FullName);
+                columns.Bound(m => m.CompanyName);
+                columns.Bound(m => m.Commisson).HeaderHtmlAttributes(new { @style = "text-align:right" }).HtmlAttributes(new { @style = "text-align:right" }).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+            })
+            .Selectable(selectable => selectable
+            .Mode(GridSelectionMode.Single))
+            .Navigatable()
+            .Sortable(sortable => sortable.AllowUnsort(false))
+            .NoRecords()
+            .DataSource(dataSource => dataSource
+            .Ajax()
+            .ServerOperation(false)
+            .PageSize(10)
+                .Model(model =>
+                {
+                    //model.Id(d => d.ClientId);
+                })
+            .Read(read => read.Action("GetTop10ClientCommissions", "Dashboard"))
+            )
+        )
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        kendoGridScroll();
+    });
+</script>
+<style>
+     .k-grid td {
+        padding: 0.25em 0.6em !important
+    }
+</style>

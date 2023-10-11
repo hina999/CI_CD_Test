@@ -1,0 +1,2477 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>C:\Hina\Publish\TransferConnex\Staging</_PublishTargetUrl>
+    <History>True|2023-10-09T04:45:18.9339553Z;True|2023-10-06T15:43:01.6445113+05:30;True|2023-10-06T10:12:11.4799796+05:30;True|2023-09-25T14:26:35.8348229+05:30;True|2023-09-22T09:37:04.7138984+05:30;True|2023-09-19T15:30:47.8568816+05:30;True|2023-09-19T14:50:46.2367164+05:30;True|2023-09-04T12:08:55.7656673+05:30;</History>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/af/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:18</publishTime>
+    </File>
+    <File Include="bin/Antlr3.Runtime.dll">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="bin/Antlr3.Runtime.pdb">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="bin/ar/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:18</publishTime>
+    </File>
+    <File Include="bin/Autofac.dll">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="bin/Autofac.Integration.Mvc.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="bin/az/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:18</publishTime>
+    </File>
+    <File Include="bin/bg/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:20</publishTime>
+    </File>
+    <File Include="bin/bn-BD/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:20</publishTime>
+    </File>
+    <File Include="bin/cs/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:22</publishTime>
+    </File>
+    <File Include="bin/da/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:22</publishTime>
+    </File>
+    <File Include="bin/de/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:24</publishTime>
+    </File>
+    <File Include="bin/el/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:24</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.SqlServer.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="bin/es/Hangfire.Core.resources.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="bin/es/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:26</publishTime>
+    </File>
+    <File Include="bin/ExchangeRatesAPI.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="bin/fa/Hangfire.Core.resources.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="bin/fa/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:14</publishTime>
+    </File>
+    <File Include="bin/fi-FI/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:16</publishTime>
+    </File>
+    <File Include="bin/fr-BE/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:18</publishTime>
+    </File>
+    <File Include="bin/fr/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:18</publishTime>
+    </File>
+    <File Include="bin/FXAdminTransferConnex.Business.dll">
+      <publishTime>10/04/2023 10:55:01</publishTime>
+    </File>
+    <File Include="bin/FXAdminTransferConnex.Business.dll.config">
+      <publishTime>09/14/2023 15:15:14</publishTime>
+    </File>
+    <File Include="bin/FXAdminTransferConnex.Business.pdb">
+      <publishTime>10/04/2023 10:55:01</publishTime>
+    </File>
+    <File Include="bin/FXAdminTransferConnex.Common.dll">
+      <publishTime>10/04/2023 10:19:43</publishTime>
+    </File>
+    <File Include="bin/FXAdminTransferConnex.Common.dll.config">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="bin/FXAdminTransferConnex.Common.pdb">
+      <publishTime>10/04/2023 10:19:43</publishTime>
+    </File>
+    <File Include="bin/FXAdminTransferConnex.Data.dll">
+      <publishTime>10/04/2023 10:19:43</publishTime>
+    </File>
+    <File Include="bin/FXAdminTransferConnex.Data.dll.config">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="bin/FXAdminTransferConnex.Data.pdb">
+      <publishTime>10/04/2023 10:19:43</publishTime>
+    </File>
+    <File Include="bin/FXAdminTransferConnex.Entities.dll">
+      <publishTime>10/04/2023 10:19:44</publishTime>
+    </File>
+    <File Include="bin/FXAdminTransferConnex.Entities.pdb">
+      <publishTime>10/04/2023 10:19:44</publishTime>
+    </File>
+    <File Include="bin/FXAdminTransferConnexApp.dll">
+      <publishTime>10/09/2023 10:15:09</publishTime>
+    </File>
+    <File Include="bin/FXAdminTransferConnexApp.pdb">
+      <publishTime>10/09/2023 10:15:09</publishTime>
+    </File>
+    <File Include="bin/Hangfire.Core.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="bin/Hangfire.SqlServer.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="bin/he/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:20</publishTime>
+    </File>
+    <File Include="bin/hr/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:20</publishTime>
+    </File>
+    <File Include="bin/hu/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:22</publishTime>
+    </File>
+    <File Include="bin/Humanizer.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="bin/id/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:24</publishTime>
+    </File>
+    <File Include="bin/it/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:24</publishTime>
+    </File>
+    <File Include="bin/ja/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:26</publishTime>
+    </File>
+    <File Include="bin/Kendo.Mvc.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/ko-KR/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:14</publishTime>
+    </File>
+    <File Include="bin/ku/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:16</publishTime>
+    </File>
+    <File Include="bin/log4net.dll">
+      <publishTime>12/07/2021 17:50:01</publishTime>
+    </File>
+    <File Include="bin/lv/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:16</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AspNet.Identity.Core.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AspNet.Identity.EntityFramework.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AspNet.Identity.Owin.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AspNet.SignalR.Core.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AspNet.SignalR.Core.pdb">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AspNet.SignalR.SystemWeb.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AspNet.SignalR.SystemWeb.pdb">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Host.SystemWeb.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.Cookies.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.OAuth.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/ms-MY/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:18</publishTime>
+    </File>
+    <File Include="bin/mt/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:18</publishTime>
+    </File>
+    <File Include="bin/nb-NO/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:18</publishTime>
+    </File>
+    <File Include="bin/nb/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:20</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>11/25/2018 13:25:30</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.pdb">
+      <publishTime>11/25/2018 13:17:04</publishTime>
+    </File>
+    <File Include="bin/nl/Hangfire.Core.resources.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="bin/nl/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:20</publishTime>
+    </File>
+    <File Include="bin/Owin.dll">
+      <publishTime>12/07/2021 17:49:44</publishTime>
+    </File>
+    <File Include="bin/pl/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:22</publishTime>
+    </File>
+    <File Include="bin/pt-BR/Hangfire.Core.resources.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="bin/pt-PT/Hangfire.Core.resources.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="bin/pt/Hangfire.Core.resources.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="bin/pt/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:22</publishTime>
+    </File>
+    <File Include="bin/RestSharp.dll">
+      <publishTime>11/01/2014 16:53:14</publishTime>
+    </File>
+    <File Include="bin/ro/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:24</publishTime>
+    </File>
+    <File Include="bin/ru/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:24</publishTime>
+    </File>
+    <File Include="bin/sk/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:14</publishTime>
+    </File>
+    <File Include="bin/sl/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:16</publishTime>
+    </File>
+    <File Include="bin/sr-Latn/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:16</publishTime>
+    </File>
+    <File Include="bin/sr/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:18</publishTime>
+    </File>
+    <File Include="bin/sv/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:18</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/System.Runtime.InteropServices.RuntimeInformation.dll">
+      <publishTime>12/07/2021 17:49:57</publishTime>
+    </File>
+    <File Include="bin/System.Web.Cors.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/System.Web.Helpers.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.Cors.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/System.Web.Optimization.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Deployment.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Razor.dll">
+      <publishTime>12/07/2021 17:49:43</publishTime>
+    </File>
+    <File Include="bin/th-TH/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:20</publishTime>
+    </File>
+    <File Include="bin/tr/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:20</publishTime>
+    </File>
+    <File Include="bin/uk/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:20</publishTime>
+    </File>
+    <File Include="bin/uz-Cyrl-UZ/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:22</publishTime>
+    </File>
+    <File Include="bin/uz-Latn-UZ/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:24</publishTime>
+    </File>
+    <File Include="bin/vi/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:26</publishTime>
+    </File>
+    <File Include="bin/WebGrease.dll">
+      <publishTime>12/07/2021 17:50:01</publishTime>
+    </File>
+    <File Include="bin/zh-CN/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:26</publishTime>
+    </File>
+    <File Include="bin/zh-Hans/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:26</publishTime>
+    </File>
+    <File Include="bin/zh-Hant/Humanizer.resources.dll">
+      <publishTime>05/06/2021 01:37:26</publishTime>
+    </File>
+    <File Include="bin/zh-TW/Hangfire.Core.resources.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="bin/zh/Hangfire.Core.resources.dll">
+      <publishTime>12/07/2021 17:49:42</publishTime>
+    </File>
+    <File Include="chatmanifest.json">
+      <publishTime>07/29/2022 15:25:30</publishTime>
+    </File>
+    <File Include="Content/ckeditor/adapters/jquery.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/build-config.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/CHANGES.md">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/ckeditor.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/config.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/contents.css">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/lang/en.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/LICENSE.md">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/a11yhelp.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/af.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/ar.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/az.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/bg.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/ca.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/cs.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/cy.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/da.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/de-ch.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/de.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/el.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/en-au.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/en-gb.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/en.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/eo.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/es-mx.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/es.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/et.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/eu.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/fa.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/fi.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/fo.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/fr-ca.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/fr.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/gl.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/gu.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/he.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/hi.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/hr.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/hu.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/id.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/it.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/ja.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/km.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/ko.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/ku.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/lt.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/lv.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/mk.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/mn.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/nb.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/nl.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/no.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/oc.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/pl.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/pt-br.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/pt.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/ro.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/ru.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/si.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/sk.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/sl.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/sq.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/sr-latn.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/sr.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/sv.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/th.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/tr.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/tt.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/ug.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/uk.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/vi.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/zh-cn.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/zh.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/a11yhelp/dialogs/lang/_translationstatus.txt">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/about/dialogs/about.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/about/dialogs/hidpi/logo_ckeditor.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/about/dialogs/logo_ckeditor.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/clipboard/dialogs/paste.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/colordialog/dialogs/colordialog.css">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/colordialog/dialogs/colordialog.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/copyformatting/cursors/cursor-disabled.svg">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/copyformatting/cursors/cursor.svg">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/copyformatting/styles/copyformatting.css">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/dialog/dialogDefinition.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/dialog/styles/dialog.css">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/div/dialogs/div.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/find/dialogs/find.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/flash/dialogs/flash.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/flash/images/placeholder.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/forms/dialogs/button.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/forms/dialogs/checkbox.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/forms/dialogs/form.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/forms/dialogs/hiddenfield.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/forms/dialogs/radio.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/forms/dialogs/select.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/forms/dialogs/textarea.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/forms/dialogs/textfield.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/forms/images/hiddenfield.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/icons.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/icons_hidpi.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/iframe/dialogs/iframe.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/iframe/images/placeholder.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/image/dialogs/image.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/image/images/noimage.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/link/dialogs/anchor.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/link/dialogs/link.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/link/images/anchor.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/link/images/hidpi/anchor.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/liststyle/dialogs/liststyle.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/magicline/images/hidpi/icon-rtl.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/magicline/images/hidpi/icon.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/magicline/images/icon-rtl.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/magicline/images/icon.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/pagebreak/images/pagebreak.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/pastefromgdocs/filter/default.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/pastefromword/filter/default.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/pastetools/filter/common.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/preview/images/pagebreak.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/preview/preview.html">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/preview/styles/screen.css">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/scayt/CHANGELOG.md">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/scayt/dialogs/dialog.css">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/scayt/dialogs/options.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/scayt/dialogs/toolbar.css">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/scayt/LICENSE.md">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/scayt/README.md">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/scayt/skins/moono-lisa/scayt.css">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/showblocks/images/block_address.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/showblocks/images/block_blockquote.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/showblocks/images/block_div.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/showblocks/images/block_h1.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/showblocks/images/block_h2.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/showblocks/images/block_h3.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/showblocks/images/block_h4.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/showblocks/images/block_h5.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/showblocks/images/block_h6.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/showblocks/images/block_p.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/showblocks/images/block_pre.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/dialogs/smiley.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/angel_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/angel_smile.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/angry_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/angry_smile.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/broken_heart.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/broken_heart.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/confused_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/confused_smile.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/cry_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/cry_smile.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/devil_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/devil_smile.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/embaressed_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/embarrassed_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/embarrassed_smile.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/envelope.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/envelope.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/heart.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/heart.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/kiss.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/kiss.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/lightbulb.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/lightbulb.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/omg_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/omg_smile.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/regular_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/regular_smile.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/sad_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/sad_smile.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/shades_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/shades_smile.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/teeth_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/teeth_smile.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/thumbs_down.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/thumbs_down.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/thumbs_up.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/thumbs_up.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/tongue_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/tongue_smile.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/tounge_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/whatchutalkingabout_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/whatchutalkingabout_smile.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/wink_smile.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/smiley/images/wink_smile.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/af.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/ar.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/az.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/bg.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/ca.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/cs.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/cy.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/da.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/de-ch.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/de.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/el.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/en-au.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/en-ca.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/en-gb.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/en.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/eo.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/es-mx.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/es.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/et.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/eu.js">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/fa.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/fi.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/fr-ca.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/fr.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/gl.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/he.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/hr.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/hu.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/id.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/it.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/ja.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/km.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/ko.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/ku.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/lt.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/lv.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/nb.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/nl.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/no.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/oc.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/pl.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/pt-br.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/pt.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/ro.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/ru.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/si.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/sk.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/sl.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/sq.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/sr-latn.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/sr.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/sv.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/th.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/tr.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/tt.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/ug.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/uk.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/vi.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/zh-cn.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/zh.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/lang/_translationstatus.txt">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/specialchar/dialogs/specialchar.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/table/dialogs/table.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/tableselection/styles/tableselection.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/tabletools/dialogs/tableCell.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/templates/dialogs/templates.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/templates/dialogs/templates.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/templates/templates/default.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/templates/templates/images/template1.gif">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/templates/templates/images/template2.gif">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/templates/templates/images/template3.gif">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/widget/images/handle.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/wsc/dialogs/ciframe.html">
+      <publishTime>08/31/2023 10:14:13</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/wsc/dialogs/tmpFrameset.html">
+      <publishTime>08/31/2023 10:14:13</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/wsc/dialogs/wsc.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/wsc/dialogs/wsc.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/wsc/dialogs/wsc_ie.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/wsc/LICENSE.md">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/wsc/README.md">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/plugins/wsc/skins/moono-lisa/wsc.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/README.md">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/css/samples.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/img/github-top.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/img/header-bg.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/img/header-separator.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/img/logo.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/img/logo.svg">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/img/navigation-tip.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/index.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/js/sample.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/js/sf.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/ajax.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/api.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/appendto.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/assets/inlineall/logo.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/assets/outputxhtml/outputxhtml.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/assets/posteddata.php">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/assets/sample.jpg">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/assets/uilanguages/languages.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/datafiltering.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/dialog/assets/my_dialog.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/dialog/dialog.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/divreplace.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/enterkey/enterkey.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/htmlwriter/assets/outputforflash/outputforflash.fla">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/htmlwriter/assets/outputforflash/outputforflash.swf">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/htmlwriter/assets/outputforflash/swfobject.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/htmlwriter/outputforflash.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/htmlwriter/outputhtml.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/index.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/inlineall.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/inlinebycode.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/inlinetextarea.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/jquery.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/magicline/magicline.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/readonly.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/replacebyclass.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/replacebycode.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/sample.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/sample.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/sample_posteddata.php">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/tabindex.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/toolbar/toolbar.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/uicolor.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/uilanguages.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/wysiwygarea/fullpage.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/old/xhtmlstyle.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/css/fontello.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/font/config.json">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/font/fontello.eot">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/font/fontello.svg">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/font/fontello.ttf">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/font/fontello.woff">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/font/LICENSE.txt">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/index.html">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/js/abstracttoolbarmodifier.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/js/fulltoolbareditor.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/js/toolbarmodifier.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/js/toolbartextmodifier.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/lib/codemirror/javascript.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/lib/codemirror/LICENSE">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/lib/codemirror/neo.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/lib/codemirror/show-hint.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/samples/toolbarconfigurator/lib/codemirror/show-hint.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/dialog.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/dialog_ie.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/dialog_ie8.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/dialog_iequirks.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/editor.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/editor_gecko.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/editor_ie.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/editor_ie8.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/editor_iequirks.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/icons.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/icons_hidpi.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/images/arrow.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/images/close.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/images/hidpi/close.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/images/hidpi/lock-open.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/images/hidpi/lock.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/images/hidpi/refresh.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/images/lock-open.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/images/lock.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/images/refresh.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/images/spinner.gif">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/skins/moono-lisa/readme.md">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/styles.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/ckeditor/vendor/promise.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/bootstrap.min.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/core.css">
+      <publishTime>10/04/2023 10:13:28</publishTime>
+    </File>
+    <File Include="Content/css/font-awesome.min.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/fullcalendar.min.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/jquery-confirm.min.css">
+      <publishTime>05/25/2023 18:21:56</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/kendo.common-material.min.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/kendo.material.min.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/Material/editor.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/Material/imagebrowser.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/Material/indeterminate.gif">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/Material/loading-image.gif">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/Material/loading.gif">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/Material/loading_2x.gif">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/Material/markers.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/Material/markers_2x.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/Material/slider-h.gif">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/Material/slider-v.gif">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/Material/sprite.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/Material/sprite_2x.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/Material/sprite_kpi.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/Kendo/Material/sprite_kpi_2x.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/css/toastr.min.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/fontawesome-webfont.eot">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/fontawesome-webfont.svg">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/fontawesome-webfont.ttf">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/fontawesome-webfont.woff">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/fontawesome-webfont.woff2">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/FontAwesome.otf">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.eot">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.svg">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.ttf">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.woff">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/glyphicons-halflings-regular.woff2">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/roboto-regular-webfont.eot">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/roboto-regular-webfont.svg">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/roboto-regular-webfont.ttf">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/roboto-regular-webfont.woff">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/fonts/roboto-regular-webfont.woff2">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/Images/404-error-page-template-10.jpg">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/Images/add-group.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/Images/ChatBG.jpg">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/Images/close-icon.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/Images/cover.jpg">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/Images/delete.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/Images/edit.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/Images/ic-error.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/Images/ic-success.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/Images/is.jpg">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/Images/loader.gif">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/Images/logo.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/Images/placeholder.jpg">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/Images/Qf83FTt.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/Images/u0XmBmv.png">
+      <publishTime>12/07/2021 17:49:39</publishTime>
+    </File>
+    <File Include="Content/img/icons/apple-touch-icon/apple-touch-icon-144x144.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/apple-touch-icon/apple-touch-icon-180x180.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/apple-touch-icon/apple-touch-icon-192x192.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/apple-touch-icon/apple-touch-icon-72x72.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/apple-touch-icon/apple-touch-icon-ipad-76x76.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/apple-touch-icon/apple-touch-icon-ipad-retina-152x152.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/apple-touch-icon/apple-touch-icon-iphone-60x60.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/apple-touch-icon/apple-touch-icon-iphone-retina-114x114.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/apple-touch-icon/apple-touch-icon-iphone-retina-120x120.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/apple-touch-icon/favicon.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-144x144.png">
+      <publishTime>07/05/2022 07:23:38</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-180x180.png">
+      <publishTime>07/05/2022 14:22:18</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-192x192.png">
+      <publishTime>07/05/2022 07:23:38</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-72x72.png">
+      <publishTime>07/05/2022 07:23:38</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-ipad-retina-152x152.png">
+      <publishTime>07/05/2022 07:23:38</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-iphone-60x60 .png">
+      <publishTime>07/05/2022 14:22:18</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-iphone-retina-114x114.png">
+      <publishTime>07/05/2022 14:22:18</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-iphone-retina-120x120.png">
+      <publishTime>07/05/2022 14:22:18</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/apple-touch-icon/favicon.png">
+      <publishTime>07/05/2022 14:22:18</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-114x114.png">
+      <publishTime>07/05/2022 14:22:18</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-120x120.png">
+      <publishTime>07/05/2022 14:22:18</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-128x128.png">
+      <publishTime>07/05/2022 07:23:38</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-144x144.png">
+      <publishTime>07/05/2022 07:23:38</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-152x152.png">
+      <publishTime>07/05/2022 07:23:38</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-16x16.png">
+      <publishTime>07/05/2022 14:22:18</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-180x180.png">
+      <publishTime>07/05/2022 14:22:18</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-192x192.png">
+      <publishTime>07/05/2022 07:23:38</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-32x32.png">
+      <publishTime>07/05/2022 14:22:18</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-384x384.png">
+      <publishTime>07/05/2022 07:23:38</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-48x48.png">
+      <publishTime>07/05/2022 07:23:38</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-512x512.png">
+      <publishTime>07/05/2022 07:23:38</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-57x57.png">
+      <publishTime>07/05/2022 14:22:18</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-60x60.png">
+      <publishTime>07/05/2022 14:22:18</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-72x72.png">
+      <publishTime>07/05/2022 07:23:38</publishTime>
+    </File>
+    <File Include="Content/img/icons/chat-icon/icon-96x96.png">
+      <publishTime>07/05/2022 07:23:38</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-114x114.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-120x120.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-128x128.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-144x144.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-152x152.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-16x16.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-180x180.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-192x192.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-32x32.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-384x384.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-512x512.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-57x57.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-60x60.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-72x72.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-76x76.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/img/icons/icon-96x96.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/js/app.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/js/fullcalendar.min.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/js/moment.min.js">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/accordion.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/all.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/autocomplete.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/base.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/button.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/core.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/datepicker.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/dialog.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/draggable.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_flat_75_ffffff_40x100.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_55_fbf9ee_1x400.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_65_ffffff_1x400.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_75_dadada_1x400.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_75_e6e6e6_1x400.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_95_fef1ec_1x400.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_highlight-soft_75_cccccc_1x100.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_222222_256x240.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_2e83ff_256x240.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_444444_256x240.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_454545_256x240.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_555555_256x240.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_777620_256x240.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_777777_256x240.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_888888_256x240.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_cc0000_256x240.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_cd0a0a_256x240.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_ffffff_256x240.png">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery-ui.css">
+      <publishTime>12/07/2021 17:49:40</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery-ui.min.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Content/themes/base/menu.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Content/themes/base/progressbar.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Content/themes/base/resizable.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Content/themes/base/selectable.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Content/themes/base/selectmenu.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Content/themes/base/slider.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Content/themes/base/sortable.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Content/themes/base/spinner.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Content/themes/base/tabs.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Content/themes/base/theme.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Content/themes/base/tooltip.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="EmailTemplates/AccountDeactivation.html">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="EmailTemplates/CommisionReport.html">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="EmailTemplates/ExceptionReport.html">
+      <publishTime>10/04/2023 10:13:28</publishTime>
+    </File>
+    <File Include="EmailTemplates/ForgetPassword.html">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="EmailTemplates/ForgotPassword.htm">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="EmailTemplates/SendPassword.html">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="EmailTemplates/TXtemplate-1-Attachments/GBPEUR Screenshot.jpg">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="EmailTemplates/TXtemplate-1-Attachments/GBPUSD Screenshot.jpg">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="EmailTemplates/TXtemplate-1-Attachments/Transfer Connex - Security.pdf">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="EmailTemplates/TXtemplate-1-Attachments/Transfer Connex End Client Deck .pdf">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="EmailTemplates/TXtemplate-1-Attachments/Transfer Connex.pdf">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="EmailTemplates/TXtemplate-2-Attachments/Ebury Collection Capabilities.pdf">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="EmailTemplates/TXtemplate-2-Attachments/Ebury Currency Accounts.pdf">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="EmailTemplates/TXtemplate-2-Attachments/Ebury Instant Brochure %282%29.pdf">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="EmailTemplates/TXtemplate-2-Attachments/Transfer Connex and Ebury.pdf">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="EmailTemplates/TX_NewBlank.html">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="EmailTemplates/TX_template-1.html">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="EmailTemplates/TX_template-2.html">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="favicon.ico">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="fonts/glyphicons-halflings-regular.eot">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="fonts/glyphicons-halflings-regular.svg">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="fonts/glyphicons-halflings-regular.ttf">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="fonts/glyphicons-halflings-regular.woff">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Images/close.png">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Images/plus.png">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Images/transfer-connex-logo.png">
+      <publishTime>08/21/2023 12:17:04</publishTime>
+    </File>
+    <File Include="manifest.json">
+      <publishTime>07/05/2022 09:53:17</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>04/24/2023 10:23:03</publishTime>
+    </File>
+    <File Include="ReportViewer/js/telerikReportViewer-11.0.17.406.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="ReportViewer/js/telerikReportViewer-11.0.17.406.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="ReportViewer/js/telerikReportViewer.kendo-11.0.17.406.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="ReportViewer/styles/blueopal/loading.gif">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="ReportViewer/styles/blueopal/sprite.png">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="ReportViewer/styles/kendo.blueopal.min.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="ReportViewer/styles/kendo.common.min.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="ReportViewer/styles/telerikReportViewer.css">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="ReportViewer/templates/telerikReportViewerTemplate-FA.html">
+      <publishTime>08/31/2023 10:16:22</publishTime>
+    </File>
+    <File Include="ReportViewer/templates/telerikReportViewerTemplate.html">
+      <publishTime>08/31/2023 10:16:22</publishTime>
+    </File>
+    <File Include="repositories.config">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Sample File/EburyTemplate.xlsx">
+      <publishTime>02/11/2022 10:49:54</publishTime>
+    </File>
+    <File Include="Sample File/GCPartnerTemplate.xlsx">
+      <publishTime>09/25/2023 15:28:06</publishTime>
+    </File>
+    <File Include="Sample File/GCPartner_Client_Template.xlsx">
+      <publishTime>05/17/2023 10:12:31</publishTime>
+    </File>
+    <File Include="Sample File/ReconciliationDeal.xlsx">
+      <publishTime>06/21/2022 16:45:37</publishTime>
+    </File>
+    <File Include="Sample File/ScioPay_Client_Template.xlsx">
+      <publishTime>05/17/2023 10:11:40</publishTime>
+    </File>
+    <File Include="Sample File/ScioPay_Deal_Template.xlsx">
+      <publishTime>09/25/2023 15:28:06</publishTime>
+    </File>
+    <File Include="Sample File/TransferConnex.xls">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/bootbox.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/Common.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.10.2.js">
+      <publishTime>03/01/2018 16:06:40</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.10.2.min.js">
+      <publishTime>03/01/2018 16:06:40</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.10.2.min.map">
+      <publishTime>03/01/2018 16:06:40</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.12.4.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.12.4.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.12.4.min.map">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/jquery-confirm.min.js">
+      <publishTime>05/25/2023 18:21:07</publishTime>
+    </File>
+    <File Include="Scripts/jquery-ui-1.12.1.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/jquery-ui-1.12.1.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/jquery.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/jquery.signalR-2.4.1.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/jquery.signalR-2.4.1.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.unobtrusive.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.unobtrusive.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/jszip.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/kendo.all.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/kendo.aspnetmvc.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/kendo.culture.en-GB.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/modernizr-2.6.2.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/respond.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/respond.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/toastr.min.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Scripts/_references.js">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="serviceworker.js">
+      <publishTime>08/03/2022 10:41:52</publishTime>
+    </File>
+    <File Include="Views/BulkEmail/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/City/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/City/ManageCity.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Client/Index.cshtml">
+      <publishTime>10/04/2023 10:13:28</publishTime>
+    </File>
+    <File Include="Views/Client/ManageClient.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Client/RingCentralClient.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Client/UploadClients.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Client/ViewClient.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Client/_ClientDeal.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Client/_MarketOrder.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Client/_OutlookMeetingClient.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Client/_TaskReminder.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Commission/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Commission/ManageTargetCommission.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Country/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Country/ManageCountry.cshtml">
+      <publishTime>08/21/2023 12:17:04</publishTime>
+    </File>
+    <File Include="Views/Dashboard/Home.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_CommissionLast12Month.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_CommissionLast30Day.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_CommissionLast5Day.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_CommissionLast6Week.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_CompanyCommissionLast12Month.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_CompanyCommissionLast30Day.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_CompanyCommissionLast5Day.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_CompanyCommissionLast6Week.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_Last5DayInCallLogChart.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_Last5DayOutCallLogChart.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_ReconciliationTeamReportData.cshtml">
+      <publishTime>08/21/2023 12:17:04</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_SalesPersonCommissionChart.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_Top10ClientCommission.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_TraderCommissionChart.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_YesterdaysInCallLogChart.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Dashboard/_YesterdaysOutCallLogChart.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/DashboardConfiguration/Index.cshtml">
+      <publishTime>08/21/2023 12:17:04</publishTime>
+    </File>
+    <File Include="Views/Deal/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Deal/ManageDeal.cshtml">
+      <publishTime>09/25/2023 15:28:06</publishTime>
+    </File>
+    <File Include="Views/Deal/ReconciliationDeal.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Deal/ReconciliationDetail.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Deal/UploadDeals.cshtml">
+      <publishTime>10/09/2023 10:11:37</publishTime>
+    </File>
+    <File Include="Views/DealImportLog/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/DNDNumber/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/DNDNumber/ManageNumber.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Login/ForgotPassword.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Login/Login.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Login/ResetPassword.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Prospect/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Prospect/ManageProspect.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Prospect/_OutlookMeeting.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Prospect/_TaskReminder.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/ReconciliationTeam/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/ReconciliationTeam/ReconciliationCurrentMonthReportData.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/ReconciliationTeam/ReconciliationTeamReport.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/ReconciliationTeam/ReconciliationTeamReportData.cshtml">
+      <publishTime>01/03/2023 12:21:58</publishTime>
+    </File>
+    <File Include="Views/ReconciliationTeam/ReconciliationTopReport.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/ReconciliationTeam/TeamTopReport.cshtml">
+      <publishTime>09/06/2023 12:54:48</publishTime>
+    </File>
+    <File Include="Views/Region/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Region/ManageRegion.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Report/BrokerCommissionReport.cshtml">
+      <publishTime>03/05/2018 17:02:07</publishTime>
+    </File>
+    <File Include="Views/Report/BrokerPerformanceReport.cshtml">
+      <publishTime>03/05/2018 17:02:08</publishTime>
+    </File>
+    <File Include="Views/Report/ClientMarginReport.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Report/ClientReproductionReport.cshtml">
+      <publishTime>08/21/2023 12:17:04</publishTime>
+    </File>
+    <File Include="Views/Report/ClientRevenueReport.cshtml">
+      <publishTime>08/21/2023 12:17:04</publishTime>
+    </File>
+    <File Include="Views/Report/CurrencyCloudClientReport.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Report/Index.cshtml">
+      <publishTime>03/05/2018 17:02:08</publishTime>
+    </File>
+    <File Include="Views/Report/NewClientRevenueReport.cshtml">
+      <publishTime>08/21/2023 12:17:04</publishTime>
+    </File>
+    <File Include="Views/Report/NewClientsReport.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Report/ProfitLossReport.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Report/VolumeReportByCategory.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Report/VolumeReportByMonth.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Report/VolumeReportByTrader.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/RingCentralHelper/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/RingCentralHelper/RingcentralCharts.cshtml">
+      <publishTime>10/04/2023 10:13:28</publishTime>
+    </File>
+    <File Include="Views/RingCentralHelper/RingCentralCustomDownloadLog.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/RingCentralHelper/_ClientProspectCallLogList.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Security/AccessDenied.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Security/LinkExpired.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Setting/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Shared/CalcEmailEditor.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/BrokerDropDown.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/ClientAgentDropDown.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/DatePicker.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/DateTimePicker.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/DrawDowns.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/GridForeignKey.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/MOAmountNumericTextBox.cshtml">
+      <publishTime>06/15/2022 12:07:56</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/MOClientRateNumericTextBox.cshtml">
+      <publishTime>06/15/2022 12:10:50</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/MOCommentTextBox.cshtml">
+      <publishTime>06/14/2022 14:35:53</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/MOFromCurrencyDropDown.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/MOMarketRateNumericTextBox.cshtml">
+      <publishTime>06/15/2022 12:11:02</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/MONotifySettingDropdown.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/MOOperatorDropDown.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/MOToCurrencyDropDown.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/NumericTextBox.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/NumericTextBoxFloat.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/RolesDropdown.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/TaskTypeDropdown.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/TextArea.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/TextBox.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/UserDropDown.cshtml">
+      <publishTime>08/02/2023 16:30:17</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/UserTypeDropDown.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/Error.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/Lockout.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/permissiondenied.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Shared/_AddEditSignalRGroup.cshtml">
+      <publishTime>07/20/2022 18:02:40</publishTime>
+    </File>
+    <File Include="Views/Shared/_BuyCalModal.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Shared/_Layout.cshtml">
+      <publishTime>09/13/2023 15:55:04</publishTime>
+    </File>
+    <File Include="Views/Shared/_LoginPartial.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/_Notifications.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Shared/_PartialViewEmojis.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Shared/_RingCentralLayout.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Shared/_SellCalModal.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/SignalRHelper/LoadcontactsListToslack.cshtml">
+      <publishTime>10/04/2023 10:13:28</publishTime>
+    </File>
+    <File Include="Views/StagingDeal/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/StagingDeal/ManageStagingDeal.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/StagingDeal/_Import.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/TaskReminder/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Templates/Reference pages/add-edit.html">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Templates/Reference pages/controls.html">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Templates/Reference pages/index.html">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/Templates/Reference pages/login.html">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Trader/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Trader/ManageTrader.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/Trader/_TraderCommission.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/User/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/User/ManageUser.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/User/MyProfile.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/User/UserRightsAssignment.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/User/_RightsAssigntblPartial.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Views/UserRights/Index.cshtml">
+      <publishTime>09/05/2023 10:44:11</publishTime>
+    </File>
+    <File Include="Views/UserRights/_UserTypeMenuAssignment.cshtml">
+      <publishTime>06/07/2022 09:55:41</publishTime>
+    </File>
+    <File Include="Views/Web.config">
+      <publishTime>08/26/2022 11:38:24</publishTime>
+    </File>
+    <File Include="Views/_ViewStart.cshtml">
+      <publishTime>12/07/2021 17:49:41</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>10/09/2023 10:15:10</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

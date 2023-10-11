@@ -1,0 +1,572 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using Kendo.Mvc.UI
+@{
+    ViewBag.Title = "RingcentralCharts";
+    Layout = "~/Views/Shared/_RingCentralLayout.cshtml";
+
+    //var GetCurrentYear = (ReconciliationTeamModel)ViewData["ReconciliationTeamCurrentYearReport"];
+    var GetCurrentMonth = (ReconciliationTeamModel)ViewData["ReconciliationTeamCurrentMonthReport"];
+}
+
+<style type="text/css">
+
+    .panel-default > .panel-heading {
+        color: white;
+        background-color: #2c52ba;
+        padding: 16px 15px !important;
+    }
+
+    .paddingZero {
+        padding: 0;
+    }
+
+    .avatar {
+        margin: 0 auto;
+        width: 180px;
+        height: 180px;
+        /*height: 120px;*/
+        line-height: 180px;
+        border-radius: 50%;
+        font-size: 80px;
+        color: #fff;
+        text-align: center;
+        background: #341535
+    }
+
+    #gridEmployeeList {
+        height: 100% !important;
+    }
+
+    .table.custom-table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+        padding: 3px !important;
+        font-size: 16px;
+    }
+
+    table.custom-table {
+        background-color: #ffffff;
+        padding-top: 15px;
+    }
+
+    .acceptance-per-text {
+        line-height: normal;
+        font-size: 62px;
+    }
+
+    #divTop3Caller span {
+        display: inline-block;
+        width: 100%;
+    }
+
+    .panel-title {
+        font-size: 14px !important;
+    }
+
+    .right-center-table-box .k-grid-header th.k-header {
+        padding: 0.2em 0.2em;
+        height: 22px;
+    }
+
+    .right-center-table-box .k-grid td {
+        padding: 0.2em 0.2em;
+        height: 22px;
+    }
+
+    .right-center-table-box .k-pager-wrap > .k-link {
+        height: 1.429em;
+        line-height: 1.100em;
+    }
+
+    .right-center-table-box .k-dropdown .k-state-default {
+        height: 3rem;
+    }
+
+    .right-center-table-box .k-dropdown-wrap .k-input {
+        height: 1.5em;
+        line-height: 1.5em;
+    }
+
+    .right-center-table-box .k-dropdown-wrap .k-select, .right-center-table-box .k-pager-numbers .k-state-selected {
+        line-height: 1.5em;
+    }
+
+    .right-center-table-box .k-pager-info {
+        padding: 6px;
+    }
+
+    .right-center-table-box .k-pager-wrap.k-grid-pager.k-widget.k-floatwrap {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+    }
+
+    .right-center-table-box .k-dropdown .k-input {
+        width: 5rem;
+    }
+
+
+    /* #divTop3Caller_panel {
+        height: 200px;
+    }
+    .fontspan {
+        font-size: 20px !important;
+    }*/
+    @@media (max-height: 1080px) and (max-width: 1920px) and (min-width:992px) {
+        #divTop3Caller {
+            height: 170px;
+            max-height: 170px !important;
+        }
+        /* .avatar{
+            height:100px;
+        }*/
+        .avatar {
+            margin: 0 auto;
+            width: 100px;
+            height: 100px;
+            /* height: 120px; */
+            /* line-height: 180px; */
+            line-height: 100px;
+            border-radius: 50%;
+            font-size: 60px;
+            color: #fff;
+            text-align: center;
+            background: #341535;
+        }
+
+        .fontspan {
+            font-size: 30px !important;
+        }
+
+        .namespan {
+            font-size: 10px;
+        }
+
+        #divTop3Caller_panel {
+            /*height:200px;*/
+            height: fit-content();
+        }
+    }
+
+    #spnMissedCallCount {
+        font-size: 62px;
+    }
+
+    .rightbox-title {
+        border: solid 1px #ff1962;
+        height: 119px;
+        display: flex;
+        align-items: center;
+        border-radius: 80px;
+        width: 119PX;
+        justify-content: center;
+        margin: 0 auto;
+        background: #ff1962;
+        color: white
+    }
+
+    .panel {
+        margin-bottom: 5px !important;
+    }
+</style>
+<div class="content">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default text-center">
+                        <div class="panel-heading">
+                            <p class="panel-title">Top Service Rep.</p>
+                            <small>Today</small>
+                        </div>
+                        <div class="panel-body" id="divTop3Caller_panel">
+
+                            <div id="divTop3Caller">
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset>
+                        <legend></legend>
+                        <div class="panel panel-default">
+                            <div class="panel-body right-center-table-box">
+                                @(Html.Kendo().Grid<RingCentralModel>()
+                                        .Name("gridEmployeeList")
+                                        .Columns(columns =>
+                                        {
+                                            columns.Bound(m => m.CallToName).Filterable(false).Sortable(false).Title("Employee Name");
+                                            columns.Bound(m => m.TotalInCount).Filterable(false).Sortable(false).Title("Inbound Calls");
+                                            columns.Bound(m => m.TotalOutCount).Filterable(false).Sortable(false).Title("Outbound Calls");
+                                            columns.Bound(m => m.AverageCallDuration).Filterable(false).Sortable(false).ClientTemplate("#=toHHMMSS(AverageCallDuration)#");
+                                            columns.Bound(m => m.CallDuration).Filterable(false).Sortable(false).ClientTemplate("#=toHHMMSS(CallDuration)#");
+                                        })
+                                        .Pageable(x =>
+                                        {
+                                            x.Refresh(true);
+                                            x.PageSizes(new int[] { 10, 20, 50, 100, 1000, 2000 });
+                                        })
+                                        .Selectable(selectable => selectable
+                                        .Mode(GridSelectionMode.Single))
+                                        .Navigatable()
+                                        .Sortable(sortable => sortable.AllowUnsort(false))
+                                        .NoRecords()
+                                        .DataSource(dataSource => dataSource
+                                        .Ajax()
+                                        .ServerOperation(false)
+                                        .Read(read => read.Action("GetEmployeeWiseCallCount", "RingCentralHelper"))
+                                        .PageSize(2000)
+                                        ))
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default text-center row">
+                        <div class="panel-heading col-md-4">
+                            <p class="panel-title">Company Commission</p>
+                            <small>Today</small>
+                        </div>
+                        <div class="panel-body col-md-8" style="padding: 5px;">
+
+                            <div>
+                                <span id="spnTotalCommission" style="width: 100%;font-size: 30px;font-weight: bolder;color:red;">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-md-4">
+                        <div class="panel panel-default text-center">
+                            <div class="panel-heading">
+                                <p class="panel-title">Inbound Calls</p>
+                                <small>Today</small>
+                            </div>
+                            <div class="panel-body" style="padding: 5px;">
+                                <div class="rightbox-title">
+                                    <span id="spnInboundCount" style="width: 100%;font-size: 22px;font-weight: 800;">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-default text-center">
+                            <div class="panel-heading">
+                                <p class="panel-title">Outbound Calls</p>
+                                <small>Today</small>
+                            </div>
+                            <div class="panel-body" style="padding: 5px;">
+                                <div class="rightbox-title">
+                                    <span id="spnOutboundCount" style="width: 100%;font-size: 22px;font-weight: 800;">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+            </div>
+            @*<div class="row">
+                    <div id="divCurrencyRates" class="col-sm-12">
+
+                    </div>
+                </div>*@
+            <div class="row" style="height:200px;">
+                <div class="col-md-12" style="padding:0">
+                    <div class="mb-5">
+                        <div class="box-1">
+                            <div class="panel panel-default text-center">
+                                <div class="panel-heading">
+                                    <h5>Current month</h5>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="tblCurrenMonthReport" class="table display table-borderless" style="margin-left:0px;font-size:16px; background:#ffffff; border-bottom:solid 1px #c6c6c6;">
+                                    <thead style=" background-color: #e7eeff;">
+                                        <tr style="border: 1px solid #c6c6c6">
+                                            <th style="padding:6px 12px;text-align: left;">Name</th>
+                                            <th style="padding: 6px 12px;color: #7030A0;">Leads</th>
+                                            <th style="padding: 6px 12px;color: #2E72C4;">R/C</th>
+                                            <th style="padding: 6px 12px;color: #00B050;">Reg</th>
+                                            <th style="padding: 6px 12px;color: #FF0000;">Dings</th>
+                                            <th style="text-align: right;padding: 6px 6px;">Comms (£)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            long? traderId = 0;
+                                            int RecordCount = 0;
+                                            int LeadCount = 0;
+                                            int RNCCount = 0;
+                                            int REGCount = 0;
+                                            int DingCount = 0;
+                                            decimal Commission = 0;
+                                            if (GetCurrentMonth != null)
+                                            {
+                                                foreach (var item in GetCurrentMonth.MemberList)
+                                                {
+                                                    RecordCount = RecordCount + 1;
+                                                    LeadCount = LeadCount + item.LeadCount.Value;
+                                                    RNCCount = RNCCount + item.RNCCount.Value;
+                                                    REGCount = REGCount + item.REGCount.Value;
+                                                    DingCount = DingCount + item.DingCount.Value;
+                                                    Commission = Commission + item.Commission.Value;
+                                                    if (traderId != item.TraderId)
+                                                    {
+                                                        if (traderId != 0)
+                                                        {
+                                                            var newList = GetCurrentMonth.MemberList.Where(x => x.TraderId == traderId);
+                                                            <tr style="border-left: 1px solid black;border-right: 1px solid black;">
+                                                                <td align="center">@newList.Sum(x => x.LeadCount)</td>
+                                                                <td align="center">@newList.Sum(x => x.RNCCount)</td>
+                                                                <td align="center">@newList.Sum(x => x.REGCount)</td>
+                                                                <td align="center">@newList.Sum(x => x.DingCount)</td>
+                                                                <td align="right">@newList.Sum(x => x.Commission).Value.ToString("n2")</td>
+                                                            </tr>
+                                                        }
+                                                        <tr style="border-left: 1px solid #c6c6c6;border-right: 1px solid #c6c6c6;">
+                                                            <td align="left" style="padding: 1px 5px;">@item.FullName</td>
+                                                            <td align="center" style="padding: 1px 5px;color:#7030A0;">@item.LeadCount</td>
+                                                            <td align="center" style="padding: 1px 5px;color:#2E72C4;">@item.RNCCount</td>
+                                                            <td align="center" style="padding: 1px 5px;color:#00B050;">@item.REGCount</td>
+                                                            <td align="center" style="padding: 1px 5px;color:#FF0000;">@item.DingCount</td>
+                                                            <td align="right" style="padding: 1px 5px;">@item.Commission.Value.ToString("n2")</td>
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr style="border-left: 1px solid #c6c6c6;border-right: 1px solid #c6c6c6;">
+                                                            <td align="left" style="padding: 1px 5px;">@item.FullName</td>
+                                                            <td align="center" style="padding: 1px 5px;color:#7030A0;">@item.LeadCount</td>
+                                                            <td align="center" style="padding: 1px 5px;color:#2E72C4;">@item.RNCCount</td>
+                                                            <td align="center" style="padding: 1px 5px;color:#00B050;">@item.REGCount</td>
+                                                            <td align="center" style="padding: 1px 5px;color:#FF0000;">@item.DingCount</td>
+                                                            <td align="right" style="padding: 1px 5px;">@item.Commission.Value.ToString("n2")</td>
+                                                        </tr>
+                                                    }
+                                                    traderId = item.TraderId;
+                                                }
+                                                @*
+                                                    <tr style="border-top: 1px solid black;">
+                                                       <td style="padding:10px 30px;" colspan="6"></td>
+                                                    </tr>
+                                                *@
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                @*<div class="col-md-12">
+                        <div class="panel panel-default text-center">
+                            <div class="panel-heading">
+                                <p class="panel-title">Last 5 Days</p>
+                                <small>In Count & Out Count</small>
+                            </div>
+                            <div class="panel-body">
+                                @(Html.Kendo().Chart<RingCentralModel>()
+                                      .Name("chartLastMonthvsThisMonth")
+                                      .ChartArea(chartArea => chartArea.Background("transparent"))
+                                      .Legend(x => x.Visible(true))
+                                      .Legend(x => x.Position(ChartLegendPosition.Bottom))
+                                      .DataSource(ds => ds.Read(read => read.Action("Last5DayInOutCallLog", "RingCentralHelper")))
+                                      .Series(series => { series.Line(model => model.TotalInCount); })
+                                      .Series(series => { series.Line(model => model.TotalOutCount); })
+                                      .Theme("material")
+                                      .CategoryAxis(axis => axis.Categories(model => model.StrCallStartTime).Labels(labels => labels.Rotation(-90)).Crosshair(c => c.Visible(true)))
+                                      .ValueAxis(axis => axis.Numeric().Labels(labels => labels.ToString()))
+                                      .Tooltip(tooltip => tooltip.Visible(true).Shared(true).Template("#=value# calls")))
+                            </div>
+                        </div>
+                    </div>*@
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel panel-default text-center">
+                                <div class="panel-heading">
+                                    <p class="panel-title">Missed Calls</p>
+                                    <small>Today</small>
+                                </div>
+                                <div class="panel-body paddingZero">
+                                    <span id="spnMissedCallCount" style="font-size:62px;line-height:normal;letter-spacing:-5px;color:#f63d12;">
+
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default text-center">
+                                <div class="panel-heading">
+                                    <p class="panel-title">Acceptance Percentage</p>
+                                    <small>Today</small>
+                                </div>
+                                <div class="panel-body paddingZero">
+                                    <span id="spnAcceptancePercentage" class="acceptance-per-text">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div style="
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    BORDER: solid 1px #ddd;
+    border-radius: 5px;
+">
+                                <a href="javascript:void(0)" onclick="goBack()" title="Transfer Connex">
+                                    <img src="~/Content/Images/TX-Logo.png" height="80px" width="100px" alt="" />
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var intervalval;
+    $(document).ready(function () {
+        //GetCanvasDataForView();
+       // intervalval = setInterval(function () {
+            //GetCanvasDataForView();
+        //}, 30000);
+
+
+        $("#legend_header").hide();
+        $(".navbar").hide();
+        $(".sidebar").hide();
+        $(".chatWidget").hide();
+        setTimeout(function () {
+            $("#rc-widget").hide();
+            $("#back-to-top").hide();
+        }, 30000);
+
+
+        GetAllCountsforView();
+        intervalval = setInterval(function () {
+            GetAllCountsforView();
+        }, 30000);
+    });
+
+    window.addEventListener('beforeunload', function (event) {
+        clearInterval(intervalval);
+    });
+
+    function GetAllCountsforView() {
+        $("#rc-widget").hide();
+        $("#back-to-top").hide();
+        $.ajax({
+            url: '@Url.Action("GetAllCounts", "RingCentralHelper")',
+            async: false,
+            type: 'POST',
+            success: function (data) {
+                $("#spnAcceptancePercentage").text(data.AcceptancePercentage + "%");
+                $("#spnInboundCount").text(data.InboundCount);
+                $("#spnMissedCallCount").text(data.MissedCallCount);
+                $("#spnOutboundCount").text(data.OutboundCount);
+                $("#spnTotalCommission").html("&#163; " + data.TotalCommission);
+                $("#divTop3Caller").html("");
+                var htmlString = "";
+
+                for (var i = 0; i < data.Top3Caller.length; i++) {
+                    let rgx = new RegExp(/(\p{L}{1})\p{L}+/, 'gu');
+
+                    let initials = [...data.Top3Caller[i].CallFromName.matchAll(rgx)] || [];
+
+                    initials = (
+                        (initials.shift()?.[1] || '') + (initials.pop()?.[1] || '')
+                    ).toUpperCase();
+
+                    var string = '<div class="col-md-4">';
+                    if (data.Top3Caller[i].ImageName) {
+                        string = string + '<img src="' + data.Top3Caller[i].ImageURL + '" class="avatar" />'
+                    }
+                    else {
+                        string = string + '<div class="avatar">' + initials + '</div>'
+                    }
+                    string = string + '<span style="font-size:50px" class="fontspan">' + data.Top3Caller[i].CallCount + '</span><p class="namespan" style="font-size:20px">' + data.Top3Caller[i].CallFromName + '</p></div>'
+
+                    htmlString = htmlString + string;
+                }
+
+                $("#divTop3Caller").html(htmlString);
+
+                $('#gridEmployeeList').data('kendoGrid').dataSource.read();
+                $('#gridEmployeeList').data('kendoGrid').refresh();
+
+            }
+        });
+    }
+
+    function GetCurrencyRateforView() {
+        $.ajax({
+            url: '@Url.Action("GetCurrencyRateAsync", "RingCentralHelper")',
+            async: false,
+            type: 'POST',
+            success: function (data) {
+
+                $("#divCurrencyRates").html("");
+                var htmlString = "";
+                if (data.data) {
+                    var Currencies = Object.keys(data.data);
+                    if (Currencies) {
+                        let count = 3;
+                        var string = '<div class=table-responsive><table border=1 class="table table-bordered custom-table"><thead class=k-grid-header role="rowgroup"><tr><td class="k-header" style="background-color: #0833b7;color: white;">Curency</td><td class=k-header style="background-color: #ff1962;color: white;">Rate</td><td class=k-header style="width: 10px;"></td><td class=k-header style="background-color: #0833b7;color: white;">Curency</td><td style="background-color: #ff1962;color: white;">Rate</td><td style="width: 10px;"></td><td class=k-header style="background-color: #0833b7;color: white;">Curency</td><td class=k-header style="background-color: #ff1962;color: white;">Rate</td></tr></thead>';
+                        string = string + '<tbody role="rowgroup"><tr class=k-alt>'
+                        for (var i = 0; i < Currencies.length; i++) {
+                            if (count > 0) {
+                                string += '<td role="gridcell"><span style="float:left">' + Currencies[i].substring(0, 3) + '</span><i style="float:left;padding:2px 4px" class="fa fa-exchange" aria-hidden="true"></i><span>' + Currencies[i].substring(3, 6) + '</span></td><td role="gridcell"><b>' + data.data[Currencies[i]] + '</b></td>';
+                                count = count - 1;
+                                string = count != 0 ? string + '<td role="gridcell"></td>' : string;
+                            }
+                            else {
+                                string += '</tr><tr>' + '<td role="gridcell"><span style="float:left">' + Currencies[i].substring(0, 3) + '</span><i style="float:left;padding:2px 4px" class="fa fa-exchange" aria-hidden="true"></i><span>' + Currencies[i].substring(3, 6) + '</span></td><td role="gridcell"><b>' + data.data[Currencies[i]] + '</b></td><td role="gridcell"></td>';
+                                count = 2;
+                            }
+                        }
+                        string += '</tr></tbody></table></div>';
+                    }
+                    htmlString = htmlString + string;
+                    $("#divCurrencyRates").html(htmlString);
+                }
+
+            }
+        });
+    }
+
+    function toHHMMSS(second) {
+        var sec_num = parseInt(second, 10);
+        var hours = Math.floor(sec_num / 3600);
+        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+        if (hours < 10) { hours = "0" + hours; }
+        if (minutes < 10) { minutes = "0" + minutes; }
+        if (seconds < 10) { seconds = "0" + seconds; }
+        return hours + ':' + minutes + ':' + seconds;
+    }
+
+    function goBack() {
+        $("#legend_header").show();
+        $(".navbar").show();
+        $(".sidebar").show();
+        $(".chatWidget").show();
+        $("#rc-widget").show();
+        $("#back-to-top").show();
+        window.location.href = '@Url.Action("Home", "Dashboard")';
+    }
+</script>

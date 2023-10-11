@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EAEE7F04-B6B2-40CA-AE29-0DA58BC4DEAA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FXAdminTransferConnex.Entities</RootNamespace>
+    <AssemblyName>FXAdminTransferConnex.Entities</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Kendo.Mvc">
+      <HintPath>..\packages\Kendo\Kendo.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.2\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CategoryModel.cs" />
+    <Compile Include="CityMasterModel.cs" />
+    <Compile Include="ClientDDL.cs" />
+    <Compile Include="ClientMasterModel.cs" />
+    <Compile Include="Common.cs" />
+    <Compile Include="CommunicatinTypeModel.cs" />
+    <Compile Include="CountryMasterModel.cs" />
+    <Compile Include="CurrencyCloudModel.cs" />
+    <Compile Include="CurrencyModel.cs" />
+    <Compile Include="DashboardModel.cs" />
+    <Compile Include="DealModel.cs" />
+    <Compile Include="GCPartnerModel.cs" />
+    <Compile Include="GlobalSearchModel.cs" />
+    <Compile Include="LeadCategoryModel.cs" />
+    <Compile Include="MobileStatus.cs" />
+    <Compile Include="ProspectModel.cs" />
+    <Compile Include="ReconciliationMissingOrMismatchModel.cs" />
+    <Compile Include="ReconciliationModel.cs" />
+    <Compile Include="ReconciliationTeamModel.cs" />
+    <Compile Include="RegionMasterModel.cs" />
+    <Compile Include="RegularExpression.cs" />
+    <Compile Include="ReportModel.cs" />
+    <Compile Include="RingCentralClientModel.cs" />
+    <Compile Include="SectorModel.cs" />
+    <Compile Include="SignalRModel.cs" />
+    <Compile Include="StagingDealModel.cs" />
+    <Compile Include="SystemEnum.cs" />
+    <Compile Include="LocalizationResource\FXAdminTransferConnexResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FXAdminTransferConnexResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="LoginViewModel.cs" />
+    <Compile Include="ProjectSession.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TargetCommissionModel.cs" />
+    <Compile Include="TraderCommissionModel.cs" />
+    <Compile Include="TraderModel.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="UserAccessPermissions.cs" />
+    <Compile Include="UserAssignRightsModel.cs" />
+    <Compile Include="UserDashboardConfigurationModel.cs" />
+    <Compile Include="UserModel.cs" />
+    <Compile Include="UserTypeMenuSearch.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FXAdminTransferConnex.Common\FXAdminTransferConnex.Common.csproj">
+      <Project>{e5fb4855-c032-4bbd-b5c5-1dd7f9cdb779}</Project>
+      <Name>FXAdminTransferConnex.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="LocalizationResource\FXAdminTransferConnexResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>FXAdminTransferConnexResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

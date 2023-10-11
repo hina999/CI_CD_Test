@@ -1,0 +1,56 @@
+﻿@using FXAdminTransferConnex.Entities
+@using Kendo.Mvc.UI
+
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        @if (ProjectSession.LoginUserDetails.UserTypeId == SystemEnum.UserType.SalesPerson.GetHashCode())
+        {
+            <h6 class="panel-title dashboard-title" id="div1">
+                SALES PERSON COMMISSION OF LAST 12 MONTHS
+                <span>
+                    <span class="fa fa-file-pdf-o" title="Export PDF" type="button" onclick="ExportChart('#chart12MonthsCommission', 'Last12MonthsSalesPersonCommissionChart', 'PDF')"></span>
+
+                    <span class="fa fa-file-image-o" title="Export Image" type="button" onclick="ExportChart('#chart12MonthsCommission', 'Last12MonthsSalesPersonCommissionChart', 'PNG')"></span>
+                </span>
+            </h6>
+        }
+        else if (ProjectSession.LoginUserDetails.UserTypeId == SystemEnum.UserType.SuperAdmin.GetHashCode())
+        {
+            <h6 class="panel-title dashboard-title" id="div1">
+                TRADER COMMISSION OF LAST 12 MONTHS
+                <span>
+                    <span class="fa fa-file-pdf-o" title="Export PDF" type="button" onclick="ExportChart('#chart12MonthsCommission', 'Last12MonthsTraderCommissionChart', 'PDF')"></span>
+
+                    <span class="fa fa-file-image-o" title="Export Image" type="button" onclick="ExportChart('#chart12MonthsCommission', 'Last12MonthsTraderCommissionChart', 'PNG')"></span>
+                </span>
+            </h6>
+        }
+        else
+        {
+            <h6 class="panel-title dashboard-title" id="div1">
+                MY COMMISSION OF LAST 12 MONTHS
+                <span>
+                    <span class="fa fa-file-pdf-o" title="Export PDF" type="button" onclick="ExportChart('#chart12MonthsCommission', 'Last12MonthsTraderCommissionChart', 'PDF')"></span>
+
+                    <span class="fa fa-file-image-o" title="Export Image" type="button" onclick="ExportChart('#chart12MonthsCommission', 'Last12MonthsTraderCommissionChart', 'PNG')"></span>
+                </span>
+            </h6>
+        }
+    </div>
+
+    <div class="panel-body chartArea">
+        @(Html.Kendo().Chart<Last12MonthsCommissionModel>()
+                                                  .Name("chart12MonthsCommission")
+                                                  .ChartArea(chartArea => chartArea.Background("transparent"))
+                                                  .Legend(x => x.Visible(false))
+                                                  .DataSource(ds => ds.Read(read => read.Action("GetLast12MonthsCommission", "Dashboard")))
+                                                  .Series(series => { series.Line(model => model.TotalCommission).Name("Total Commission"); })
+                                                  .Series(series => { series.Line(model => model.TargetCommission).Name("Target Commission"); })
+                                                  .Theme("material")
+                                                  .CategoryAxis(axis => axis.Categories(model => model.Month).Labels(labels => labels.Rotation(-90)).Crosshair(c => c.Visible(true)))
+                                                  .ValueAxis(axis => axis.Numeric().Labels(labels => labels.Format("{0:C2}")))
+                                                  .Tooltip(tooltip => tooltip.Visible(true).Shared(true).Format("{0:C2}")))
+    </div>
+</div>
+

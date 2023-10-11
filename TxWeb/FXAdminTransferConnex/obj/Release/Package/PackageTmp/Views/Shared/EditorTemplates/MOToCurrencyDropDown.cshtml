@@ -1,0 +1,19 @@
+﻿@using Kendo.Mvc.UI
+@model object
+
+
+@(Html.Kendo().DropDownListFor(m => m)
+          .Name("ToCurrency")
+          .OptionLabel("Select To Currency")
+          .DataTextField("CCY")
+          .DataValueField("CCYId").HtmlAttributes(new { @style = "width:100% !important;" })
+          .DataSource(source =>
+          {
+              source.Read(read =>
+              {
+                  read.Action("GetCurrencyList", "Common");
+              });
+          }))
+
+
+

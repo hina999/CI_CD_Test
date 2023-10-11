@@ -1,0 +1,67 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+
+@(Html.Kendo().Grid<DealModel>()
+                  .Name("gridClientDeal")
+                  .Columns(columns =>
+                  {
+                      columns.Bound(m => m.DealNo).ClientTemplate("<a href='" + Url.Action("ManageDeal", "Deal") + "?DealId=#= DealId #'" + ">#=DealNo#</a>");
+                      columns.Bound(m => m.TradeDateString);
+                      columns.Bound(m => m.ValueDateString);
+                      columns.Bound(m => m.ClientSoldCCY);
+                      columns.Bound(m => m.ClientSoldGBP).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+                      columns.Bound(m => m.ClientBoughtAmt).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+                      columns.Bound(m => m.ClientBoughtCCY);
+                      columns.Bound(m => m.GrossCommGBP).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+                      columns.Bound(m => m.GrossComm).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+                      columns.Bound(m => m.GrossCommCurrency).Title("GrossCommCCY");
+                  })
+                  .Pageable(x =>
+                  {
+                      x.Refresh(true);
+                      x.PageSizes(new int[] { 10, 20, 50, 100 });
+                      
+                  })
+                  .Selectable(selectable => selectable
+                  .Mode(GridSelectionMode.Single))
+                  .Navigatable()
+                  .Sortable(sortable => sortable.AllowUnsort(false))
+                  .NoRecords()
+                  .Events(grid => grid.DataBound("OndataboundClientDetail"))
+                  .DataSource(dataSource => dataSource
+                      .Ajax()
+                      .ServerOperation(false)
+                      .PageSize(ConfigItems.GridPageSize)
+                      .Model(model =>
+                      {
+                          model.Id(d => d.DealId);
+                      })
+                        .Read(read => read.Action("GetClientDealList", "Client").Data("paraClientId"))
+                  ))
+
+<script>
+    $(document).ready(function () {
+        kendoGridScroll();
+        var grid = $("#gridClientDeal").data("kendoGrid");
+        grid.setOptions({
+            pageable: {
+                position: "bottom"
+            }
+        });
+    });
+
+    function paraClientId() {
+        return {
+            ClientId: $('#ClientId').val()
+        }
+    }
+    function OndataboundClientDetail(e) {
+        var inboxGrid = $('#gridClientDeal').data("kendoGrid");
+        var gridData = inboxGrid.dataSource.total();
+        if (gridData <= 10) {
+            inboxGrid.pager.element.hide(); 
+        }
+    }
+</script>

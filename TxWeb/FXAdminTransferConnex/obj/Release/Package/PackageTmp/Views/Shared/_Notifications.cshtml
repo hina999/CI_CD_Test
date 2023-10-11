@@ -1,0 +1,168 @@
+﻿@using FXAdminTransferConnex.Common;
+@* ReSharper disable once AssignNullToNotNullAttribute *@
+
+@{
+    //success messages
+    var successMessages = new List<string>();
+    if (TempData[string.Format("tmp.notifications.{0}", Enums.NotifyType.Success)] != null)
+    {
+        if (TempData != null)
+        {
+            successMessages.AddRange(TempData[string.Format("tmp.notifications.{0}", Enums.NotifyType.Success)] as IList<string>);
+        }
+    }
+    if (ViewData[string.Format("tmp.notifications.{0}", Enums.NotifyType.Success)] != null)
+    {
+        if (ViewData.ContainsKey(string.Format("tmp.notifications.{0}", Enums.NotifyType.Success)))
+        {
+            successMessages.AddRange(ViewData[string.Format("tmp.notifications.{0}", Enums.NotifyType.Success)] as IList<string>);
+        }
+    }
+    if (Session[string.Format("tmp.notifications.{0}", Enums.NotifyType.Success)] != null)
+    {
+        if (Session != null)
+        {
+            successMessages.AddRange(Session[string.Format("tmp.notifications.{0}", Enums.NotifyType.Success)] as IList<string>);
+            Session[string.Format("tmp.notifications.{0}", Enums.NotifyType.Success)] = null;
+        }
+    }
+
+
+    //error messages
+    var errorMessages = new List<string>();
+    if (TempData[string.Format("tmp.notifications.{0}", Enums.NotifyType.Error)] != null)
+    {
+        errorMessages.AddRange(TempData[string.Format("tmp.notifications.{0}", Enums.NotifyType.Error)] as IList<string>);
+    }
+    if (ViewData[string.Format("tmp.notifications.{0}", Enums.NotifyType.Error)] != null)
+    {
+        errorMessages.AddRange(ViewData[string.Format("tmp.notifications.{0}", Enums.NotifyType.Error)] as IList<string>);
+    }
+    if (Session[string.Format("tmp.notifications.{0}", Enums.NotifyType.Error)] != null)
+    {
+        errorMessages.AddRange(Session[string.Format("tmp.notifications.{0}", Enums.NotifyType.Error)] as IList<string>);
+        Session[string.Format("tmp.notifications.{0}", Enums.NotifyType.Error)] = null;
+    }
+}
+@*<p>&nbsp;</p>*@
+@foreach (var message in successMessages)
+{
+    <div class="success-notification alert alert-success" id="success-notification-div-for" style="display:none;">
+        @*<button type="button" class="close closeSuccess">&times;</button>*@
+        <img id="imgJobApplyMsg" src="@Url.Content("~/Content/images/ic-success.png")" alt="" />
+        <span>
+
+            @Html.Raw(message)
+            <script>
+                    $(window).load(function () {
+                        $("#success-notification-div-for").slideDown();
+                });
+            </script>
+
+        </span>
+    </div>
+}
+@foreach (var message in errorMessages)
+{
+    <div class="error-notification alert alert-danger" id="error-notification-div-for" style="display:none;">
+        @*<button type="button" class="close closeErrormsg">&times;</button>*@
+        <img id="imgJobApplyMsg" src="@Url.Content("~/Content/images/ic-error.png")" alt=""/>
+        <span>
+            @Html.Raw(message)
+            <script>
+
+              $(window).load(function () {
+                  $("#error-notification-div-for").slideDown();
+              });
+            </script>
+
+        </span>
+    </div>
+}
+<div class="success-notification alert alert-success" id="success-notification-div" style="display:none;">
+    @*<button type="button" class="close closeSuccess">&times;</button>*@
+    <img id="imgJobApplyMsg" src="@Url.Content("~/Content/images/ic-success.png")" alt=""/>
+    <span id="successmsg">
+    </span>
+</div>
+<div class="error-notification alert alert-danger" id="error-notification-div" style="display:none;">
+    @*<button type="button" class="close closeErrormsg">&times;</button>*@
+    <img id="imgJobApplyMsg" src="@Url.Content("~/Content/images/ic-error.png")" alt=""/>
+    <span id="errormsg">
+    </span>
+</div>
+
+<script>
+    $(window).load(function () {
+        setTimeout(function () {
+            ClrearMessages();
+        }, 6000);
+    });
+
+    function ShowSuccessMessage(message) {
+        ClrearMessages();//clear message
+        i = 0;
+        $("#success-notification-div").slideDown();
+        $("#successmsg").text(message);
+        setTimeout(function () {
+            ClrearMessages();
+        }, 6000);
+    }
+    function ShowErrorMessage(message) {
+        ClrearMessages();//clear message
+        j = 0;
+        $("#error-notification-div").slideDown();
+        $("#errormsg").text(message);
+        setTimeout(function () {
+            ClrearMessages();
+        }, 6000);
+    }
+    function ClrearMessages() {
+        $("#success-notification-div").slideUp();
+        $("#error-notification-div").slideUp();
+        $("#success-notification-div-for").slideUp();
+        $("#error-notification-div-for").slideUp();
+    }
+    function ShowErrorMessagePopUp(message) {
+        ClrearMessages();//clear message
+        j = 0;
+        $(".popUp #error-notification-div").show();
+        $(".popUp #errormsg").text(message);
+
+    }
+    function ShowSuccessMessagePopUp(message) {
+        ClrearMessages();//clear message
+        i = 0;
+        $(".popUp #success-notification-div").show();
+        $(".popUp #successmsg").text(message);
+    }
+
+    function DisplayResponseMessage(para)
+    {
+
+        if (para.type!='read' && para.response !=undefined  && para.response.Message != undefined ) {
+            if ( para.response.IsError == '@Convert.ToInt32(Enums.NotifyType.Error)') {
+                ShowErrorMessage(para.response.Message);
+            }
+            else {
+                ShowSuccessMessage(para.response.Message);
+            }
+        }
+    }
+
+    function DisplayResponseMessageForAjax(data) {
+        if (data != undefined) {
+            if (data.IsError == '@Convert.ToInt32(Enums.NotifyType.Error)') {
+                ShowErrorMessage(data.Message);
+            }
+            else {
+                ShowSuccessMessage(data.Message);
+            }
+        }
+    }
+
+    $(document).ready(function () {
+         $('.closeErrormsg').click(function () { $(".error-notification").fadeOut(10); });
+        $('.closeSuccess').click(function () { $(".success-notification").fadeOut(10); });
+    });
+</script>

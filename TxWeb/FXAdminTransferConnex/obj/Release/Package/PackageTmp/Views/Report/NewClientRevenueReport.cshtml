@@ -1,0 +1,443 @@
+﻿@using Kendo.Mvc.UI;
+@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnexApp;
+@model FXAdminTransferConnex.Entities.ClientReproductionReport
+
+@{
+    ViewBag.Title = "NewClientRevenueReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <legend>Client Commission Tracking Report</legend>
+
+
+    <div class="panel panel-default client-registration">
+        <div class="panel-heading cursor-pointer mb-20" data-toggle="collapse" data-target="#div1">
+            <h4 class="panel-title">
+                <span class="fa fa-minus mr-10"></span>
+                Search
+            </h4>
+        </div>
+        <div id="div1" class="collapse panel-body collapse in">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @(Html.Kendo().MultiSelect()
+                                  .Name("txtClient")
+                                  .DataTextField("FullName")
+                                  .DataValueField("ClientId")
+                                  .Placeholder("Select Clients")
+                                  .AutoBind(true)
+                                  .AutoClose(false)
+                                  .DataSource(source =>
+                                  {
+                                      source.Read(read =>
+                                      {
+                                          read.Action("GetClientListForDropdown", "Report");
+                                      });
+                                  })
+                         )
+                            @*<input type="text" name="txtClient" placeholder="Client Name" class="form-control" id="txtClient" />*@
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <input type="text" name="txtCompany" placeholder="Company Name" class="form-control" id="txtCompany" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @(Html.Kendo().DropDownList()
+                                .Name("ddMonth")
+                                .OptionLabel("-- Select Month--")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .DataTextField("MonthName")
+                                .DataValueField("MonthNo")
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Action("GetMonthList", "Common");
+                                    });
+                                })
+                        )
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @(Html.Kendo().DropDownList()
+                                .Name("ddYear")
+                                .OptionLabel("-- Select Year --")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                 .DataTextField("Year")
+                                 .DataValueField("Year")
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Action("GetYearList", "Common");
+                                    });
+                                })
+                        )
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    @{
+                        if (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode() &&
+                            ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.Trader.GetHashCode())
+                        {
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @(Html.Kendo().DropDownList()
+                                .Name("SearchSalesperson")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .OptionLabel("Select Sales person")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode() });
+                                    });
+                                })
+                                )
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    @{
+                        if (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode() &&
+                            ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.Trader.GetHashCode())
+                        {
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @(Html.Kendo().DropDownList()
+                                .Name("SearchJuniorSalesperson")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .OptionLabel("Select Junior Sales person")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode() });
+                                    });
+                                })
+                                )
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    @{
+                        if ((ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode()) &&
+                            (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.Trader.GetHashCode()))
+                        {
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @(Html.Kendo().DropDownList()
+                                .Name("SearchTrader")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .OptionLabel("Select Trader")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.Trader.GetHashCode() });
+                                    });
+                                })
+                                )
+                                </div>
+                            </div>
+                        }
+                    }
+
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <button type="button" class="btn-orange" onclick="preview();">Search</button>
+                            <button type="button" class="btn-orange" onclick="reset();">Reset</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+          
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h4 id="header">New client revenue for settled figures</h4>
+            @(Html.Kendo().Grid<ClientRevenueReport>()
+            .Name("gridNewClientRevenue_ValueDate")
+            .Columns(columns =>
+            {
+                columns.Bound(m => m.ClientName).Width(200);
+                columns.Bound(m => m.CompanyName).Width(400).ClientTemplate("<a  href='" + Url.Action("ManageClient", "Client") + "?ClientId=#= ClientId #'" + ">#=CompanyName#</a>");
+                columns.Bound(m => m.col1).HeaderTemplate("<label id='Vallblcol1'><label>");
+                columns.Bound(m => m.col2).HeaderTemplate("<label id='Vallblcol2'><label>");
+                columns.Bound(m => m.col3).HeaderTemplate("<label id='Vallblcol3'><label>");
+                columns.Bound(m => m.col4).HeaderTemplate("<label id='Vallblcol4'><label>");
+                columns.Bound(m => m.col5).HeaderTemplate("<label id='Vallblcol5'><label>");
+                columns.Bound(m => m.col6).HeaderTemplate("<label id='Vallblcol6'><label>");
+                columns.Bound(m => m.col7).HeaderTemplate("<label id='Vallblcol7'><label>");
+                columns.Bound(m => m.Total).Width(150).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+                columns.Bound(m => m.Avg).Width(150).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+
+                //columns.Bound(m => m.ReductionChange).Width(150).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}").HeaderTemplate("<span id='' Title='The reduction charge value show the percentage reduction in the last month compare to previous five months.'>Reduction Change (%)</span>");
+            })
+            .Pageable(x =>
+            {
+                x.Refresh(false);
+                x.PageSizes(true);
+            })
+            .Navigatable()
+            .NoRecords()
+            .ToolBar(t => t.Excel())
+            .Sortable(sortable => sortable.AllowUnsort(false))
+            .Pageable(x =>
+            {
+                x.Refresh(false);
+                x.PageSizes(new int[] { 10, 20, 50, 100 });
+            })
+            //.Events(events => events.ExcelExport("ClientReproductionExportExcel"))
+            .Excel(excel => excel.AllPages(true).FileName("ClientReproductionReport" + "_" + DateTime.UtcNow.ToString().Replace(" ", "_") + ".xlsx"))
+            .DataSource(dataSource => dataSource
+            .Ajax()
+            //.Sort(sort => sort.Add("ReductionChange").Descending())
+            .ServerOperation(false)
+            .PageSize(10)
+            .Read(read => read.Action("GetNewClientRevenueReportList_ValueDate", "Report").Data("additionalData"))
+            ))
+
+
+            <h4 id="header" style="margin-top:25px;">New client revenue for trade date</h4>
+            @(Html.Kendo().Grid<ClientRevenueReport>()
+            .Name("gridNewClientRevenue_TradeDate")
+            .Columns(columns =>
+            {
+                columns.Bound(m => m.ClientName).Width(200);
+                columns.Bound(m => m.CompanyName).Width(400).ClientTemplate("<a  href='" + Url.Action("ManageClient", "Client") + "?ClientId=#= ClientId #'" + ">#=CompanyName#</a>");
+                columns.Bound(m => m.col1).HeaderTemplate("<label id='lblcol1'><label>");
+                columns.Bound(m => m.col2).HeaderTemplate("<label id='lblcol2'><label>");
+                columns.Bound(m => m.col3).HeaderTemplate("<label id='lblcol3'><label>");
+                columns.Bound(m => m.col4).HeaderTemplate("<label id='lblcol4'><label>");
+                columns.Bound(m => m.col5).HeaderTemplate("<label id='lblcol5'><label>");
+                columns.Bound(m => m.col6).HeaderTemplate("<label id='lblcol6'><label>");
+                columns.Bound(m => m.col7).HeaderTemplate("<label id='lblcol7'><label>");
+                columns.Bound(m => m.Total).Width(150).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+                columns.Bound(m => m.Avg).Width(150).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+
+                //columns.Bound(m => m.ReductionChange).Width(150).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}").HeaderTemplate("<span id='' Title='The reduction charge value show the percentage reduction in the last month compare to previous five months.'>Reduction Change (%)</span>");
+            })
+            .Pageable(x =>
+            {
+                x.Refresh(false);
+                x.PageSizes(true);
+            })
+            .Navigatable()
+            .NoRecords()
+            .ToolBar(t => t.Excel())
+            .Sortable(sortable => sortable.AllowUnsort(false))
+            .Pageable(x =>
+            {
+                x.Refresh(false);
+                x.PageSizes(new int[] { 10, 20, 50, 100 });
+            })
+            //.Events(events => events.ExcelExport("ClientReproductionExportExcel"))
+            .Excel(excel => excel.AllPages(true).FileName("ClientReproductionReport" + "_" + DateTime.UtcNow.ToString().Replace(" ", "_") + ".xlsx"))
+            .DataSource(dataSource => dataSource
+            .Ajax()
+            //.Sort(sort => sort.Add("ReductionChange").Descending())
+            .ServerOperation(false)
+            .PageSize(10)
+            .Read(read => read.Action("GetNewClientRevenueReportList_TradeDate", "Report").Data("additionalData"))
+            ))
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var havePermission ='@WebHelper.CanView()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+        kendoGridScroll();
+        $("#ddMonth").data("kendoDropDownList").value((new Date()).getMonth() + 1);
+        $("#ddYear").data("kendoDropDownList").value((new Date()).getFullYear());
+
+        GetColumnName(new Date().getMonth() + 1, new Date().getFullYear());
+       /* $("#gridNewClientRevenue").append("<lable style='float:left;margin-top:5px;font-size:85%'>*The reduction charge value show the percentage reduction in the last month compare to previous five months.</lable>")*/
+    });
+
+    function additionalData() {
+        var month = (new Date()).getMonth() + 1;
+        var year = (new Date()).getFullYear();
+        if ($("#ddMonth").val() != '' && $("#ddYear").val() != '') {
+            month = $("#ddMonth").val();
+            year = $("#ddYear").val();
+        }
+
+        var salePerson = $('#SearchSalesperson').data("kendoDropDownList");
+        var juniorSalePerson = $('#SearchJuniorSalesperson').data("kendoDropDownList");
+        var trader = $('#SearchTrader').data("kendoDropDownList");
+        var multiselectItem = $('#txtClient').data('kendoMultiSelect');
+        var selected = multiselectItem.value();
+        var str_selected = selected.toString();
+
+        return {
+            Month: month,
+            Year: year,
+            /*ClientName: $("#txtClient").val(),*/
+            ClientName: str_selected,
+            CompanyName: $("#txtCompany").val(),
+            fromReductionRate: $("#txtfromreduction").val(),
+            toReductionRate: $("#txttoreduction").val(),
+            SalesPersonId: salePerson != null ? salePerson.value().trim() : null,
+            JuniorSalesPersonId: juniorSalePerson != null ? juniorSalePerson.value().trim() : null,
+            TraderId: trader != null ? trader.value().trim() : null
+        }
+    };
+
+    $('#txtClient').keypress(function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+           preview();
+        }
+    });
+
+    $('#txtCompany').keypress(function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            preview();
+        }
+    });
+
+    function preview() {
+
+        $('#gridNewClientRevenue_TradeDate').data('kendoGrid').dataSource.read();
+        $('#gridNewClientRevenue_TradeDate').data().kendoGrid.dataSource.page(1);
+
+        $('#gridNewClientRevenue_ValueDate').data('kendoGrid').dataSource.read();
+        $('#gridNewClientRevenue_ValueDate').data().kendoGrid.dataSource.page(1);
+
+        GetColumnName($("#ddMonth").val(),$("#ddYear").val());
+    };
+    function reset() {
+        $("#ddMonth").data("kendoDropDownList").value((new Date()).getMonth() + 1);
+        $("#ddYear").data("kendoDropDownList").value((new Date()).getFullYear());
+        //$("#txtClient").val('');
+        $("#txtCompany").val('');
+        $("#txtfromreduction").val('');
+        $("#txttoreduction").val('');
+
+        var salePerson = $('#SearchSalesperson').data("kendoDropDownList");
+        var juniorSalePerson = $('#SearchJuniorSalesperson').data("kendoDropDownList");
+        var trader = $('#SearchTrader').data("kendoDropDownList");
+        var multiselectClient = $('#txtClient').data("kendoMultiSelect");
+        if (multiselectClient != null) {
+            $("#txtClient").data("kendoMultiSelect").value([]);
+        }
+        if (salePerson != null) {
+            $("#SearchSalesperson").data("kendoDropDownList").value(0);
+        }
+        if (juniorSalePerson != null) {
+            $("#SearchJuniorSalesperson").data("kendoDropDownList").value(0);
+        }
+        if (trader != null) {
+            $("#SearchTrader").data("kendoDropDownList").value(0);
+        }
+
+        $('#gridNewClientRevenue_TradeDate').data('kendoGrid').dataSource.read();
+        $('#gridNewClientRevenue_TradeDate').data().kendoGrid.dataSource.page(1);
+
+
+        $('#gridNewClientRevenue_ValueDate').data('kendoGrid').dataSource.read();
+        $('#gridNewClientRevenue_ValueDate').data().kendoGrid.dataSource.page(1);
+
+        GetColumnName(new Date().getMonth() + 1, new Date().getFullYear());
+    };
+
+    function GetColumnName(month, year) {
+        if (!year) {
+            year = new Date().getFullYear();
+        }
+        $.ajax({
+            url: '@Url.Action("GetNewColumnNameList", "Report")' + "?Year=" + year + "&Month=" + month,
+            async: false,
+            type: 'GET',
+            //data: { Year: parseInt($("#ddYear").val()), Month: parseInt($("#ddMonth").val()) },
+            success: function (data) {
+                if (data != undefined || data != null) {
+                    var TradeDate_grid = $("#gridNewClientRevenue_TradeDate").data("kendoGrid");
+                    var ValueDate_grid = $("#gridNewClientRevenue_ValueDate").data("kendoGrid");
+
+                    TradeDate_grid.columns[1].title = data[0];
+                    TradeDate_grid.columns[2].title = data[1];
+                    TradeDate_grid.columns[3].title = data[2];
+                    TradeDate_grid.columns[4].title = data[3];
+                    TradeDate_grid.columns[5].title = data[4];
+                    TradeDate_grid.columns[6].title = data[5];
+                    TradeDate_grid.columns[7].title = data[6];
+
+                    ValueDate_grid.columns[1].title = data[0];
+                    ValueDate_grid.columns[2].title = data[1];
+                    ValueDate_grid.columns[3].title = data[2];
+                    ValueDate_grid.columns[4].title = data[3];
+                    ValueDate_grid.columns[5].title = data[4];
+                    ValueDate_grid.columns[6].title = data[5];
+                    ValueDate_grid.columns[7].title = data[6];
+
+                    $("#lblcol1").text(data[0]);
+                    $("#lblcol2").text(data[1]);
+                    $("#lblcol3").text(data[2]);
+                    $("#lblcol4").text(data[3]);
+                    $("#lblcol5").text(data[4]);
+                    $("#lblcol6").text(data[5]);
+                    $("#lblcol7").text(data[6]);
+
+                    $("#Vallblcol1").text(data[0]);
+                    $("#Vallblcol2").text(data[1]);
+                    $("#Vallblcol3").text(data[2]);
+                    $("#Vallblcol4").text(data[3]);
+                    $("#Vallblcol5").text(data[4]);
+                    $("#Vallblcol6").text(data[5]);
+                    $("#Vallblcol7").text(data[6]);
+
+                }
+            }
+        });
+    }
+   /* $("#gridNewClientRevenue").data("kendoGrid").columns[0].title*/
+
+    function ClientReproductionExportExcel(e) {
+
+        if (e.sender._exporting === undefined) {
+            e.sender._exporting = true;
+        }
+        if (e.sender._exporting) {
+            e.preventDefault();
+            e.sender._exporting = false;
+            e.sender.saveAsExcel();
+        } else {
+            e.sender._exporting = true;
+        }
+    };
+</script>
+

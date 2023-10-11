@@ -1,0 +1,442 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+
+<div class="content">
+    <legend>Deal List</legend>
+    <div class="panel panel-default">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Deal Number:</label>
+                                <input id="txtDealNo" type="text" placeholder="Deal Number" class="k-textbox Search" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Company Name:</label>
+                                <input id="txtCompanyName" type="text" placeholder="Company Name" class="k-textbox Search" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">From Date:</label>
+                                @Html.Kendo().DatePicker().Name("FromDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:100%" })
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">To Date:</label>
+                                @Html.Kendo().DatePicker().Name("ToDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:100%" })
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3 IsAdmin">
+                            <div class="form-group">
+                                <label class="control-label">Select Sales Person:</label>
+                                @(Html.Kendo().DropDownList()
+                                .Name("SalesPersonId")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .OptionLabel("Select Sales Person")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .DataSource(source =>
+                                {
+                                source.Read(read =>
+                                {
+                                read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode() });
+                                });
+                                })
+                                )
+                            </div>
+                        </div>
+                        <div class="col-sm-3 IsAdmin">
+                            <div class="form-group">
+                                <label class="control-label">Select Junior Sales Person:</label>
+                                @(Html.Kendo().DropDownList()
+                                .Name("JuniorSalesPersonId")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .OptionLabel("Select Junior Sales Person")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .DataSource(source =>
+                                {
+                                source.Read(read =>
+                                {
+                                read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode() });
+                                });
+                                })
+                                )
+                            </div>
+                        </div>
+                        <div class="col-sm-3 IsAdmin">
+                            <div class="form-group">
+                                <label class="control-label">Select Trader:</label>
+                                @(Html.Kendo().DropDownList()
+                                .Name("TraderId")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .OptionLabel("Select Trader")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .DataSource(source =>
+                                {
+                                source.Read(read =>
+                                {
+                                read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.Trader.GetHashCode() });
+                                });
+                                })
+                                )
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Select Trade Status:</label>
+                                @(Html.Kendo().DropDownList()
+                                .Name("TStatus")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .OptionLabel("Select Status")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .DataSource(source =>
+                                {
+                                source.Read(read =>
+                                {
+                                read.Action("GetDealTradeStatus", "Common");
+                                });
+                                })
+                                )
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Select Source:</label>
+                                @(Html.Kendo().DropDownList()
+                                .Name("Source")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .OptionLabel("Select Source")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .BindTo(new List<SelectListItem>
+                                    ()
+                                    {
+                                    new SelectListItem() {
+                                    Text = "Currency Cloud", Value = "CurrencyCloud"
+                                    },
+                                    new SelectListItem() {
+                                    Text = "GC Partner", Value = "GCPartner"
+                                    }
+                                    })
+                                    )
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-sm-6 pull-right">
+                            <div class="form-group pull-right">
+                                <button type="button" class="k-button btn-orange" onclick="urllink()">Upload Deals</button>
+                                <button id="btnSearch" type="button" class="k-button btn-orange">Search</button>
+                                <button id="btnReset" type="button" class="k-button btn-orange">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* GRID HERE *@
+
+    <fieldset>
+        <legend></legend>
+        <div class="panel panel-default dealindex-box">
+            <div class="panel-body">
+                @(Html.Kendo().Grid<DealModel>()
+                                          .Name("gridClientDeal")
+                                          .Columns(columns =>
+                                          {
+                                              if (WebHelper.CanEdit())
+                                              {
+                                                  columns.Command(command =>
+                                                  {
+
+                                                      command.Custom("Edit").Text("<span class='k-icon k-view-white'></span>").Click("onInsert").HtmlAttributes(new { @style = "margin:2px;background: #0833b7;color:white;" });
+
+                                                  })
+                                                      .HeaderHtmlAttributes(Common.CenterColumnStyle)
+                                                      .HtmlAttributes(Common.CenterColumnStyle)
+                                                      .Title("Action")
+                                                      .Width(80);
+                                              }
+                                              columns.Bound(m => m.DealNo);
+                                              columns.Bound(m => m.DealSource).Title("Source");
+                                              columns.Bound(m => m.ContactName);
+                                              columns.Bound(m => m.CompanyName);
+                                              columns.Bound(m => m.TradeDateString);
+                                              columns.Bound(m => m.ValueDateString);
+                                              //columns.Bound(m => m.ClientSoldAmt).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}").Title("Client Comm Amt");
+                                              columns.Bound(m => m.ClientSoldCCY);
+                                              columns.Bound(m => m.ClientSoldGBP).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+                                              columns.Bound(m => m.ClientBoughtAmt).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+                                              columns.Bound(m => m.ClientBoughtCCY);
+                                              columns.Bound(m => m.GrossCommGBP).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+                                              columns.Bound(m => m.GrossComm).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+                                              columns.Bound(m => m.GrossCommCurrency).Title("GrossCommCCY");
+                                              columns.Bound(m => m.ProfitOrLoss).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+                                              //columns.Bound(m => m.WLTotalCommGBP);
+
+
+                                          })
+
+                                          .ToolBar(toolbar =>
+                                          {
+                                              if (WebHelper.CanAdd())
+                                              {
+                                                  toolbar.Template("<div class='row'><div class='pull-right col-lg-7 col-sm-11 trane-from-date'>" + @Html.Kendo().DatePicker().Name("CCFromDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:30%", @placeholder = "Trade From Date" }) + "+ " + @Html.Kendo().DatePicker().Name("CCToDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:30%", @placeholder = "Trade To Date" }) + "<button id='btnImport' class='k-button k-button-icontext' onclick='ImportDeal()' style='margin-bottom:2px;'><span class='fa fa-cloud-download'></span> Import Deals </button> <button id='btnImport' style='display:none' class='k-button k-button-icontext' onclick='ImportClientDeal()' style='margin-bottom:2px;'><span class='fa fa-cloud-download'></span> Import Clients & Deals </button> <a class='k-button k-button-icontext k-grid-excel' href='#' tabindex='12' style='margin-bottom:2px;'><span class='k-icon k-i-excel'></span>Export to Excel</a></div></div>");
+                                              }
+
+                                          })
+                                          .Editable(e => e.Mode(GridEditMode.PopUp))
+                                          .Pageable(x =>
+                                          {
+                                              x.Refresh(false);
+                                              x.PageSizes(new int[] { 10, 20, 50, 100, 1000 });
+                                          })
+                                           //.Events(events => events.ExcelExport("excelExport").AllPages(true))
+                                           .Excel(excel => excel.FileName("Deallist.xlsx").Filterable(true).AllPages(true))
+                                          .Selectable(selectable => selectable
+                                          .Mode(GridSelectionMode.Single))
+                                          .Navigatable()
+                                          .Sortable(sortable => sortable.AllowUnsort(false))
+                                          .NoRecords()
+                                          .DataSource(dataSource => dataSource
+                                              .Ajax()
+                                              .ServerOperation(true)
+                                              .PageSize(ConfigItems.GridPageSize)
+                                              .Model(model =>
+                                              {
+                                                  model.Id(d => d.DealId);
+                                              })
+                                            .Destroy(delete => delete.Action("DeleteDeal", "Deal"))
+                                            .Read(read => read.Action("GetDealList", "Deal").Data("additionalData"))
+                                            .Events(events => events.RequestEnd("onRequestEnd"))
+                                          ))
+            </div>
+        </div>
+
+    </fieldset>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        var havePermission ='@WebHelper.CanView()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+        kendoGridScroll();
+        CheckIsAdmin(@ProjectSession.LoginUserDetails.UserTypeId.GetHashCode())
+    });
+
+
+    function CheckIsAdmin(usertype)
+    {
+        if(usertype == @SystemEnum.UserType.SuperAdmin.GetHashCode())
+            $(".IsAdmin").show();
+        else
+            $(".IsAdmin").hide();
+    }
+
+    function additionalData() {
+
+        return {
+            DealNo: $('#txtDealNo').val().trim(),
+            CompanyName: $('#txtCompanyName').val().trim(),
+            FromDate: $("#FromDate").data("kendoDatePicker").value(),
+            ToDate: $("#ToDate").data("kendoDatePicker").value(),
+            SalesPersonId: $("#SalesPersonId").data("kendoDropDownList").value(),
+            JuniorSalesPersonId: $("#JuniorSalesPersonId").data("kendoDropDownList").value(),
+            TraderId: $("#TraderId").data("kendoDropDownList").value(),
+            TStatus: $("#TStatus").data("kendoDropDownList").value(),
+            Source: $("#Source").data("kendoDropDownList").value()
+        }
+    };
+
+    $('.k-pager-refresh').click(function () {
+        $('.Search').val('');
+        $("#SalesPersonId").data("kendoDropDownList").value(-1);
+        $("#JuniorSalesPersonId").data("kendoDropDownList").value(-1);
+        $("#TraderId").data("kendoDropDownList").value(-1);
+    });
+
+    $('#btnReset').click(function () {
+        $('.Search').val('');
+        $("#FromDate").data("kendoDatePicker").value(null);
+        $("#ToDate").data("kendoDatePicker").value(null);
+        $("#SalesPersonId").data("kendoDropDownList").value(-1);
+        $("#TraderId").data("kendoDropDownList").value(-1);
+        $("#SalesPersonId").data("kendoDropDownList").value(-1);
+        $("#JuniorSalesPersonId").data("kendoDropDownList").value(-1);
+        $("#TraderId").data("kendoDropDownList").value(-1);
+        $("#TStatus").data("kendoDropDownList").value(-1);
+        $("#Source").data("kendoDropDownList").value(-1);
+        $('#gridClientDeal').data('kendoGrid').dataSource.read({ DealNo: $('#txtDealNo').val().trim(), CompanyName: $('#txtCompanyName').val().trim(), FromDate: $("#FromDate").data("kendoDatePicker").value(), ToDate: $("#ToDate").data("kendoDatePicker").value(), SalesPersonId: $("#SalesPersonId").data("kendoDropDownList").value(), TraderId: $("#TraderId").data("kendoDropDownList").value(), TStatus: $("#TStatus").data("kendoDropDownList").value(),Source: $("#Source").data("kendoDropDownList").value()});
+    });
+
+    $("#btnSearch").click(function () {
+        //if ($('#txtsearch').val() !== "") {
+        $("#TraderId").data("kendoDropDownList").value(),
+            $('#gridClientDeal').data('kendoGrid').dataSource.read({ DealNo: $('#txtDealNo').val().trim(), CompanyName: $('#txtCompanyName').val().trim(), FromDate: $("#FromDate").data("kendoDatePicker").value(), ToDate: $("#ToDate").data("kendoDatePicker").value(), SalesPersonId: $("#SalesPersonId").data("kendoDropDownList").value(), TraderId: $("#TraderId").data("kendoDropDownList").value(), TStatus: $("#TStatus").data("kendoDropDownList").value(), Source: $("#Source").data("kendoDropDownList").value() });
+        //}
+    });
+
+    $(window).on('keypress', function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#btnSearch").click();
+        }
+    });
+
+    //Shows the notifications
+    function onRequestEnd(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridClientDeal').data('kendoGrid').dataSource.read({ DealNo: $('#txtDealNo').val().trim(), CompanyName: $('#txtCompanyName').val().trim(), FromDate: $("#FromDate").data("kendoDatePicker").value(), ToDate: $("#ToDate").data("kendoDatePicker").value(), SalesPersonId: $("#SalesPersonId").data("kendoDropDownList").value(), JuniorSalesPersonId: $("#JuniorSalesPersonId").data("kendoDropDownList").value(), TraderId: $("#TraderId").data("kendoDropDownList").value(), TStatus: $("#TStatus").data("kendoDropDownList").value() });
+        }
+        DisplayResponseMessage(para);
+    }
+
+    function onInsert(e) {
+        var dealId = 0;
+        if (e != 0) {
+            e.preventDefault();
+            var tr = $(e.target).closest("tr");
+            var data = this.dataItem(tr);
+
+            if (data != null) {
+                dealId = data.DealId;
+            }
+        }
+
+        var urllink = '@Url.Action("ManageDeal", "Deal")';
+        window.location.href = urllink + "?DealId=" + dealId;
+    }
+
+    function excelExport(e) {
+        if (e.sender._exporting === undefined) {
+            e.sender._exporting = true;
+        }
+        if (e.sender._exporting) {
+            //e.sender.hideColumn(0);
+            e.preventDefault();
+
+            e.sender._exporting = false;
+            e.sender.saveAsExcel();
+
+        } else {
+            e.sender._exporting = true;
+            e.sender.showColumn(0);
+        }
+    };
+
+    function ImportClientDeal() {
+        var url = '@Url.Action("ImportClientDeals", "Deal")';
+
+        $.ajax({
+            url: url,
+            cache: false,
+            dataType: 'json',
+            data: undefined,
+            timeout: 99999999999999,
+            success: function (data) {
+                console.log('data', data);
+                if (data != null || data != '') {
+
+                    $('#gridClientDeal').data('kendoGrid').dataSource.read({ DealNo: $('#txtDealNo').val().trim(), CompanyName: $('#txtCompanyName').val().trim(), FromDate: $("#FromDate").data("kendoDatePicker").value(), ToDate: $("#ToDate").data("kendoDatePicker").value(), SalesPersonId: $("#SalesPersonId").data("kendoDropDownList").value(), JuniorSalesPersonId: $("#JuniorSalesPersonId").data("kendoDropDownList").value(), TraderId: $("#TraderId").data("kendoDropDownList").value() ,TStatus : $("#TStatus").data("kendoDropDownList").value()});
+
+                    var msg = "Import Client = " + data.ImportClientCount + "</br>"
+                            + "Exist Client = " + data.ExistClientCount + "</br>"
+                            + "Import Deal = " + data.ImportDealCount
+                    //+ "</br>"
+                    //+ "Exist Deal = " + data.ExistDealCount
+                    showMessageOnly(msg);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('jqXHR', jqXHR);
+                console.log('textStatus', textStatus);
+                console.log('errorThrown', errorThrown);
+                showMessageOnly("The following error occured: " + errorThrown, 'popup-error');
+            },
+            always: function () {
+            }
+        });
+    };
+
+
+
+    function ImportDeal() {
+        if ($("#CCFromDate").data("kendoDatePicker").value() != null && $("#CCToDate").data("kendoDatePicker").value() != null) {
+            var FromDate = $("#CCFromDate").data("kendoDatePicker").value();
+            var dateobj1 = kendo.parseDate(FromDate, "yyyy-MM-dd h:mm:ss tt");
+            var datestring1 = kendo.toString(dateobj1, "yyyy-MM-dd");
+
+
+            var ToDate = $("#CCToDate").data("kendoDatePicker").value();
+            var dateobj2 = kendo.parseDate(ToDate, "yyyy-MM-dd h:mm:ss tt");
+            var datestring2 = kendo.toString(dateobj2, "yyyy-MM-dd");
+
+            $.ajax({
+                url: '@Url.Action("ImportDeal", "Deal")',
+                cache: false,
+                type: "POST",
+                //dataType: 'json',
+                data: { FromDate: datestring1, ToDate: datestring2 },
+                timeout: 99999999999999,
+                success: function (data) {
+                    console.log('data', data);
+                    if (data != null || data != '') {
+                        $('#gridClientDeal').data('kendoGrid').dataSource.read({ DealNo: $('#txtDealNo').val().trim(), CompanyName: $('#txtCompanyName').val().trim(), FromDate: $("#FromDate").data("kendoDatePicker").value(), ToDate: $("#ToDate").data("kendoDatePicker").value(), SalesPersonId: $("#SalesPersonId").data("kendoDropDownList").value(), JuniorSalesPersonId: $("#JuniorSalesPersonId").data("kendoDropDownList").value(), TraderId: $("#TraderId").data("kendoDropDownList").value(), TStatus: $("#TStatus").data("kendoDropDownList").value() });
+
+                        var msg = "Import Deal = " + data.ImportDealCount;
+                        var message = "";
+
+                        if (data.ImportDealCount > 0) {
+                            message = msg;
+                        }
+                        else if (data.ErrorMessage != "") {
+                            var msg_err = "Error occur : " + data.ErrorMessage;
+                            message = msg + "</br>" + msg_err;
+                            //msg.append("</br>" + "Error occur : " + data.ErrorMessage);
+                        }
+
+                        //+ "</br>"
+                        //+ "Exist Deal = " + data.ExistDealCount
+                        showMessageOnly(message);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log('jqXHR', jqXHR);
+                    console.log('textStatus', textStatus);
+                    console.log('errorThrown', errorThrown);
+
+                    showMessageOnly("The following error occured3: " + errorThrown, 'popup-error');
+                },
+                always: function () {
+                }
+            });
+        }
+        else if ($("#CCFromDate").data("kendoDatePicker").value() == null) {
+            showMessageOnly("Please select conversation from date");
+        } else {
+            showMessageOnly("Please select conversation to date");
+        }
+    };
+    function urllink() {
+         var urllink = '@Url.Action("UploadDeals", "Deal")';
+          window.location.href = urllink;
+    }
+</script>

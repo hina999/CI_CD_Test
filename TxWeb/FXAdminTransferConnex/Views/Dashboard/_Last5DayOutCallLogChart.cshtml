@@ -1,0 +1,29 @@
+﻿@using FXAdminTransferConnex.Entities
+@using Kendo.Mvc.UI
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h6 class="panel-title dashboard-title" id="div1">
+            OUTGOING CALL OF LAST 5 DAYS
+            <span>
+                <span class="fa fa-file-pdf-o" title="Export PDF" type="button" onclick="ExportChart('#chartLast5DayOutCallLog', 'Last5DayOutCallChart', 'PDF')"></span>
+
+                <span class="fa fa-file-image-o" title="Export Image" type="button" onclick="ExportChart('#chartLast5DayOutCallLog', 'Last5DayOutCallChart', 'PNG')"></span>
+            </span>
+        </h6>
+    </div>
+
+    <div class="panel-body chartArea">
+        @(Html.Kendo().Chart<RingCentralModel>()
+        .Name("chartLast5DayOutCallLog")
+        .ChartArea(chartArea => chartArea.Background("transparent"))
+        .Legend(x => x.Visible(false))
+        .DataSource(ds => ds.Read(read => read.Action("GetLast5DayOutCallLog", "Dashboard")))
+        .Series(series => { series.Column(model => model.TotalCallDuration); })
+        .Theme("material")
+        .CategoryAxis(axis => axis.Categories(model => model.CallFromName).Labels(labels => labels.Rotation(-90)).Crosshair(c => c.Visible(true)))
+        .ValueAxis(axis => axis.Numeric().Labels(labels => labels.ToString()))
+        .Tooltip(tooltip => tooltip.Visible(true).Shared(true).Template("#=value# minutes")))
+    </div>
+</div>
+

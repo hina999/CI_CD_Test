@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2019
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WCFService", "WinService\WCFService.csproj", "{180865CF-7793-4FDD-975D-E4A4DD0076A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransferConnexDealImportService", "TransferConnextDealImport\TransferConnexDealImportService.csproj", "{D2BF1276-2914-45F0-9137-612C79A87B55}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{180865CF-7793-4FDD-975D-E4A4DD0076A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{180865CF-7793-4FDD-975D-E4A4DD0076A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{180865CF-7793-4FDD-975D-E4A4DD0076A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{180865CF-7793-4FDD-975D-E4A4DD0076A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2BF1276-2914-45F0-9137-612C79A87B55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2BF1276-2914-45F0-9137-612C79A87B55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2BF1276-2914-45F0-9137-612C79A87B55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2BF1276-2914-45F0-9137-612C79A87B55}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {07C3C320-F753-42DD-B75F-397A5E212561}
+	EndGlobalSection
+EndGlobal

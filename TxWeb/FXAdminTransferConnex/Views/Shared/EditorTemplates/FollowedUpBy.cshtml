@@ -1,0 +1,16 @@
+﻿@using Kendo.Mvc.UI
+
+@model object
+@(Html.Kendo().DropDownListFor(m => m)
+                    .Name("FirstName")
+                    .OptionLabel("Followed up By")
+                    .DataTextField("Text")
+                        .DataValueField("Value")
+                            .DataSource(s =>
+                            {
+                                s.Read(read =>
+                                {
+                                    read.Action("UserTypesById", "Client");
+                                });
+                                
+                            }))

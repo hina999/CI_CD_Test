@@ -1,0 +1,240 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = "ManageProspect";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .fa {
+        float: none;
+    }
+</style>
+<div class="content">
+    <legend>Ring Central Call Log</legend>
+    <div class="panel panel-default rightcenterhelper-box">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">From Date:</label>
+                                @Html.Kendo().DatePicker().Name("FromDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:100%" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">To Date:</label>
+                                @Html.Kendo().DatePicker().Name("ToDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:100%" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Phone Number:</label>
+                                <input id="txtPhoneNumber" type="text" placeholder="Search Number" class="k-textbox" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Name:</label>
+                                <input id="txtName" type="text" placeholder="Search Name" class="k-textbox" />
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Call Direction:</label>
+                                @(Html.Kendo().DropDownList()
+                                .Name("DDLCallDirection")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .OptionLabel("-- Select--")
+                                .BindTo(new List<SelectListItem>()
+                                {
+                                new SelectListItem()
+                                {
+                                    Text = "Inbound",
+                                    Value = "inbound"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Outbound",
+                                    Value = "outbound"
+                                }
+                                })
+                                .HtmlAttributes(new { style = "width: 100%" })
+                                )
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-12 text-right">
+                            <div class="form-group">
+                                <a title="Ring central Dashboard" href="@Url.Action("RingcentralCallLogImportView","RingCentralHelper")" class="k-button btn-orange">Import Call Log</a>
+                                <button id="btnSearch" type="button" class="k-button btn-orange">Search</button>
+                                <button id="btnReset" type="button" class="k-button btn-orange">Reset</button>
+                                <a title="Ring central Dashboard" href="@Url.Action("RingcentralCharts","RingCentralHelper")" class="k-button btn-orange">Dashboard</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+    <fieldset>
+        <legend></legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @(Html.Kendo().Grid<RingCentralModel>()
+                .Name("gridCallList")
+                .Columns(columns =>
+                {
+                    columns.Bound(m => m.CallDirection).Visible(true).ClientTemplate(
+                    "# if (CallDirection == 'Inbound') { #" +
+                        "# if (CallResult == 'Missed') { #" +
+                        "<i class='fa fa-long-arrow-down fa-2x' aria-hidden='true' style='color:rgb(227, 30, 30);transform: rotate(45deg);'></i>" +
+                        "# } else { #" +
+                        "<i class='fa fa-long-arrow-down fa-2x' aria-hidden='true' style='color:rgb(26, 133, 23);transform: rotate(45deg);'></i>" +
+                        "# } #" +
+                    "# } else { #" +
+                    "<i class='fa fa-long-arrow-up fa-2x' aria-hidden='true' style='color:rgb(6, 121, 186);transform: rotate(45deg);'></i>" +
+                    "# } #"
+                    ).Title("").HtmlAttributes(new { @style = "text-align: center;" });
+                    columns.Bound(m => m.RingCentralCallId).Visible(true).ClientTemplate(
+                    "# if (ClientId > 0) { #" +
+                    "<a class='active restrictCall' href='" + Url.Action("ManageClient", "Client") + "?ClientId=#=ClientId #'>" + "#=ClientCompanyName#" + "</a>" +
+                    "# } else { #" +
+                    "# if (ProspectId > 0) { #" +
+                    "<a class='active restrictCall' href='" + Url.Action("ManageProspect", "Prospect") + "?ProspectId=#=ProspectId #'>" + "#=ProspectCompanyName#" + "</a>" +
+                    "# } #"+
+                    "# } #"
+                    ).Title("Company Name").Width(250);
+                    columns.Bound(m => m.CallFromName).Filterable(false).Sortable(false);
+                    columns.Bound(m => m.CallFromNumber).Filterable(false).Sortable(false);
+                    columns.Bound(m => m.CallToName).Filterable(false).Sortable(false);
+                    columns.Bound(m => m.CallToNumber).Filterable(false).Sortable(false);
+                    columns.Bound(m => m.CallStartTime).Filterable(false).Sortable(false).Format("{0:dd/MM/yyyy hh:mm:ss tt}").Title("Call Date");
+                    columns.Bound(m => m.CallDuration).Filterable(false).Sortable(false).ClientTemplate("#=toHHMMSS(CallDuration)#");
+                    //columns.Bound(m => m.CallType).Filterable(false).Sortable(false);
+                    columns.Bound(m => m.CallDirection).Filterable(false).Sortable(false);
+                    columns.Bound(m => m.CallAction).Filterable(false).Sortable(false);
+                    columns.Bound(m => m.CallResult).Filterable(false).Sortable(false);
+                })
+                .Pageable(x =>
+                {
+                    x.Refresh(true);
+                    x.PageSizes(new int[] { 10, 20, 50, 100 });
+                })
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                .Navigatable()
+                .Sortable(sortable => sortable.AllowUnsort(false))
+                .NoRecords()
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .ServerOperation(true)
+                .PageSize(ConfigItems.GridPageSize)
+                .Model(model =>
+                {
+                    model.Id(d => d.RingCentralCallId);
+                })
+                .Read(read => read.Action("GetRingcentralCallList", "RingCentralHelper").Data("ParaFilterData"))
+                .Events(events => events.RequestEnd("onRequestEnd"))
+                ))
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script>
+    var PageNumber = 1;
+    $(document).ready(function () {
+        var havePermission ='@WebHelper.CanView()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+        kendoGridScroll();
+    });
+
+    $('#btnReset').click(function () {
+        $('#txtPhoneNumber').val('');
+        $('#txtName').val('');
+        var callDirection = $('#DDLCallDirection').data("kendoDropDownList").value('');
+        var dtFromDate = $("#FromDate").data("kendoDatePicker").value('');
+        var dtToDate = $("#ToDate").data("kendoDatePicker").value('');
+
+        $('#gridCallList').data('kendoGrid').dataSource.read({
+            FromDate: dtFromDate,
+            ToDate: dtToDate,
+            MobileNo: $('#txtPhoneNumber').val().trim(),
+            Name: $('#txtName').val().trim(),
+            CallDirection: callDirection
+        });
+        $('#gridCallList').data().kendoGrid.dataSource.page(1);
+    });
+
+    $("#btnSearch").click(function () {
+        //if ($('#txtsearch').val() !== "") {
+        var callDirection = $('#DDLCallDirection').data("kendoDropDownList").value();
+        var dtFromDate = $("#FromDate").data("kendoDatePicker").value();
+        var dtToDate = $("#ToDate").data("kendoDatePicker").value();
+
+        $('#gridCallList').data('kendoGrid').dataSource.read({
+            FromDate: dtFromDate,
+            ToDate: dtToDate,
+            MobileNo: $('#txtPhoneNumber').val().trim(),
+            Name: $('#txtName').val().trim(),
+            CallDirection: callDirection
+        });
+        $('#gridCallList').data().kendoGrid.dataSource.page(1);
+    });
+
+    $(window).on('keypress', function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#btnSearch").click();
+        }
+    });
+
+    function onRequestEnd(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridCallList').data('kendoGrid').dataSource.read();
+        }
+        DisplayResponseMessage(para);
+    }
+
+    function ParaFilterData() {
+
+        var callDirection = $('#DDLCallDirection').data("kendoDropDownList").value();
+        var dtFromDate = $("#FromDate").data("kendoDatePicker").value();
+        var dtToDate = $("#ToDate").data("kendoDatePicker").value();
+
+        return {
+            FromDate: dtFromDate,
+            ToDate: dtToDate,
+            MobileNo: $('#txtPhoneNumber').val().trim(),
+            Name: $('#txtName').val().trim(),
+            CallDirection: callDirection
+        }
+    }
+
+    function toHHMMSS(second) {
+        var sec_num = parseInt(second, 10); // don't forget the second param
+        var hours = Math.floor(sec_num / 3600);
+        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+        if (hours < 10) { hours = "0" + hours; }
+        if (minutes < 10) { minutes = "0" + minutes; }
+        if (seconds < 10) { seconds = "0" + seconds; }
+        return hours + ':' + minutes + ':' + seconds;
+    
+        //return new Date(second * 1000).toISOString().substr(11, 8)
+    }
+
+</script>

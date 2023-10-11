@@ -1,0 +1,147 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnexApp
+@using FXAdminTransferConnex.Common
+
+@using Kendo.Mvc.UI
+
+<div class="content">
+    <legend>Region</legend>
+    <div class="panel panel-default">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <input id="txtsearch" type="text" placeholder="Search" class="k-textbox" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <button id="search" type="button" class="k-button btn-orange">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* GRID HERE *@
+
+    <fieldset>
+        <legend></legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                @(Html.Kendo().Grid<RegionMasterModel>()
+                  .Name("gridUser")
+                  .Columns(columns =>
+                  {
+                      columns.Bound(m => m.RegionName).Width(150);
+                      columns.Command(command =>
+                      {
+
+                          command.Custom("Edit").Text("<span class='k-icon k-edit'></span>").Click("onInsert").HtmlAttributes(new { @style = "margin:2px" });
+
+                          command.Destroy().Text(" ").HtmlAttributes(new { @style = "margin:2px" });
+
+
+                          //command.Custom("Edit").Text("<a  href='" +
+                          // Url.Action("ManageUser", "User") + "?id=#= UserId #'" + "> <span class='k-icon k-edit'></span></a>");
+                          //command.Edit().CancelText("Cancel").Text(" ").UpdateText("Save");
+
+                      })
+                          .HeaderHtmlAttributes(Common.CenterColumnStyle)
+                          .HtmlAttributes(Common.CenterColumnStyle)
+                          .Title("Action")
+                          .Width(150);
+                  })
+                  .ToolBar(toolbar =>
+                  {
+                    
+                          toolbar.Custom().Text("Add Region").Url(Url.Action("ManageRegion", "Region")).HtmlAttributes(new { @class = "k-button btn-orange" });
+                    
+
+                  })
+                  .Editable(e => e.Mode(GridEditMode.PopUp))
+                  .Pageable(x =>
+                  {
+                      x.Refresh(false);
+                      x.PageSizes(new int[] { 10, 20, 50, 100 });
+                  })
+                  .Selectable(selectable => selectable
+                  .Mode(GridSelectionMode.Single))
+                  .Navigatable()
+                  //.Scrollable(scrollable => scrollable.Height("auto"))
+                  .Sortable(sortable => sortable.AllowUnsort(false))
+                  .NoRecords()
+                  //.Events(grid => grid.Edit("edit"))
+                  .DataSource(dataSource => dataSource
+                      .Ajax()
+                      .ServerOperation(false)                      
+                      .Model(model =>
+                      {
+                          model.Id(d => d.RegionID);
+                      })
+                   //.Create(update => update.Action("AddUserDetails", "User"))
+                   //.Update(update => update.Action("AddUserDetails", "User"))
+                   .Destroy(delete => delete.Action("DeleteRegion", "Region"))
+                   .Read(read => read.Action("GetRegion", "Region"))
+                    .Events(events => events.RequestEnd("onRequestEnd"))
+                  ))
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script>
+    $(document).ready(function () {
+        kendoGridScroll();
+    });
+
+    $('.k-pager-refresh').click(function () {
+        $('#txtsearch').val('');
+    });
+
+    $("#search").click(function () {
+        //if ($('#txtsearch').val() !== "") {
+        $('#gridUser').data('kendoGrid').dataSource.read({ Search: $('#txtsearch').val().trim() });
+        $('#gridUser').data().kendoGrid.dataSource.page(1);
+        //}
+    });
+
+    $('#txtsearch').keypress(function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            if ($('#txtsearch').val() !== "") {
+                $('#gridUser').data('kendoGrid').dataSource.read({ Search: $('#txtsearch').val().trim() });
+                $('#gridUser').data().kendoGrid.dataSource.page(1);
+            }
+        }
+    });
+
+    //Shows the notifications
+    function onRequestEnd(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridUser').data('kendoGrid').dataSource.read();
+        }
+        DisplayResponseMessage(para);
+    }
+
+    function onInsert(e) {
+        var userId = 0;
+
+        if (e != 0) {
+            e.preventDefault();
+            var tr = $(e.target).closest("tr");
+            var data = this.dataItem(tr);
+
+            if (data != null) {
+                userId = data.RegionId;
+            }
+        }
+        var urllink = '@Url.Action("ManageRegion", "Region")';
+        window.location.href = urllink + "?id=" + userId;
+    }
+</script>

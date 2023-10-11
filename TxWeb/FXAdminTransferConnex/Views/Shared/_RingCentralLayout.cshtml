@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnexApp
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer Connex</title>
+    <!-- Add manifest -->
+    <link rel="manifest" href="~/manifest.json">
+    <meta name="theme-color" content="#ff1962">
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="~/Content/img/icons/apple-touch-icon/favicon.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="~/Content/img/icons/apple-touch-icon/favicon.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-iphone-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-ipad-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-iphone-retina-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-iphone-retina-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-ipad-retina-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-192x192.png">
+
+    @Styles.Render("~/Content/ui")
+
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    @*<script src="~/Scripts/jquery.validate.min.js"></script>
+        <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
+    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+    <script src="~/Scripts/kendo.all.min.js"></script>
+    <script src="~/Scripts/kendo.aspnetmvc.min.js"></script>
+</head>
+
+<body class="sidebar-xs">
+
+
+    <div class="page-container">
+        <div class="page-content">
+            
+            <div class="content-wrapper">
+                <div class="body-content">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="loader" >
+        <img src="~/Content/Images/loader.gif" alt="Loading..." />
+    </div>
+    @*@Scripts.Render("~/bundles/bootstrap")*@
+    @*<script src="~/Scripts/kendo.all.min.js"></script>
+    <script src="~/Scripts/kendo.aspnetmvc.min.js"></script>*@
+    @RenderSection("scripts", required: false)
+
+</body>
+
+
+
+</html>
+
+
+
+
+<script type="text/javascript">
+    $(document).ajaxStop(function () {
+        setTimeout(function () {
+            $(".loader").hide();
+        }, 1000);
+
+    });
+    $(document).ajaxError(function (event, result, settings, thrownError) {
+        $(".loader").hide();
+    });
+
+    $(document).ajaxSend(function (evt, request, settings) {
+
+        $(".loader").show();
+
+    });
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+            .register('/serviceworker.js')
+            .then(function () { console.log('Service Worker Registered'); });
+    }
+</script>

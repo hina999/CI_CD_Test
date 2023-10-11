@@ -1,0 +1,209 @@
+﻿
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>Sell Amount</span>
+        </div>
+        <div class="col-md-8">
+            <input type="number" id="txtAmount_Sell" class="form-control customheight" />
+        </div>
+    </div>
+</div>
+
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>TC Rate</span>
+        </div>
+        <div class="col-md-8">
+            <input type="number" id="txtTransferConnex_Sell" onchange="validateFloatKeyPress_Sell(this);" class="form-control customheight" />
+        </div>
+    </div>
+</div>
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>Clients Rate</span>
+        </div>
+        <div class="col-md-8">
+            <input type="number" id="txtClientrate_Sell" onchange="validateFloatKeyPress_Sell(this);" class="form-control customheight" />
+        </div>
+    </div>
+</div>
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>Commission Rate %</span>
+        </div>
+        <div class="col-md-8">
+            <input type="number" id="txtCommissionRate_Sell" onchange="validateFloatKeyPress_Sell(this);" class="form-control customheight" />
+        </div>
+    </div>
+</div>
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+
+        </div>
+        <div class="col-md-8">
+            <button type="button" class="btn btn-primary" onclick="CalculateRate_Sell()">Calculate</button>
+        </div>
+    </div>
+</div>
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>Buy Amount</span>
+        </div>
+        <div class="col-md-8">
+            <input type="number" id="txtBuyAmount_Sell" class="form-control customheight" disabled="disabled" />
+        </div>
+    </div>
+</div>
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>TC Cost</span>
+        </div>
+        <div class="col-md-8">
+            <input type="number" id="txtTCCost_Sell" class="form-control customheight" disabled="disabled" />
+        </div>
+    </div>
+</div>
+
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>Savings</span>
+        </div>
+        <div class="col-md-8">
+            <input type="number" id="txtSavings_Sell" class="form-control customheight" disabled="disabled" />
+        </div>
+    </div>
+</div>
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>Commission</span>
+        </div>
+        <div class="col-md-8">
+            <input type="number" id="txtCommission_Sell" class="form-control customheight" disabled="disabled" />
+        </div>
+    </div>
+</div>
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>Pips</span>
+        </div>
+        <div class="col-md-8">
+            <input type="number" id="txtPips_Sell" class="form-control customheight" disabled="disabled" />
+        </div>
+    </div>
+</div>
+
+<script>
+    function validateFloatKeyPress_Sell(el) {
+        var v = parseFloat(el.value);
+        el.value = (isNaN(v)) ? '' : v.toFixed(4);
+    }
+
+    function CalculateRate_Sell() {
+        var amt = $("#txtAmount_Sell").val();
+        var commRate = $("#txtCommissionRate_Sell").val();
+
+        var txrate = $("#txtTransferConnex_Sell").val();
+        var clientrate = $("#txtClientrate_Sell").val();
+
+        var Status = true;
+        $('#valamt_Sell').remove();
+        $('#valcommRate_Sell').remove();
+        $('#valcommRate_Sell_').remove();
+        $('#valtxrate_Sell').remove();
+        $('#valclientrate_Sell').remove();
+        $('#valtxrate_Sell_').remove();
+        $('#valclientrate_Sell_').remove();
+
+        if (!commRate || commRate <= 0) {
+            $("#txtCommissionRate_Sell").val(0);
+            commRate = 0;
+        }
+
+        if (commRate > 100) {
+            Status = false;
+            $('#txtCommissionRate_Sell').after('<div style="position:inherit;"><span role="alert" id="valcommRate_Sell_" style="padding-bottom:0px ;padding-top:0px" data-valmsg-for="files" data-for="files" class="text-danger"><span class="k-icon k-warning"> </span>Invalid commission.</span></div>');
+        }
+
+        if (!txrate || txrate <= 0) {
+            Status = false;
+            $('#txtTransferConnex_Sell').after('<div style="position:inherit;"><span role="alert" id="valtxrate_Sell" style="padding-bottom:0px ;padding-top:0px" data-valmsg-for="files" data-for="files" class="text-danger"><span class="k-icon k-warning"> </span>TC rate is required.</span></div>');
+        }
+
+        if (txrate > 100) {
+            Status = false;
+            $('#txtTransferConnex_Sell').after('<div style="position:inherit;"><span role="alert" id="valtxrate_Sell_" style="padding-bottom:0px ;padding-top:0px" data-valmsg-for="files" data-for="files" class="text-danger"><span class="k-icon k-warning"> </span>Invalid rate.</span></div>');
+        }
+
+        if (!clientrate || clientrate <= 0) {
+            Status = false;
+            $('#txtClientrate_Sell').after('<div style="position:inherit;"><span role="alert" id="valclientrate_Sell" style="padding-bottom:0px ;padding-top:0px" data-valmsg-for="files" data-for="files" class="text-danger"><span class="k-icon k-warning"> </span>Client rate is required.</span></div>');
+        }
+
+        if (clientrate > 100) {
+            Status = false;
+            $('#txtClientrate_Sell').after('<div style="position:inherit;"><span role="alert" id="valclientrate_Sell_" style="padding-bottom:0px ;padding-top:0px" data-valmsg-for="files" data-for="files" class="text-danger"><span class="k-icon k-warning"> </span>Invalid rate.</span></div>');
+        }
+
+        if (!amt || amt <= 0) {
+            Status = false;
+            $('#txtAmount_Sell').after('<div style="position:inherit;"><span role="alert" id="valamt_Sell" style="padding-bottom:0px ;padding-top:0px" data-valmsg-for="files" data-for="files" class="text-danger"><span class="k-icon k-warning"> </span>Amount is required.</span></div>');
+        }
+        if (Status) {
+
+
+            var fixDigit = 2;
+            var fixDigitpips = 4;
+            var SellAmount = parseFloat($("#txtAmount_Sell").val()) / parseFloat($("#txtClientrate_Sell").val());
+            $("#txtBuyAmount_Sell").val(SellAmount.toFixed(fixDigit));
+            var TCCost = parseFloat($("#txtAmount_Sell").val()) / parseFloat($("#txtTransferConnex_Sell").val());
+            $("#txtTCCost_Sell").val(TCCost.toFixed(fixDigit));
+            var Savings = SellAmount - TCCost;
+            $("#txtSavings_Sell").val(Savings.toFixed(fixDigit));
+            var Commission = (Savings / 100) * parseFloat($("#txtCommissionRate_Sell").val());
+            $("#txtCommission_Sell").val(Commission.toFixed(fixDigit));
+            var pips = parseFloat($("#txtTransferConnex_Sell").val()) - parseFloat($("#txtClientrate_Sell").val());
+            $("#txtPips_Sell").val(pips.toFixed(fixDigitpips));
+        }
+    }
+
+    function ClearAll_Sell() {
+        $("#txtAmount_Sell").val('');
+        $("#txtTransferConnex_Sell").val('');
+        $("#txtClientrate_Sell").val('');
+        $("#txtCommissionRate_Sell").val('');
+        $("#txtBuyAmount_Sell").val('');
+        $("#txtTCCost_Sell").val('');
+        $("#txtSavings_Sell").val('');
+        $("#txtCommission_Sell").val('');
+        $("#txtPips_Sell").val('');
+
+        $('#valamt_Sell').remove();
+        $('#valcommRate_Sell').remove();
+        $('#valcommRate_Sell_').remove();
+
+        $('#valtxrate_Sell').remove();
+        $('#valclientrate_Sell').remove();
+        $('#valtxrate_Sell_').remove();
+        $('#valclientrate_Sell_').remove();
+    }
+</script>
+
+<style>
+    .customheight {
+        height: 30px;
+    }
+
+        .customheight:disabled {
+            background-color: lightyellow;
+        }
+</style>

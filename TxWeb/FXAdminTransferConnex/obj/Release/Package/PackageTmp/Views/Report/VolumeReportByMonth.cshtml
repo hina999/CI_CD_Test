@@ -1,0 +1,449 @@
+﻿@using Kendo.Mvc.UI
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnexApp;
+@{
+    ViewBag.Title = "VolumeReportByMonth";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <legend>
+        Volume Report By Month
+    </legend>
+    <div class="panel panel-default">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                   
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Select Start :</label>
+                                @(Html.Kendo().DatePicker().Name("startdatepicker").Start(CalendarView.Year).Depth(CalendarView.Year).Format("MMMM yyyy").Value("").HtmlAttributes(new { style = "width: 95.5%;", onkeydown = "javascript:return false;"}))
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Select End :</label>
+                                @(Html.Kendo().DatePicker().Name("Enddatepicker").Start(CalendarView.Year).Depth(CalendarView.Year).Format("MMMM yyyy").Value("").HtmlAttributes(new { style = "width: 95.5%;", onkeydown = "javascript:return false;"}))
+                            </div>
+                        </div>
+                        <div class="col-sm-12 text-right">
+                            <div class="form-group">
+                                <button id="btnSearch" type="button" class="btn-orange">Search</button>
+                                <button id="btnReset" type="button" class="btn-orange">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    @*</div>*@
+    <fieldset>
+        <legend></legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h4 id="header">Volume Report from <span id="from_text"> </span> to <span id="to_text"> </span></h4>
+                @(Html.Kendo().Grid<VolumeReportByMonthodelMonthYear>
+            ()
+            .Name("gridVolumeReportByMonth")
+            .Columns(columns =>
+            {
+                columns.Bound(m => m.MonthYear);
+                columns.Bound(m => m.ClientSoldAmt).Format("{0:n2}").Title("Total Volume Traded (GBP)").ClientFooterTemplate("Avg : #=kendo.toString(average, '0.00')#");
+                columns.Bound(m => m.ClientCount).Title("Client count");
+                columns.Bound(m => m.GrossProfit).Format("{0:n2}").Title("Gross Profit").ClientFooterTemplate("Avg : #=kendo.toString(average, '0.00')#");
+                columns.Bound(m => m.TotalTrade).Title("Total No of Trades").ClientFooterTemplate("Avg : #=kendo.toString(average,'0.00')#");
+                columns.Bound(m => m.AvgTradeSize).Format("{0:n2}").Title("Average Trade Size").ClientFooterTemplate("Avg : #=kendo.toString(average, '0.00')#");
+                columns.Bound(m => m.AvgTradeProfit).Format("{0:n2}").Title("Average Trade Profit").ClientFooterTemplate("Avg : #=kendo.toString(average, '0.00')#");
+                columns.Bound(m => m.AvgSpread).Title("Average Spread").ClientFooterTemplate("Avg : #=kendo.toString(average, '0.0000')#");
+            })
+            .Pageable(x =>
+            {
+                x.Refresh(false);
+                x.PageSizes(new int[] { 10, 20, 50, 100 });
+            })
+            .ToolBar(t => t.Excel())
+            .Excel(excel => excel.FileName("ClientMargin.xlsx").Filterable(true).AllPages(true))
+            .Selectable(selectable => selectable
+            .Mode(GridSelectionMode.Single))
+            .Navigatable()
+            .Sortable(sortable => sortable.AllowUnsort(true))
+            //.Filterable(filter => filter.Mode(GridFilterMode.Row))
+            .NoRecords()
+            .DataSource(dataSource => dataSource
+            .Ajax()
+            .ServerOperation(false)
+            .PageSize(ConfigItems.GridPageSize)
+            .Aggregates(aggregates =>
+            {
+                aggregates.Add(p => p.ClientSoldAmt).Average();
+                aggregates.Add(p => p.GrossProfit).Average();
+                aggregates.Add(p => p.TotalTrade).Average();
+                aggregates.Add(p => p.AvgTradeSize).Average();
+                aggregates.Add(p => p.AvgTradeProfit).Average();
+                aggregates.Add(p => p.AvgSpread).Average();
+            })
+            .Read(read => read.Action("GetVolumeReportByMonthList", "Report").Data("OnData"))
+            ))
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend></legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <div class="row">
+
+                    <div class="col-md-6" id="chartTotalvolumeTradeddiv">
+                        <h4>Total Volume Traded</h4>
+
+                        @(Html.Kendo().Chart<VolumeReportByMonthodelMonthYear>()
+                                  .Name("chartTotalvolumeTraded")
+                                  .ChartArea(chartArea => chartArea.Background("transparent"))
+                                  .Legend(x => x.Visible(false))
+                                  .DataSource(ds => ds.Read(read => read.Action("GetVolumeReportByMonthListChart", "Report").Data("OnData")))
+                                  .Series(series => { series.Column(model => model.ClientSoldAmt).Name("Total volume Traded"); })
+                                  .Theme("material")
+                                  .CategoryAxis(axis => axis.Categories(model => model.MonthYear)
+                                                    .Labels(labels => labels.Rotation(-90))
+                                                    .Crosshair(c => c.Visible(true)))
+                                  .ValueAxis(axis => axis.Numeric())
+                                  .Tooltip(tooltip => tooltip.Visible(true).Shared(true)))
+
+                    </div>
+                    <div class="col-md-6" id="chartTotalTradediv">
+                        <h4>Total Trade</h4>
+                        @(Html.Kendo().Chart<VolumeReportByMonthodelMonthYear>()
+                                  .Name("chartTotalTrade")
+                                  .ChartArea(chartArea => chartArea.Background("transparent"))
+                                  .Legend(x => x.Visible(false))
+                                  .DataSource(ds => ds.Read(read => read.Action("GetVolumeReportByMonthListChart", "Report").Data("OnData")))
+                                  .Series(series => { series.Column(model => model.TotalTrade).Name("Total Trade"); })
+                                  .Theme("material")
+                                  .CategoryAxis(axis => axis.Categories(model => model.MonthYear)
+                                                    .Labels(labels => labels.Rotation(-90))
+                                                    .Crosshair(c => c.Visible(true)))
+                                  .ValueAxis(axis => axis.Numeric())
+                                  .Tooltip(tooltip => tooltip.Visible(true).Shared(true)))
+
+                    </div>
+
+                    <div class="col-md-6" id="chartTotalGrossProfitdiv">
+                        <h4>Total Gross Profit</h4>
+                        @(Html.Kendo().Chart<VolumeReportByMonthodelMonthYear>()
+                                  .Name("chartTotalGrossProfit")
+                                  .ChartArea(chartArea => chartArea.Background("transparent"))
+                                  .Legend(x => x.Visible(false))
+                                  .DataSource(ds => ds.Read(read => read.Action("GetVolumeReportByMonthListChart", "Report").Data("OnData")))
+                                  .Series(series => { series.Column(model => model.GrossProfit).Name("Gross Profit"); })
+                                  .Theme("material")
+                                  .CategoryAxis(axis => axis.Categories(model => model.MonthYear)
+                                                    .Labels(labels => labels.Rotation(-90))
+                                                    .Crosshair(c => c.Visible(true)))
+                                  .ValueAxis(axis => axis.Numeric())
+                                  .Tooltip(tooltip => tooltip.Visible(true).Shared(true)))
+
+
+
+                    </div>
+                    <div class="col-md-6" id="chartAvgTradeSizediv">
+                        <h4>Avg Trade Size</h4>
+                        @(Html.Kendo().Chart<VolumeReportByMonthodelMonthYear>()
+                                  .Name("chartAvgTradeSize")
+                                  .AutoBind(false)
+                                  .ChartArea(chartArea => chartArea.Background("transparent"))
+                                  .Legend(x => x.Visible(false))
+                                  .DataSource(ds => ds.Read(read => read.Action("GetVolumeReportByMonthListChart", "Report").Data("OnData")))
+                                  .Series(series => { series.Column(model => model.AvgTradeSize).Name("Avg Trade Size"); })
+                                  .Theme("material")
+                                  .CategoryAxis(axis => axis.Categories(model => model.MonthYear).Labels(labels => labels.Rotation(-90)).Crosshair(c => c.Visible(true)))
+                                  .ValueAxis(axis => axis.Numeric().Labels(labels => labels.Format("{0:C2}")))
+                                  .Tooltip(tooltip => tooltip.Visible(true).Shared(true).Format("{0:C2}")))
+
+                    </div>
+
+                    <div class="col-md-6" id="chartAvgTradeProfitdiv">
+                        <h4>Avg Trade Profit</h4>
+                        @(Html.Kendo().Chart<VolumeReportByMonthodelMonthYear>()
+                                  .Name("chartAvgTradeProfit")
+                                  .AutoBind(false)
+                                  .ChartArea(chartArea => chartArea.Background("transparent"))
+                                  .Legend(x => x.Visible(false))
+                                  .DataSource(ds => ds.Read(read => read.Action("GetVolumeReportByMonthListChart", "Report").Data("OnData")))
+                                  .Series(series => { series.Column(model => model.AvgTradeProfit).Name("Avg Trade Profit"); })
+                                  .Theme("material")
+                                  .CategoryAxis(axis => axis.Categories(model => model.MonthYear).Labels(labels => labels.Rotation(-90)).Crosshair(c => c.Visible(true)))
+                                  .ValueAxis(axis => axis.Numeric().Labels(labels => labels.Format("{0:C2}")))
+                                  .Tooltip(tooltip => tooltip.Visible(true).Shared(true).Format("{0:C2}")))
+
+                    </div>
+                    <div class="col-md-6" id="chartAvgSpreaddiv">
+                        <h4>Avg Spread</h4>
+                        @(Html.Kendo().Chart<VolumeReportByMonthodelMonthYear>()
+                                  .Name("chartAvgSpread")
+                                  .AutoBind(false)
+                                  .ChartArea(chartArea => chartArea.Background("transparent"))
+                                  .Legend(x => x.Visible(false))
+                                  .DataSource(ds => ds.Read(read => read.Action("GetVolumeReportByMonthListChart", "Report").Data("OnData")))
+                                  .Series(series => { series.Column(model => model.AvgSpread).Name("Avg Spread"); })
+                                  .Theme("material")
+                                  .CategoryAxis(axis => axis.Categories(model => model.MonthYear).Labels(labels => labels.Rotation(-90)).Crosshair(c => c.Visible(true)))
+                                  .ValueAxis(axis => axis.Numeric().Labels(labels => labels.ToString()))
+                                  .Tooltip(tooltip => tooltip.Visible(true).Shared(true)))
+
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+
+                            @Html.RadioButton("rbChartTotalType", "ClientSoldAmt", true,new{@id= "ClientSoldAmt" }) @Html.Label("Total Volume Traded", new { @id = "ClientSoldAmtlbl" })
+                            @Html.RadioButton("rbChartTotalType", "GrossProfit", false,new{@id= "GrossProfit" }) @Html.Label("Gross Profit", new { @id = "GrossProfitlbl" })
+                            @Html.RadioButton("rbChartTotalType", "TotalTrade", false,new{@id= "TotalTrade" }) @Html.Label("Total no of trades", new { @id = "TotalTradelbl" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.RadioButton("rbChartAvgType", "AvgTradeSize", true,new{@id= "AvgTradeSize" }) @Html.Label("Avg Trade Size", new { @id = "AvgTradeSizelbl" })
+                            @Html.RadioButton("rbChartAvgType", "AvgTradeProfit", false,new{ @id = "AvgTradeProfit" }) @Html.Label("Avg Trade Profit", new { @id = "AvgTradeProfitlbl" })
+                            @Html.RadioButton("rbChartAvgType", "AvgSpread", false,new{ @id = "AvgSpread" }) @Html.Label("Avg Spread", new { @id = "AvgSpreadlbl" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('#header').hide();
+        $('#chartTotalvolumeTradeddiv').show();
+        $('#chartTotalTradediv').hide();
+        $('#chartTotalGrossProfitdiv').hide();
+        $('#chartAvgTradeProfitdiv').hide();
+        $('#chartAvgSpreaddiv').hide();
+        var havePermission = '/******************/';
+        if (havePermission.toLowerCase() == "false") {
+            var urllink = '/***************************************/';
+            window.location.href = urllink;
+        }
+        kendoGridScroll();
+
+    });
+
+    $(function () {
+
+        $('input[type = radio][name = rbChartTotalType]').on("change", function () {
+
+            if ($(this).val() == "ClientSoldAmt") {
+                $('#chartTotalvolumeTradeddiv').show();
+                $('#chartTotalTradediv').hide();
+                $('#chartTotalGrossProfitdiv').hide();
+               
+                var chartTotalvolumeTraded = $("#chartTotalvolumeTraded").data("kendoChart");
+                chartTotalvolumeTraded.dataSource.read();
+                //chartTotalvolumeTraded.refresh();
+
+            }
+            else if ($(this).val() == "GrossProfit") {
+                $('#chartTotalvolumeTradeddiv').hide();
+                $('#chartTotalTradediv').hide();
+                $('#chartTotalGrossProfitdiv').show();
+                var chartTotalGrossProfit = $("#chartTotalGrossProfit").data("kendoChart");
+                chartTotalGrossProfit.dataSource.read();
+                //chartTotalGrossProfit.refresh();
+            }
+            else {
+                $('#chartTotalvolumeTradeddiv').hide();
+                $('#chartTotalTradediv').show();
+                $('#chartTotalGrossProfitdiv').hide();
+                var chartTotalTrade = $("#chartTotalTrade").data("kendoChart");
+                chartTotalTrade.dataSource.read();
+                //chartTotalTrade.refresh();
+            }
+        });
+
+    });
+    $('#ClientSoldAmtlbl').click(function () {
+        $('#chartTotalvolumeTradeddiv').show();
+        $('#chartTotalTradediv').hide();
+        $('#chartTotalGrossProfitdiv').hide();
+        $('#ClientSoldAmt').prop("checked", true);
+        var chartTotalvolumeTraded = $("#chartTotalvolumeTraded").data("kendoChart");
+        chartTotalvolumeTraded.dataSource.read();
+        //chartTotalvolumeTraded.refresh();
+        //ReadGrid()
+        
+    });
+    $('#GrossProfitlbl').click(function () {
+        $('#chartTotalvolumeTradeddiv').hide();
+        $('#chartTotalTradediv').hide();
+        $('#chartTotalGrossProfitdiv').show();
+        $('#GrossProfit').prop("checked", true);
+        var chartTotalGrossProfit = $("#chartTotalGrossProfit").data("kendoChart");
+        chartTotalGrossProfit.dataSource.read();
+        //chartTotalGrossProfit.refresh();
+        //ReadGrid()
+        
+    });
+    $('#TotalTradelbl').click(function () {
+        $('#chartTotalvolumeTradeddiv').hide();
+        $('#chartTotalTradediv').show();
+        $('#chartTotalGrossProfitdiv').hide();
+        $('#TotalTrade').prop("checked", true);
+        var chartTotalTrade = $("#chartTotalTrade").data("kendoChart");
+        chartTotalTrade.dataSource.read();
+        //chartTotalTrade.refresh();
+        //ReadGrid()
+        
+    });
+ 
+    $('#AvgTradeSizelbl').click(function () {
+        $('#chartAvgTradeSizediv').show();
+        $('#chartAvgTradeProfitdiv').hide();
+        $('#chartAvgSpreaddiv').hide();
+        $('#AvgTradeSize').prop("checked", true);
+        var chartAvgTradeSize = $("#chartAvgTradeSize").data("kendoChart");
+        chartAvgTradeSize.dataSource.read();
+        
+    });
+    $('#AvgTradeProfitlbl').click(function () {
+        $('#chartAvgTradeSizediv').hide();
+        $('#chartAvgTradeProfitdiv').show();
+        $('#chartAvgSpreaddiv').hide();
+        $('#AvgTradeProfit').prop("checked", true);
+        var chartAvgTradeProfit = $("#chartAvgTradeProfit").data("kendoChart");
+        chartAvgTradeProfit.dataSource.read();
+       
+    });
+    $('#AvgSpreadlbl').click(function () {
+        $('#chartAvgTradeSizediv').hide();
+        $('#chartAvgTradeProfitdiv').hide();
+        $('#chartAvgSpreaddiv').show();
+        $('#AvgSpread').prop("checked", true);
+        var chartAvgSpread = $("#chartAvgSpread").data("kendoChart");
+        chartAvgSpread.dataSource.read();
+       
+    });
+
+
+
+    $(function () {
+
+        $('input[type = radio][name = rbChartAvgType]').on("change", function () {
+
+            if ($(this).val() == "AvgTradeSize") {
+                $('#chartAvgTradeSizediv').show();
+                $('#chartAvgTradeProfitdiv').hide();
+                $('#chartAvgSpreaddiv').hide();
+                var chartAvgTradeSize = $("#chartAvgTradeSize").data("kendoChart");
+                chartAvgTradeSize.dataSource.read();
+                //chartAvgTradeSize.refresh();
+                
+            }
+            else if ($(this).val() == "AvgTradeProfit") {
+                $('#chartAvgTradeSizediv').hide();
+                $('#chartAvgTradeProfitdiv').show();
+                $('#chartAvgSpreaddiv').hide();
+                var chartAvgTradeProfit = $("#chartAvgTradeProfit").data("kendoChart");
+                chartAvgTradeProfit.dataSource.read();
+            }
+            else {
+                $('#chartAvgTradeSizediv').hide();
+                $('#chartAvgTradeProfitdiv').hide();
+                $('#chartAvgSpreaddiv').show();
+                var chartAvgSpread = $("#chartAvgSpread").data("kendoChart");
+                chartAvgSpread.dataSource.read();
+            }
+        });
+
+
+    });
+
+
+    function ReadGrid() {
+        $('#gridVolumeReportByMonth').data('kendoGrid').dataSource.read();
+        var chartTotalTrade = $("#chartTotalTrade").data("kendoChart");
+        var chartTotalvolumeTraded = $("#chartTotalvolumeTraded").data("kendoChart");
+        var chartTotalGrossProfit = $("#chartTotalGrossProfit").data("kendoChart");
+        var chartAvgTradeSize = $("#chartAvgTradeSize").data("kendoChart");
+        var chartAvgTradeProfit = $("#chartAvgTradeProfit").data("kendoChart");
+        var chartAvgSpread = $("#chartAvgSpread").data("kendoChart");
+        
+        chartTotalTrade.dataSource.read();
+        chartTotalTrade.refresh();
+        chartTotalGrossProfit.dataSource.read();
+        chartTotalGrossProfit.refresh();
+        chartTotalvolumeTraded.dataSource.read();
+        chartTotalvolumeTraded.refresh();
+        chartAvgTradeSize.dataSource.read();
+        chartAvgTradeSize.refresh();
+        chartAvgTradeProfit.dataSource.read();
+        chartAvgTradeProfit.refresh();
+        chartAvgSpread.dataSource.read();
+        chartAvgSpread.refresh();
+        //$('#chartAvg').data('KendoChart').dataSource.read();
+
+    }
+
+
+    function OnData() {
+        var startmonth = (new Date($("#startdatepicker").data("kendoDatePicker").value()).getMonth()) + 1;
+        var startyear = new Date($("#startdatepicker").data("kendoDatePicker").value()).getFullYear();
+        var endmonth = (new Date($("#Enddatepicker").data("kendoDatePicker").value()).getMonth()) + 1;
+        var endYear = new Date($("#Enddatepicker").data("kendoDatePicker").value()).getFullYear();
+        return {
+            StartMonth: startmonth,
+            StartYear: startyear,
+            EndMonth: endmonth,
+            EndYear: endYear
+        }
+    }
+
+    $('#btnReset').click(function () {
+        $('#header').hide();
+        $("#startdatepicker").data("kendoDatePicker").value("");
+        $("#Enddatepicker").data("kendoDatePicker").value("");
+
+        ReadGrid();
+    });
+
+    $("#btnSearch").click(function () {
+        $('#header').show();
+        //$('#k-header').show();
+        ReadGrid();
+        var startmonth = kendo.toString($("#startdatepicker").data("kendoDatePicker").value(), 'MMMM');
+        var startyear = kendo.toString($("#startdatepicker").data("kendoDatePicker").value(), 'yyyy');
+        var endmonth = kendo.toString($("#Enddatepicker").data("kendoDatePicker").value(), 'MMMM');
+        var endYear = kendo.toString($("#Enddatepicker").data("kendoDatePicker").value(), 'yyyy');
+        $('#from_text').text(startmonth + " " + startyear);
+        $('#to_text').text(endmonth + " " + endYear);
+
+    });
+
+    $(window).on('keypress', function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $('#header').show();
+            ReadGrid();
+            var startmonth = kendo.toString($("#startdatepicker").data("kendoDatePicker").value(), 'MMMM');
+            var startyear = kendo.toString($("#startdatepicker").data("kendoDatePicker").value(), 'yyyy');
+            var endmonth = kendo.toString($("#Enddatepicker").data("kendoDatePicker").value(), 'MMMM');
+            var endYear = kendo.toString($("#Enddatepicker").data("kendoDatePicker").value(), 'yyyy');
+            $('#from_text').text(startmonth + " " + startyear);
+            $('#to_text').text(endmonth + " " + endYear);
+        }
+    });
+</script>

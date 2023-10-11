@@ -1,0 +1,381 @@
+﻿@using Kendo.Mvc.UI;
+@using FXAdminTransferConnex.Entities
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@model FXAdminTransferConnex.Entities.ReconciliationModel
+@{
+    ViewBag.Title = "ReconciliationDeal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("SaveReconciliation", "Deal", FormMethod.Post, new { @id = "ReconciliationForm", enctype = "multipart/form-data" }))
+{
+    @*@Html.HiddenFor(m => m.ReconciliationId)*@
+    <div class="content">
+        <legend>Monthly Trades Re-conciliation</legend>
+        <fieldset>
+            <legend></legend>
+            <div class="panel panel-default">
+                <div class="panel-heading cursor-pointer" data-toggle="collapse" data-target="#divReconciliation">
+                    <h4 class="panel-title">
+                        <span class="fa fa-minus mr-10"></span>
+                        Re-conciliation Details
+                    </h4>
+                </div>
+                <div id="divReconciliation" class="panel-body in">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Source:</label>
+                                    @(Html.Kendo().DropDownList()
+                                            .Name("Source")
+                                            .OptionLabel("-- Select Source --")
+                                            .DataTextField("Text")
+                                            .DataValueField("Value")
+                                            .BindTo(new List<SelectListItem>()
+                                            {
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "Currency Cloud",
+                                                                Value = "CurrencyCloud"
+                                                            },
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "GC Partner",
+                                                                Value = "GCPartner"
+                                                            }
+                                            })
+                                            .HtmlAttributes(new { style = "width: 100%" })
+                                    )
+                                    @Html.ValidationMessageFor(m => m.Source)
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Report Month:</label>
+                                    @(Html.Kendo().DropDownList()
+                                            .Name("ReportMonth")
+                                            .DataTextField("Text")
+                                            .DataValueField("Value")
+                                            .OptionLabel("-- Select Month --")
+                                            .BindTo(new List<SelectListItem>()
+                                            {
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "January",
+                                                                Value = "1"
+                                                            },
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "February",
+                                                                Value = "2"
+                                                            },
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "March",
+                                                                Value = "3"
+                                                            },
+                                                            new SelectListItem()
+                                                            {
+                                                               Text = "April",
+                                                               Value = "4"
+                                                            },
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "May",
+                                                                Value = "5"
+                                                            },
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "Jun",
+                                                                Value = "6"
+                                                            },
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "July",
+                                                                Value = "7"
+                                                            },
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "August",
+                                                                Value = "8"
+                                                            },
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "September",
+                                                                Value = "9"
+                                                            },
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "October",
+                                                                Value = "10"
+                                                            },
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "November",
+                                                                Value = "11"
+                                                            },
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "December",
+                                                                Value = "12"
+                                                            }
+                                            })
+                                            .HtmlAttributes(new { style = "width: 100%" })
+                                    )
+                                    @Html.ValidationMessageFor(m => m.ReportMonth)
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+
+                                    <label class="control-label">Report Year:</label>
+
+                                    @(Html.Kendo().DropDownList()
+                                            .Name("ReportYear")
+                                            .OptionLabel("-- Select Year --")
+                                            .HtmlAttributes(new { style = "width:100%;" })
+                                            .DataTextField("Year")
+                                            .DataValueField("Year")
+                                            .DataSource(source =>
+                                            {
+                                                source.Read(read =>
+                                                {
+                                                    read.Action("GetTenYearList", "Common");
+                                                });
+                                            })
+                                    )
+                                    @Html.ValidationMessageFor(m => m.ReportYear)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Upload Re-conciliation Sheet:</label>
+                                    @Html.Kendo().Upload().Name("ReconciliationFile").Multiple(false).ShowFileList(true)
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+
+                                <button class="btn btn-orange mt-5 mr-5 pull-right" title="Save" type="submit">Save</button>
+                                <a href="/Sample File/ReconciliationDeal.xlsx" class="btn btn-orange mt-5 mr-5 pull-right" title="Download Template" download="">
+                                    Download Template
+                                </a>
+                                @*<a class="btn btn-orange mt-5 mr-5 pull-right" title="Download Template" href="~/Sample File/ReconciliationDeal.xlsx">Download Template</a>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default divCompare" id="divMissingRecord" style="display: none;">
+                <div class="panel-heading cursor-pointer" data-toggle="collapse" data-target="#divMissingRecordCompare">
+                    <h4 class="panel-title">
+                        <span class="fa fa-minus mr-10"></span>
+                        Missing Records
+                    </h4>
+                </div>
+                <div id="divMissingRecordCompare" class="panel-body in">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @(Html.Kendo().Grid<ReconciliationMissingOrMismatchModel>()
+                                    .Name("gridMissingRecords")
+                                    .Columns(columns =>
+                                    {
+                                        columns.Bound(m => m.DealRef);
+                                        columns.Bound(m => m.AccountName);
+                                        columns.Bound(m => m.AccountId);
+                                    })
+                                    .Pageable(x =>
+                                    {
+                                        x.Refresh(true);
+                                        x.PageSizes(new int[] { 10, 20, 50, 100 });
+                                    })
+                                    .Selectable(selectable => selectable
+                                    .Mode(GridSelectionMode.Single))
+                                    .Navigatable()
+                                    .AutoBind(false)
+                                    .Sortable(sortable => sortable.AllowUnsort(false))
+                                    .NoRecords()
+                                    .DataSource(dataSource => dataSource
+                                    .Ajax()
+                                    .ServerOperation(false)
+                                    .PageSize(ConfigItems.GridPageSize)
+                                    .Model(model =>
+                                    {
+                                        model.Id(d => d.ReconciliationId);
+                                    })
+                                    .Read(read => read.Action("GetMissingReconciliationDeal", "Deal"))
+                                    ))
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default divCompare" id="divUnmatchRecord" style="display: none;">
+                <div class="panel-heading cursor-pointer" data-toggle="collapse" data-target="#divUnmatchRecordCompare">
+                    <h4 class="panel-title">
+                        <span class="fa fa-minus mr-10"></span>
+                        Un-match Records
+                    </h4>
+                </div>
+                <div id="divUnmatchRecordCompare" class="panel-body in">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @(Html.Kendo().Grid<ReconciliationMissingOrMismatchModel>()
+                                .Name("gridMismatchRecords")
+                                .Columns(columns =>
+                                {
+                                            //columns.Bound(m => m.ClientSoldCCY).Sortable(false).Title("").ClientTemplate("<a style='color: white;' href='" + Url.Action("ManageDeal", "Deal") + "?DealId=#= DealId #'" + ">#=DealRef#</a>");
+                                            if (WebHelper.CanEdit())
+                                    {
+                                        columns.Command(command =>
+                                        {
+                                            command.Custom("Edit").Text("<span>Merge</span>").Click("onMergeClick").HtmlAttributes(new { @style = "margin:2px;background: transparent;color:white;" });
+                                        })
+                                            .HeaderHtmlAttributes(Common.CenterColumnStyle)
+                                            .HtmlAttributes(Common.CenterColumnStyle)
+                                            .Title("")
+                                            .Width(80);
+                                    }
+                                    columns.Bound(m => m.Source).Sortable(false);
+                                    columns.Bound(m => m.ReportYear).Sortable(false);
+                                    columns.Bound(m => m.AccountName).Sortable(false).Width(150);
+                                    columns.Bound(m => m.AccountId).Sortable(false).Width(150);
+                                    columns.Bound(m => m.DealRef).Sortable(false).Width(150).ClientTemplate("<a style='color: white;' href='" + Url.Action("ManageDeal", "Deal") + "?DealId=#= DealId #'" + ">#=DealRef#</a>");
+                                    columns.Bound(m => m.strTradeDate).Sortable(false).Title("Trade Date");
+                                    columns.Bound(m => m.strValueDate).Sortable(false).Title("Value Date");
+                                    columns.Bound(m => m.ClientBoughtAmount).Sortable(false);
+                                    columns.Bound(m => m.ClientBoughtCCY).Sortable(false);
+                                    columns.Bound(m => m.ClientSoldAmount).Sortable(false);
+                                    columns.Bound(m => m.ClientSoldCCY).Sortable(false);
+                                    columns.Bound(m => m.ClientSoldAmountGBP).Sortable(false);
+                                    columns.Bound(m => m.GrossCommsGBP).Sortable(false);
+                                    columns.Bound(m => m.MismatchColumn).Sortable(false);
+                                })
+                                .Pageable(x =>
+                                {
+                                    x.Refresh(true);
+                                            //x.PageSizes(new int[] { 10, 20, 50, 100 });
+                                        })
+                                .Selectable(selectable => selectable
+                                .Mode(GridSelectionMode.Single))
+                                .Navigatable()
+                                .AutoBind(false)
+                                .Sortable(sortable => sortable.AllowUnsort(true))
+                                .NoRecords()
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .ServerOperation(false)
+                                .PageSize(ConfigItems.GridPageSize)
+                                .Model(model =>
+                                {
+                                    model.Id(d => d.ReconciliationId);
+                                })
+                                .Read(read => read.Action("GetMismatchReconciliationDeal", "Deal"))
+                                ).Events(events => events.DataBound("onDataBound")))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+}
+
+<script type="text/javascript">
+    function compareClick() {
+        $(".divCompare").show();
+
+        //read will request the server and reload only reload datasource
+        $('#gridMissingRecords').data('kendoGrid').dataSource.read();
+
+        //refresh will re-render items in grid from the current datasource
+        $('#gridMissingRecords').data('kendoGrid').refresh();
+
+        //read will request the server and reload only reload datasource
+        $('#gridMismatchRecords').data('kendoGrid').dataSource.read();
+
+        //refresh will re-render items in grid from the current datasource
+        $('#gridMismatchRecords').data('kendoGrid').refresh();
+    }
+    $(function () {
+        var container = $("#ReconciliationForm");
+        kendo.init(container);
+        container.kendoValidator({});
+        $("#ReconciliationFile").closest(".k-upload-button").find("span").text("Select Excel File...");
+    });
+    function onDataBound(e) {
+        $.each(e.sender._data,
+            function (i, row) {
+                if (i == 0 || i == 1 || i == 4 || i == 5 || i == 8 || i == 9) {
+                    $('tr[data-uid="' + row.uid + '"] ').css({ "background-color": "#251180", "color": "white" });
+
+                } else if (i == 2 || i == 3 || i == 6 || i == 7) {
+                    $('tr[data-uid="' + row.uid + '"] ').css({ "background-color": "#ad1845","color":"white"});
+                }
+                if (row.Source == "Excel") {
+                    $('tr[data-uid="' + row.uid + '"] td:last-child').attr("rowspan", "2");
+                    $('tr[data-uid="' + row.uid + '"] ').next("tr").find("td:eq(13)").remove();
+
+                    $('tr[data-uid="' + row.uid + '"] td:first-child').attr("rowspan", "2"); //changes
+                    $('tr[data-uid="' + row.uid + '"] ').next("tr").find("td:eq(0)").remove(); // changes
+                    $('tr[data-uid="' + row.uid + '"] ').next("tr").find("td:eq(0)").css({ "border-left-width": "1px"});
+                }
+            });
+    }
+    $(document).ready(function () {
+        var havePermission ='@WebHelper.CanView()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+    });
+    $("#divUnmatchRecordCompare").click(function (e) {
+        $('#divUnmatchRecordCompare').find('tr').removeClass('k-state-selected');
+    });
+
+    function onMergeClick(e) {
+        var current = this;
+        bootbox.confirm("Are you sure you want to merge this data?",
+            function (result) {
+                let DealRef = 0;
+                let MismatchColumn = '';
+                e.preventDefault();
+                var tr = $(e.target).closest("tr");
+                var data = current.dataItem(tr);
+                DealRef = data.DealRef;
+                MismatchColumn = data.MismatchColumn;
+                if (result) {
+                $.ajax({
+                    type: "POST",
+                    url: encodeURI('@Url.Action("MergerReconciliationData", "Deal")'),
+                    data: { DealRef: DealRef, MismatchColumn: MismatchColumn },
+                    cache: false,
+                    async: false,
+                    //dataType: 'json',
+                    error: function (jqXHR, exception) {
+                    },
+                    success: function (data) {
+                        if (data.data > 0) {
+                            compareClick();
+                        }
+                        else {
+                            toastr.error("Something went wrong.");
+                        }
+                    }
+
+                });
+            }
+            });
+
+    }
+
+</script>

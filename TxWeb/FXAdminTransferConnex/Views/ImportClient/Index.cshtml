@@ -1,0 +1,81 @@
+﻿@using Kendo.Mvc.UI;
+
+@{
+    ViewBag.Title = "Import Client";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("UploadClient", "ImportClient", FormMethod.Post, new { @id = "formUpload", enctype = "multipart/form-data" }))
+{
+    <legend>Import File <a href="~/Sample File/TransferConnex.xls" target="_blank"><i class="fa fa-download" aria-hidden="true"> Download Sample File</i></a>  </legend>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.Kendo().Upload().Name("ImportClient").Multiple(false).ShowFileList(true).Events(e => e.Select("ValidateFileExtention"))
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <br />
+                    <button id="search" type="button" onclick="return SaveUploadValidate();" class="k-button btn-orange">Import</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    function ValidateFileExtention(e) {
+        var validFileExtensions = 'xls,xlsx';
+        if (validFileExtensions != NaN && validFileExtensions != '') {
+            var validFileExtension = validFileExtensions.toLowerCase().split(',');
+            var files = e.files;
+            var isValid = true;
+
+            $.each(files, function () {
+                var selectedfileExtension = this.extension.toLowerCase().replace(".", "");
+                var found = $.inArray(selectedfileExtension, validFileExtension) > -1;
+                if (!found) {
+                    isValid = false;
+                    e.preventDefault();
+                }
+            });
+
+            if (!isValid) {
+                ShowErrorMessageImport('Please Select Valid File To Import');
+            }
+            else {
+                return true;
+            }
+        }
+    }
+
+    function SaveUploadValidate(e) {
+        var selectedfiles = $("#ImportClient").parent().siblings("ul").length;
+        if (selectedfiles <= 0) {
+            ShowErrorMessageImport('Must Select File To Import');
+            return false;
+        }
+        else {
+            var formData = new FormData($('#formUpload').get(0));
+            $.ajax({
+                url: '@Url.Action("UploadClient", "ImportClient")',
+                async: false,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.ErrorMessage == "" || data.ErrorMessage == null) {
+                        ShowSuccessMessage('Clients imported successfully.')
+                    }
+                    else {
+                        ShowErrorMessage(data.ErrorMessage);
+                    }
+                }
+            });
+        }
+    };
+</script>

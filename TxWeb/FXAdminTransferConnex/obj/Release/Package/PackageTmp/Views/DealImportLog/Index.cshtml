@@ -1,0 +1,62 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+
+<div class="content">
+    <legend>Deal Import Logs</legend>
+
+    @* GRID HERE *@
+
+    <fieldset>
+        <legend></legend>
+        <div class="panel panel-default">
+            <div class="panel-body dealimportlog-box">
+                <div class="table-responsive">
+                @(Html.Kendo().Grid<ImportLogModel>()
+                     .Name("gridTrader")
+                     .Columns(columns =>
+                     {
+                         columns.Bound(m => m.ImportDate).Filterable(false).Width(200).Format("{0:dd/MM/yyyy HH:mm:ss}");
+                         columns.Bound(m => m.ImportFrom).Filterable(true).Width(200).Format("{0:dd/MM/yyyy}");
+                         columns.Bound(m => m.ImportTo).Filterable(false).Width(200).Format("{0:dd/MM/yyyy}");
+                         columns.Bound(m => m.DealCount).Filterable(true).Width(200);
+                         columns.Bound(m => m.Importstatus).Title("Import Status").Filterable(true).Width(200);
+                         columns.Bound(m => m.DealShortReference).Filterable(true).Width(200);
+                     })
+                     .Selectable(selectable => selectable
+                     .Mode(GridSelectionMode.Single))
+                     .Navigatable()
+                     .Pageable(x =>
+                     {
+                         x.Refresh(true);
+                         x.PageSizes(new int[] { 5, 10, 20, 50, 100 });
+
+                     })
+                     .Sortable(sortable => sortable.AllowUnsort(false))
+                     .NoRecords()
+                     .DataSource(dataSource => dataSource
+                     .Ajax()
+                     .ServerOperation(false)
+                     .Model(model =>
+                     {
+                         model.Id(d => d.GetHashCode());
+                     })
+                     .Read(read => read.Action("GetImportDealList", "DealImportLog"))
+                 ))
+
+               
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var havePermission ='@WebHelper.CanView()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+    });
+</script>

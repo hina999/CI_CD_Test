@@ -1,0 +1,120 @@
+﻿@using Kendo.Mvc.UI
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnexApp;
+@{
+    ViewBag.Title = "VolumeReportByMonth";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <legend>
+        Volume Report By Trader
+    </legend>
+    <div class="panel panel-default">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">Select Start Month:</label>
+                                @(Html.Kendo().DropDownList().Name("ddMonth").OptionLabel("-- Select Month--").HtmlAttributes(new { style = "width:100%;" }).DataTextField("MonthName").DataValueField("MonthNo").DataSource(source => { source.Read(read => { read.Action("GetMonthList", "Common"); }); }) )
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">Select Start Year:</label>
+                                @(Html.Kendo().DropDownList().Name("ddYear").OptionLabel("-- Select Year --").HtmlAttributes(new { style = "width:100%;" }).DataTextField("Year").DataValueField("Year").DataSource(source => { source.Read(read => { read.Action("GetYearList", "Common"); }); }) )
+                            </div>
+                        </div>
+                        <div class="col-sm-4 text-right">
+                            <div class="form-group">
+                                <button id="btnSearch" type="button" class="btn-orange">Search</button>
+                                <button id="btnReset" type="button" class="btn-orange">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <fieldset>
+        <legend></legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @(Html.Kendo().Grid<VolumeReportByMonthodelMonthYear>
+            ()
+            .Name("gridVolumeReportByTrader")
+            .Columns(columns =>
+            {
+                columns.Bound(m => m.TraderName);
+                columns.Bound(m => m.ClientSoldAmt).Title("Total Volume Traded (GBP)").Format("{0:n2}");
+                columns.Bound(m => m.GrossProfit).Title("Gross Profit").Format("{0:n2}"); 
+                columns.Bound(m => m.TotalTrade).Title("Total No of Trades");
+                columns.Bound(m => m.AvgTradeSize).Title("Average Trade Size").Format("{0:n2}");
+                columns.Bound(m => m.AvgTradeProfit).Title("Average Trade Profit").Format("{0:n2}");
+                columns.Bound(m => m.AvgSpread).Title("Average Spread");
+            })
+            .Pageable(x =>
+            {
+                x.Refresh(false);
+                x.PageSizes(new int[] { 10, 20, 50, 100 });
+            })
+            .ToolBar(t => t.Excel())
+            .Excel(excel => excel.FileName("ClientMargin.xlsx").Filterable(true).AllPages(true))
+            .Selectable(selectable => selectable
+            .Mode(GridSelectionMode.Single))
+            .Navigatable()
+            //.Filterable()
+            .Sortable(sortable => sortable.AllowUnsort(true))
+            .NoRecords()
+            .DataSource(dataSource => dataSource
+            .Ajax()
+            .ServerOperation(false)
+            .PageSize(ConfigItems.GridPageSize)
+            .Read(read => read.Action("GetVolumeReportByTraderList", "Report").Data("OnData"))
+            ))
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script>
+    $(document).ready(function () {
+        var havePermission = '@WebHelper.CanView()';
+        if (havePermission.toLowerCase() == "false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+        kendoGridScroll();
+    });
+
+    function ReadGrid() {
+        $('#gridVolumeReportByTrader').data('kendoGrid').dataSource.read();
+    }
+
+    function OnData() {
+        return {
+            Month: $("#ddMonth").data("kendoDropDownList").value(),
+            Year: $("#ddYear").data("kendoDropDownList").value()
+        }
+    }
+
+    $('#btnReset').click(function () {
+        $("#ddMonth").data("kendoDropDownList").value(0);
+        $("#ddYear").data("kendoDropDownList").value(0);
+        ReadGrid();
+    });
+
+    $("#btnSearch").click(function () {
+        ReadGrid();
+    });
+
+    $(window).on('keypress',function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            ReadGrid();
+        }
+    });
+</script>

@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3354E200-C991-4B2B-88EF-2050692CF995}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FXAdminTransferConnex.Data</RootNamespace>
+    <AssemblyName>FXAdminTransferConnex.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Databases\FXBackOfficeSystemContext.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Databases\IDBContext.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Helper\AESEncryptionDecryptionHelper.cs" />
+    <Compile Include="LocalizationResource\FXBackOfficeSystemResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FXBackOfficeSystemResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="LocalizationResource\Locale.cs" />
+    <Compile Include="Models\Agent.cs" />
+    <Compile Include="Models\Broker.cs" />
+    <Compile Include="Models\CityMaster.cs" />
+    <Compile Include="Models\ClientAgent.cs" />
+    <Compile Include="Models\ClientBroker.cs" />
+    <Compile Include="Models\ClientCommunication.cs" />
+    <Compile Include="Models\ClientMaster.cs" />
+    <Compile Include="Models\CommunicationType.cs" />
+    <Compile Include="Models\CountryMaster.cs" />
+    <Compile Include="Models\Deal.cs" />
+    <Compile Include="Models\DealBrokerAgent.cs" />
+    <Compile Include="Models\DrawDowns.cs" />
+    <Compile Include="Models\FXBackOfficeSystemContext.cs" />
+    <Compile Include="Models\Mapping\AgentMap.cs" />
+    <Compile Include="Models\Mapping\BrokerMap.cs" />
+    <Compile Include="Models\Mapping\ClientAgentMap.cs" />
+    <Compile Include="Models\Mapping\ClientBrokerMap.cs" />
+    <Compile Include="Models\Mapping\ClientCommunicationMap.cs" />
+    <Compile Include="Models\Mapping\ClientMasterMap.cs" />
+    <Compile Include="Models\Mapping\CommunicationTypeMap.cs" />
+    <Compile Include="Models\Mapping\DealBrokerAgentMap.cs" />
+    <Compile Include="Models\Mapping\DealMap.cs" />
+    <Compile Include="Models\Mapping\MenuMap.cs" />
+    <Compile Include="Models\Mapping\ProspectClient.cs" />
+    <Compile Include="Models\Mapping\ProspectClientAgentMap.cs" />
+    <Compile Include="Models\Mapping\ProspectClientBrokerMap.cs" />
+    <Compile Include="Models\Mapping\ProspectClientCommunicationMap.cs" />
+    <Compile Include="Models\Mapping\ProspectClientMasterMap.cs" />
+    <Compile Include="Models\Mapping\StagingDealBrokerAgentMap.cs" />
+    <Compile Include="Models\Mapping\StagingDealMap.cs" />
+    <Compile Include="Models\Mapping\TransactionFollowUpMap.cs" />
+    <Compile Include="Models\Mapping\UserDashboardConfigurationMap.cs" />
+    <Compile Include="Models\Mapping\UserMasterMap.cs" />
+    <Compile Include="Models\Mapping\UserTypeMap.cs" />
+    <Compile Include="Models\Mapping\UserTypeMenuMap.cs" />
+    <Compile Include="Models\Menu.cs" />
+    <Compile Include="Models\ProspectClientAgent.cs" />
+    <Compile Include="Models\ProspectClientBroker.cs" />
+    <Compile Include="Models\ProspectClientCommunication.cs" />
+    <Compile Include="Models\ProspectClientMaster.cs" />
+    <Compile Include="Models\RegionMaster.cs" />
+    <Compile Include="Models\StagingDeal.cs" />
+    <Compile Include="Models\StagingDealBrokerAgent.cs" />
+    <Compile Include="Models\TransactionFollowUp.cs" />
+    <Compile Include="Models\UserDashboardConfiguration.cs" />
+    <Compile Include="Models\UserMaster.cs" />
+    <Compile Include="Models\UserType.cs" />
+    <Compile Include="Models\UserTypeMenu.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\EfRepository.cs" />
+    <Compile Include="Repository\IRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="LocalizationResource\FXBackOfficeSystemResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>FXBackOfficeSystemResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

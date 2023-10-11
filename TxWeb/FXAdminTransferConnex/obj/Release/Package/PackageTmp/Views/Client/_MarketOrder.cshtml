@@ -1,0 +1,190 @@
+﻿
+@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+@(Html.Kendo().Grid<MarketOrderSettingModel>()
+              .Name("gridMarketOrder")
+              .Columns(columns =>
+              {
+                  //columns.Bound(m => m.MarketOrderId).Visible(true).ClientTemplate(
+                  //             "# if (ClientId > 0) { #" +
+                  //             "<a class='active restrictCall' href='" + Url.Action("ManageClient", "Client") + "?ClientId=#=ClientId #'>" + "#=FullName#" + "</a>" +
+                  //             "# } else { #" +
+                  //             "<a class='active restrictCall' href='" + Url.Action("ManageProspect", "Prospect") + "?ProspectId=#=ProspectId #'>" + "#=FullName#" + "</a>" +
+                  //             "# } #"
+                  //             ).Title("Client Name").Width(200);
+                  columns.Bound(m => m.CompanyName).Visible(true).Title("Company Name").Width(200);
+                  columns.Bound(m => m.TraderName).Visible(true).Title("Trader Name").Width(150);
+                  columns.Bound(m => m.AccountNo).Visible(true).Title("Account No").Width(150);
+                  columns.Bound(m => m.From_To_currency).Visible(true).Title("From - To").Width(150);
+                  columns.Bound(m => m.DateCondition).Visible(true).Title("Date Condition").Width(170);
+                  //columns.Template(t => { }).ClientTemplate("<span>#= FromCurrencyName +'-' +  ToCurrencyName) #</span>").Title("Group Name");
+                  // columns.Bound(m => m.FromCurrencyName + " " + m.ToCurrencyName).Visible(true).Title("From-To Currency").Width(150);
+                  //columns.Bound(m => m.FromCurrencyName).Visible(true).Title("From Currency").Width(150);
+                  //columns.Bound(m => m.ToCurrencyName).Visible(true).Title("To Currency").Width(150);
+                  //columns.Bound(m => m.Filter).Visible(true).Title("Date Condition").Width(80);
+                  //columns.Bound(m => m.FromDate).Visible(true).Title("From Date").Width(100);
+                  //columns.Bound(m => m.ToDate).Visible(true).Title("To Date").Width(100);
+                  columns.Bound(m => m.Operator).Visible(true).Title("Condition").Width(40).HtmlAttributes(new { style = "text-align: center" });
+                  columns.Bound(m => m.MarketRate).Width(150);
+                  columns.Bound(m => m.ClientRate).Width(150);
+                  columns.Bound(m => m.Amount).Width(150).Format("{0:n2}");
+                  columns.Bound(m => m.Comments).Width(150);
+                  //columns.Bound(m => m.strCreatedDate).Visible(true).Title("Created Date").Width(150);
+                  columns.Bound(m => m.Status).Visible(true).Title("Status").Width(100);
+
+
+                  //columns.Bound(m => m.FromCurrencyName).Visible(true).Title("From Currency").Width(150);
+                  //columns.Bound(m => m.ToCurrencyName).Visible(true).Title("To Currency").Width(150);
+                  //columns.Bound(m => m.Filter).Visible(true).Title("Date Condition").Width(150);
+                  //columns.Bound(m => m.FromDate).Visible(true).Title("From Date").Width(150);
+                  //columns.Bound(m => m.ToDate).Visible(true).Title("To Date").Width(150);
+                  //columns.Bound(m => m.OperatorStr).Visible(true).Title("Condition").Width(150);
+                  //columns.Bound(m => m.MarketRate).Width(150);
+                  //columns.Bound(m => m.ClientRate).Width(150);
+                  //columns.Bound(m => m.Amount).Width(150).Format("{0:n2}");
+                  //columns.Bound(m => m.strCreatedDate).Visible(true).Title("Created Date").Width(150);
+                  //columns.Bound(m => m.Status).Visible(true).Title("Status").Width(150);
+                  columns.Command(command =>
+                  {
+                      if (WebHelper.CanEdit())
+                      {
+                          command.Edit().CancelText("Cancel").Text(" ").UpdateText("Save");
+                      }
+                      if (WebHelper.CanDelete())
+                      {
+                          command.Destroy().Text(" ");
+                      }
+                      command.Custom("Action").Text("<i class='k-icon k-i-tick'></i>").Click("UpdateAction");
+                  }).Hidden(ViewBag.isViewClient == true)
+                      .HeaderHtmlAttributes(Common.CenterColumnStyle)
+                      .HtmlAttributes(Common.CenterColumnStyle)
+                      .Title("Action")
+                      .Width(300);
+              })
+              .ToolBar(toolbar =>
+              {
+                  if (!ViewBag.isViewClient)
+                  {
+                      toolbar.Create().Text("Add Market Order");
+                  }
+              })
+              .Editable(e => e.Mode(GridEditMode.PopUp))
+              .Pageable(x =>
+              {
+
+                  x.Refresh(true);
+                  x.PageSizes(new int[] { 10, 20, 50, 100 });
+              })
+              .Selectable(selectable => selectable
+              .Mode(GridSelectionMode.Single))
+              .Navigatable()
+              .Sortable(sortable => sortable.AllowUnsort(false))
+              .NoRecords()
+              .Events(grid => grid.Edit("EditMarketOrder"))
+              .DataSource(dataSource => dataSource
+                  .Ajax()
+                  .ServerOperation(true)
+                  .PageSize(ConfigItems.GridPageSize)
+                  .Model(model =>
+                  {
+                      model.Id(d => d.MarketOrderId);
+                  })
+                .Create(update => update.Action("SaveMarketOrderSetting", "Client"))
+                .Update(update => update.Action("SaveMarketOrderSetting", "Client"))
+                .Destroy(delete => delete.Action("DeleteMarketOrderSetting", "Client"))
+                .Read(read => read.Action("GetMarketOrderSettingList", "Client").Data("paraMarketClientId"))
+                .Events(events => events.RequestEnd("onMarketOrderRequestEnd"))
+              ).Events(events => events.DataBound("onDataBound")))
+
+<script>
+
+    $(document).ready(function () {
+        kendoGridScroll();
+    });
+
+    //Shows the notifications
+    function onMarketOrderRequestEnd(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridMarketOrder').data('kendoGrid').dataSource.read();
+        }
+        DisplayResponseMessage(para);
+    }
+
+    function onDataBound() {
+        var inboxGrid = $('#gridMarketOrder').data("kendoGrid");
+        var gridData = inboxGrid.dataSource.total();
+        if (gridData <= 10) {
+            inboxGrid.pager.element.hide();  
+        }
+      
+    }
+
+    function paraMarketClientId() {
+        var marketStatus = ["Created","Triggered","Actioned"]
+        return {
+            FullName: null,
+            EmailAddress: null,
+            CompanyName: null,
+            MarketOrderStatus: marketStatus.toString() ,
+            FromCurrency: null,
+            ToCurrency: null,
+            ClientId: $('#ClientId').val(),
+            ProspectId: $('#ProspectId').val()
+        }
+    }
+
+    function UpdateAction(e) {
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+        if (parseInt(dataItem.id) > 0) {
+            $.ajax({
+                data: { ID: dataItem.id, Status: "Actioned" },
+                // type: 'POST',
+                url: '@Url.Action("MarketOrderSettingUpdateStatus", "Client")',
+            }).done(function (data) {
+
+                if (data) {
+                    ShowSuccessMessage('Market order actioned successfully.');
+                    $('#gridMarketOrder').data('kendoGrid').dataSource.read();
+                }
+                else {
+                    ShowErrorMessage('Something went wrong.')
+                }
+
+            });
+        }
+    }
+
+    function EditMarketOrder(e) {
+        var window = e.container.data("kendoWindow");
+        e.model.set("ClientId", $('#ClientId').val());
+        e.model.set("ProspectId", $('#ProspectId').val());
+        $('label[for=FilterId]').text("Date Condition");
+        if (e.model.isNew()) {
+            window.title("Add Market Order");
+        }
+        else {
+            var data = e.model;
+            if (data.Filter == "Range") {
+                $('label[for=StartDate]').text("Start Date");
+                $('label[for=EndDate]').show()
+                $("#EndDate").closest(".k-widget").show();
+            } else {
+                $('label[for=EndDate]').hide();
+                $("#EndDate").closest(".k-widget").hide();
+                $('label[for=StartDate]').text("Date");
+            }
+
+            window.title("Edit Market Order");
+        }
+    };
+
+    $("#gridMarketOrder").delegate("tbody>tr", "dblclick", function () {
+        if (!$(this).hasClass('k-grid-edit-row')) {
+            $("#gridMarketOrder").data("kendoGrid").editRow($(this));
+        }
+    });
+  
+</script>

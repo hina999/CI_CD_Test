@@ -1,0 +1,106 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnexApp
+@model FXAdminTransferConnex.Entities.ReconciliationTeamModel
+@{
+    ViewBag.Title = "Sales Figures";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <legend>
+        Sales Figures Report
+    </legend>
+    <div class="panel panel-default">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">From Date:</label>
+                                @Html.Kendo().DatePicker().Name("FromDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:100%" })
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">To Date:</label>
+                                @Html.Kendo().DatePicker().Name("ToDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:100%" })
+                            </div>
+                        </div>
+                        <div class="col-sm-4 text-right">
+                            <div class="form-group pt-30">
+                                <button id="btnmembersearch" type="button" class="k-button btn-orange" onclick="loadReport()">Search</button>
+                                <button id="btnReset" type="button" class="k-button btn-orange" onclick="resetSearch()">Reset</button>
+                                <button id="btnSave" type="button" class="k-button btn-orange" onclick="goBack()">Back</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <fieldset>
+        <legend></legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="partialRightAssignDiv">
+                    @Html.Partial("ReconciliationTeamReportData")
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script>
+    $(document).ready(function () {
+        var havePermission ='@WebHelper.CanView()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+        loadReport();
+    });
+
+    function loadReport() {
+        var FDate = $("#FromDate").data("kendoDatePicker").value();
+        var FfinalDate = '';
+        if (FDate) {
+            var Fdate = new Date(FDate);
+            var Fday = Fdate.getDate();
+            var Fmonth = Fdate.getMonth() + 1;
+            var Fyear = Fdate.getFullYear();
+
+            FfinalDate = ("0" + Fday).slice(-2) + "/" + ("0" + Fmonth).slice(-2) + "/" + Fyear;
+        }
+
+        var TDate = $("#ToDate").data("kendoDatePicker").value();
+        var TfinalDate = '';
+        if (TDate) {
+            var Tdate = new Date(TDate);
+            var Tday = Tdate.getDate();
+            var Tmonth = Tdate.getMonth() + 1;
+            var Tyear = Tdate.getFullYear();
+
+            TfinalDate = ("0" + Tday).slice(-2) + "/" + ("0" + Tmonth).slice(-2) + "/" + Tyear;
+        }
+
+        $.ajax({
+            data: { strFromDate: FfinalDate, strToDate: TfinalDate },
+            type: "GET",
+            url: '@Url.Action("ReconciliationTeamReportData", "ReconciliationTeam")'
+        }).done(function (data) {
+            $('.loader').hide();
+            $("#partialRightAssignDiv").html(data);
+        });
+    }
+
+    function resetSearch() {
+        $("#FromDate").data("kendoDatePicker").value(null);
+        $("#ToDate").data("kendoDatePicker").value(null);
+
+        loadReport();
+    }
+
+    function goBack() {
+        window.history.back();
+    }
+</script>

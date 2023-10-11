@@ -1,0 +1,207 @@
+﻿@using Kendo.Mvc.UI;
+@using FXAdminTransferConnexApp
+@model FXAdminTransferConnex.Entities.TraderModel
+
+@{
+    ViewBag.Title = "Manage Trader";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .picture-container {
+        position: relative;
+        cursor: pointer;
+        text-align: center;
+        height: 130px;
+    }
+
+    .picture {
+        width: 130px;
+        height: 130px;
+        max-width: 130px;
+        max-height: 130px;
+        background-color: #999;
+        border: 4px solid #ccc;
+        color: #fff;
+        border-radius: 50%;
+        overflow: hidden;
+        transition: all .2s;
+        -webkit-transition: all .2s;
+    }
+
+    .picture-src {
+        width: 100%;
+        height: 100% !important;
+    }
+
+    .picture input[type=file] {
+        cursor: pointer;
+        display: block;
+        height: 100%;
+        left: 0;
+        opacity: 0 !important;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+</style>
+
+@using (Html.BeginForm("ManageTrader", "Trader", FormMethod.Post, new { @id = "TraderForm", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(m => m.TraderId)
+    @Html.HiddenFor(m => m.ImageURL)
+    @Html.HiddenFor(m => m.ImageName)
+    <div class="content">
+        <legend>Trader Detail</legend>
+        <fieldset>
+            <legend></legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">First Name:</label>
+                                    @Html.TextBoxFor(m => m.FirstName, new { @placeholder = "First Name", @class = "form-control", @tabindex = "1" })
+                                    @Html.ValidationMessageFor(m => m.FirstName)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Last Name:</label>
+                                    @Html.TextBoxFor(m => m.LastName, new { @placeholder = "Last Name", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.LastName)
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Company Name:</label>
+                                    @Html.TextBoxFor(m => m.CompanyName, new { @placeholder = "Company Name", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CompanyName)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Email Address:</label>
+                                    @Html.TextBoxFor(m => m.EmailAddress, new { @placeholder = "EmailAddress", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.EmailAddress)
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Mobile Number:</label>
+                                    @Html.TextBoxFor(m => m.MobileNo, new { @placeholder = "Mobile Number", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.MobileNo)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Joining Date:</label>
+                                    @(Html.Kendo()
+                                                        .DatePickerFor(m => m.JoiningDate)
+                                                        .Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate)
+                                                        .HtmlAttributes(new { @class = "dropdown", style = "width: 100%" })
+                                    )
+                                    @Html.ValidationMessageFor(m => m.JoiningDate)
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-12">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Password:</label>
+                                    @Html.TextBoxFor(m => m.Password, new { @placeholder = "Password", @class = "form-control", @type = "password" })
+                                    @Html.ValidationMessageFor(m => m.Password)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <input id="IsClose" name="IsClose" value="@Model.IsClose" @(Model.IsClose ? "checked=\"checked\"" : "") class="k-checkbox" type="checkbox" />
+                                    <label class="control-label k-checkbox-label" for="IsClose">Is Close ?</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" id="lblPassword">Profile Picture:</label>
+                                    <div class="picture-container picture card-avatar">
+                                        <img class="picture-src" id="wizardPicturePreview" src="" title="" alt="">
+                                        <input id="wizard-picture" name="ImageFile" onchange="onFileChanged(event)" type="file" accept=".jpeg,.png,.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <a href="@Url.Action("Index", "Trader")" class="btn btn-orange mt-5 mr-10 pull-right">Cancel</a>
+                            <button class="btn btn-orange mt-5 mr-10 pull-right" type="submit">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.TraderId > 0)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#div1">
+                        <h4 class="panel-title">
+                            <span class="fa fa-minus mr-10"></span>
+                            Trader Commission
+                        </h4>
+                    </div>
+                    <div id="div1" class="panel-body">
+                        @Html.Partial("_TraderCommission", Model)
+                    </div>
+                </div>
+            }
+        </fieldset>
+    </div>
+}
+
+
+<script>
+    $(document).ready(function () {
+        checkAddeditPermission();
+        var validator = $("#TraderForm").kendoValidator().data("kendoValidator");
+
+        let ImageName = $("#ImageName").val();
+        if (ImageName) {
+            let ImageURL = $("#ImageURL").val();
+            document.getElementById("wizardPicturePreview").setAttribute("src", ImageURL);
+        }
+    });
+
+    function checkAddeditPermission() {
+        var havePermission = "false";
+        if (@Model.TraderId > 0) {
+            havePermission = '@WebHelper.CanEdit()';
+        } else {
+            havePermission = '@WebHelper.CanAdd()';
+        }
+        console.log(havePermission);
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+    }
+
+    function onFileChanged(event) {
+        if (event.target.files && event.target.files[0]) {
+            var reader = new FileReader();
+            var file;
+            reader.onload = function (e) {
+                file = e.target;
+                document.getElementById("wizardPicturePreview").setAttribute("src", file.result);
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    }
+</script>

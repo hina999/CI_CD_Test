@@ -1,0 +1,108 @@
+﻿
+@{
+    ViewBag.Title = "Client Ring Central";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*<script type="text/javascript">
+    $(document).ready(function() {
+        var rcs = document.createElement("script");
+        rcs.src = "https://ringcentral.github.io/ringcentral-web-widget/adapter.js";
+        var rcs0 = document.getElementsByTagName("script")[0];
+        rcs0.parentNode.insertBefore(rcs, rcs0);
+        window.addEventListener('message',
+            function (e) {
+
+                var data = e.data;
+                //console.log(data);
+                if (data && data.type == "rc-call-ring-notify") {
+                    console.log(data.call.from);
+                    GetClientIdByMobile(data.call.from);
+                }
+            });
+
+        toastr.options =
+        {
+            "closeButton": true,
+            "debug": true,
+            "positionClass": "toast-bottom-full-width",
+            "onclick": null,
+            "fadeIn": 3000,
+            "fadeOut": 1000,
+            "extendedTimeOut": 0,
+            "timeOut": 0,
+            "tapToDismiss":false
+            }
+        
+    });
+
+    function GetClientIdByMobile(mobile) {
+        $.ajax({
+            data: { MobileNo: mobile },
+            type: "GET",
+            url: '@Url.Action("GetClientDetailByMobile", "Client")'
+        }).done(function (data) {
+            $('.loader').hide();
+            
+            if (data && data.ClientId > 0) {
+
+                var clientDetail = "<div class='row' style='border-bottom: 1px solid; font-size: 25px; text-align: center;'><span>Incoming Call. . .</span></div>" +
+                    "<div class='row pt-10'>" +
+                    "<div class='col-md-12'>" +
+                    "<div class='col-md-6'>" +
+                    "<div class='col-md-4 text-right pr-0'>Client Name :</div>" +
+                    "<div class='col-md-8'>" + data.ClientName + "</div>" +
+                    "</div>" +
+                    "<div class='col-md-6'>" +
+                    "<div class='col-md-4 text-right pr-0'>Company Name :</div>" +
+                    "<div class='col-md-8'>" + data.CompanyName + "</div>" +
+                    "</div>" +
+
+                    "</div>" +
+                    "</div>" +
+
+                    "<div class='row'>" +
+                    "<div class='col-md-12'>" +
+                    "<div class='col-md-6'>" +
+                    "<div class='col-md-4 text-right pr-0'>Trader :</div>" +
+                    "<div class='col-md-8'>" + data.TraderName + "</div>" +
+                    "</div>" +
+                    "<div class='col-md-6'>" +
+                    "<div class='col-md-4 text-right pr-0'>Sales Person :</div>" +
+                    "<div class='col-md-8'>" + data.SalesPersonName + "</div>" +
+                    "</div>" +
+
+                    "</div>" +
+                    "</div>" +
+                    "<div class='row'>" +
+                    "<div class='col-md-12'>" +
+                    "<div class='col-md-6'>" +
+                    "<div class='col-md-4 text-right pr-0'>Default Margin :</div>" +
+                    "<div class='col-md-8'>" + data.DefaultMargin + "</div>" +
+                    "</div>" +
+                    "</div>" +
+                    "</div>" +
+                    "<div class='row'>" +
+                    "<div class='col-md-12'>" +
+                    "<div class='col-md-12 text-center'>" +
+                    "<a href='javascript:void(0)' onclick=rediredtToClientDetailPage("+data.ClientId+") style='background: #0833b7; color: white;' title='Click here to show more client details'>[ Click here for more client details ]</a>" +
+                    "</div>" +
+                    "</div>" +
+                    "</div>"
+                toastr.info(clientDetail);
+            }
+
+
+        });
+    }
+    function rediredtToClientDetailPage(clientId) {
+        var urllink = '@Url.Action("ManageClient", "Client")';
+        window.open(urllink + '?ClientId=' + clientId);
+    }
+</script>
+<style>
+    .toast-bottom-full-width {
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 60% !important;
+    }
+</style>*@

@@ -1,0 +1,1249 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+
+<style>
+    .button_group {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+</style>
+
+<div class="content">
+    <legend id="titleClient">Client List</legend>
+    <div class="panel panel-default" id="clientSearchPanel">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Full Name:</label>
+                                <input id="txtFullName" type="text" placeholder="Full Name" class="k-textbox Search" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Company Name:</label>
+                                <input id="txtCompanyName" type="text" placeholder="Company Name" class="k-textbox Search" />
+                            </div>
+                        </div>
+                        @{
+                            if (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode() &&
+                                ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.Trader.GetHashCode())
+                            {
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Select Sales Person:</label>
+                                        @(Html.Kendo().DropDownList()
+                                                .Name("SearchClientSalesperson")
+                                                .HtmlAttributes(new { style = "width:100%;" })
+                                                .OptionLabel("Select Sales person")
+                                                .DataTextField("Text")
+                                                .DataValueField("Value")
+                                                .DataSource(source =>
+                                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode() });
+                                    });
+                                })
+                                        )
+                                    </div>
+                                </div>
+
+
+                            }
+
+                            else if (ProjectSession.LoginUserDetails.UserTypeId == (int)SystemEnum.UserType.Trader)
+                            {
+
+                                //------
+                                <div class="col-lg-3 col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Trade Persons:</label>
+                                        @(Html.Kendo().DropDownList()
+                                           .Name("TradePersonsList")
+                                           .HtmlAttributes(new { style = "width:100%;" })
+                                           .DataTextField("Text")
+                                           .DataValueField("Value")
+                                           .OptionLabel("-- Select Trade Person--")
+                                          .DataSource(source =>
+                                          {
+                                              source.Read(read =>
+                                              {
+                                                  read.Action("GetTraderList", "Common");
+                                              });
+                                          })
+                                           .Events(e =>
+                                           {
+                                               e.Change("onChange").Select("onSelect");
+                                           })
+                                  .HtmlAttributes(new { style = "width: 100%" })
+                                       )
+                                    </div>
+                                </div>
+                                @*<div class="col-lg-3 col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Sales Persons:</label>
+                                            @(Html.Kendo().DropDownList()
+                                                .Name("SalesPersonsList")
+                                                .DataTextField("Text")
+                                                .DataValueField("Value")
+                                                .OptionLabel("-- Select Sales Person--")
+                                                .DataSource(source =>
+                                                {
+                                                    source.Read(read =>
+                                                    {
+                                                        read.Action("GetSalesPersonListByTrader", "Common");
+                                                    });
+                                                })
+                                                .HtmlAttributes(new { style = "width: 100%" })
+                                                )
+                                        </div>
+                                    </div>*@
+
+                                <div class="col-lg-3 col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Sales Persons:</label>
+                                        @(Html.Kendo().DropDownList()
+                                        .Name("SalesPersonsList")
+                                        .HtmlAttributes(new { style = "width:100%;" })
+                                        .CascadeFrom("TradePersonsList")
+                                        .OptionLabel("-- Select Sales Person--")
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetSalespersonListByTradeId", "Common")
+                                               .Data("filterSalesPersonByTradeId");
+                                            })
+                                             .ServerFiltering(true);
+                                        })
+                                     .Enable(false)
+                                     .AutoBind(false)
+                                )
+                                    </div>
+                                </div>
+
+                                //------
+                            }
+
+                        }
+
+                        @{
+                            if ((ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode()) &&
+                                                                 (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.Trader.GetHashCode()))
+                            {
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Select Junior Sales Person:</label>
+                                        @(Html.Kendo().DropDownList()
+                                                .Name("SearchClientJuniorSalesPerson")
+                                                .HtmlAttributes(new { style = "width:100%;" })
+                                                .OptionLabel("Select Junior Sales Person")
+                                                .DataTextField("Text")
+                                                .DataValueField("Value")
+                                                .DataSource(source =>
+                                                {
+                                                    source.Read(read =>
+                                                    {
+                                                        read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode() });
+                                                    });
+                                                })
+                                        )
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    </div>
+                    <div class="row">
+                        @{
+                            if ((ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode()) &&
+                                                                 (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.Trader.GetHashCode()))
+                            {
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Select Trader:</label>
+                                        @(Html.Kendo().DropDownList()
+                                                .Name("SearchClientTrader")
+                                                .HtmlAttributes(new { style = "width:100%;" })
+                                                .OptionLabel("Select Trader")
+                                                .DataTextField("Text")
+                                                .DataValueField("Value")
+                                                .DataSource(source =>
+                                                {
+                                                    source.Read(read =>
+                                                    {
+                                                        read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.Trader.GetHashCode() });
+                                                    });
+                                                })
+                                        )
+                                    </div>
+                                </div>
+                            }
+                        }
+                        @*<div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Account Number:</label>
+                                    <input id="txtAccountNo" type="text" placeholder="Account Number" class="k-textbox Search" />
+                                </div>
+                            </div>*@
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Awaiting Action:</label>
+                                @(Html.Kendo().DropDownList()
+                                        .Name("AwaitingAction")
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        //.OptionLabel("-- Status--")
+                                        .Value(ViewBag.IsAwaitingAction.ToString())
+                                        .BindTo(new List<SelectListItem>()
+                                        {
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "All",
+                                                            Value = "2"
+                                                        },
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "Yes",
+                                                            Value = "1"
+                                                        },
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "No",
+                                                            Value = "0"
+                                                        }
+                                        })
+                                        .HtmlAttributes(new { style = "width: 100%" })
+                                )
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Market Order:</label>
+                                @(Html.Kendo().DropDownList()
+                                        .Name("MarketOrder")
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        //.OptionLabel("-- Status--")
+                                        .Value(ViewBag.IsMarketOrder.ToString())
+                                        .BindTo(new List<SelectListItem>()
+                                        {
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "All",
+                                                            Value = "2"
+                                                        },
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "Yes",
+                                                            Value = "1"
+                                                        },
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "No",
+                                                            Value = "0"
+                                                        }
+                                        })
+                                        .HtmlAttributes(new { style = "width: 100%" })
+                                )
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Email Address:</label>
+                                <input id="txtEmailAddress" type="text" placeholder="Email Address" class="k-textbox Search" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Currency Bought:</label>
+                                @(Html.Kendo().DropDownList()
+                                        .Name("SearchCurrenciesBought")
+                                        .HtmlAttributes(new { style = "width:100%;" })
+                                        .OptionLabel("Select Currencies")
+                                        .DataTextField("CCY")
+                                        .DataValueField("CCYId")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetCurrencyList", "Common");
+                                            });
+                                        })
+                                )
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Currency Sold:</label>
+                                @(Html.Kendo().DropDownList()
+                                        .Name("SearchCurrenciesSold")
+                                        .HtmlAttributes(new { style = "width:100%;" })
+                                        .OptionLabel("Select Currencies")
+                                        .DataTextField("CCY")
+                                        .DataValueField("CCYId")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetCurrencyList", "Common");
+                                            });
+                                        })
+                                )
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Lead Category:</label>
+                                @(Html.Kendo().DropDownList()
+                                        .Name("SearchLeadCategory")
+                                        .HtmlAttributes(new { style = "width:100%;" })
+                                        .OptionLabel("Select Lead Category")
+                                        .DataTextField("LeadCategory")
+                                        .DataValueField("LeadId")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetLeadCategoryList", "Common");
+                                            });
+                                        })
+                                )
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+
+                                <label class="control-label">Business Category:</label>
+                                @(Html.Kendo().DropDownList()
+                                        .Name("SearchBusinessCategory")
+                                        .HtmlAttributes(new { style = "width:100%;" })
+                                        .OptionLabel("Select Business Category")
+                                        .DataTextField("CategoryName")
+                                        .DataValueField("CategoryId")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetCategoryList", "Common");
+                                            });
+                                        })
+
+                                )
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Business Sector:</label>
+                                @(Html.Kendo().DropDownList()
+                                        .Name("SearchSectorCategory")
+                                        .HtmlAttributes(new { style = "width:100%;" })
+                                        .CascadeFrom("SearchBusinessCategory")
+                                        .OptionLabel("Select Sector Category")
+                                        .DataTextField("SectorName")
+                                        .DataValueField("SectorId")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetBusinessSectorList", "Common")
+                                                .Data("filterBusinessSectorByCategoryId");
+                                            })
+                                             .ServerFiltering(true);
+                                        })
+                                     .Enable(false)
+                                     .AutoBind(false)
+                                )
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Communication Detail:</label>
+                                <input id="txtCommunication" type="text" placeholder="Search Communication Detail" class="k-textbox Search" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Source:</label>
+                                @(Html.Kendo().DropDownList()
+                                      .Name("SearchSource")
+                                      .OptionLabel("Select Source")
+                                      .DataTextField("Text")
+                                      .DataValueField("Value")
+                                      .BindTo(new List<SelectListItem>()
+                                      {
+                                           new SelectListItem()
+                                           {
+                                               Text = "GCPartner",
+                                               Value = "GCPartner"
+                                           },
+                                           new SelectListItem()
+                                           {
+                                               Text = "ScioPay",
+                                               Value ="ScioPay"
+                                           },
+                                           new SelectListItem()
+                                           {
+                                               Text = "CurrencyCloud",
+                                               Value ="CurrencyCloud"
+                                           },
+                                            new SelectListItem()
+                                           {
+                                               Text = "Eburry",
+                                               Value = "Eburry"
+                                           }
+                                      })
+                                      .HtmlAttributes(new { style = "width: 100%" })
+                                    )
+                            </div>
+                        </div>
+                        <div class="col-sm-3 mt-25">
+                            <div class="form-group">
+                                <div class="button_group">
+                                    <button id="btnSearch" type="button" class="k-button btn-orange">Search</button>
+                                    <button id="btnReset" type="button" class="k-button btn-orange">Reset</button>
+                                    <button type="button" class="k-button btn-orange" onclick="urllink()">Import Clients</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <legend id="titleMarketOrder" style="display:none">Market Order List</legend>
+    <div class="panel panel-default" id="marketorderSearchPanel" style="display:none">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Client Name:</label>
+                                <input id="txtMarketFullName" type="text" placeholder="Full Name" class="k-textbox Search" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Company Name:</label>
+                                <input id="txtMarketCompanyName" type="text" placeholder="Company Name" class="k-textbox Search" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Email Address:</label>
+                                <input id="txtMarketEmailAddress" type="text" placeholder="Email Address" class="k-textbox Search" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Status:</label>
+                                
+                                @(Html.Kendo().MultiSelect()
+                                        .Name("MarketOrderStatus")
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        .Placeholder("Select Status")
+                                        .BindTo(new List<SelectListItem>()
+                                        {
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "Created",
+                                                            Value = "Created"
+                                                        },
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "Actioned",
+                                                            Value = "Actioned"
+                                                        },
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "Triggered",
+                                                            Value = "Triggered"
+                                                        }
+                                        })
+                                        .HtmlAttributes(new { style = "width: 100%" })
+                                )
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">From Currency:</label>
+                                @(Html.Kendo().DropDownList()
+                                                                .Name("SearchFromCurrency")
+                                                                .HtmlAttributes(new { style = "width:100%;" })
+                                                                .OptionLabel("Select Currencies")
+                                                                .DataTextField("CCY")
+                                                                .DataValueField("CCYId")
+                                                                .DataSource(source =>
+                                                                {
+                                                                    source.Read(read =>
+                                                                    {
+                                                                        read.Action("GetCurrencyList", "Common");
+                                                                    });
+                                                                })
+                                )
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">To Currency:</label>
+                                @(Html.Kendo().DropDownList()
+                                                                .Name("SearchToCurrency")
+                                                                .HtmlAttributes(new { style = "width:100%;" })
+                                                                .OptionLabel("Select Currencies")
+                                                                .DataTextField("CCY")
+                                                                .DataValueField("CCYId")
+                                                                .DataSource(source =>
+                                                                {
+                                                                    source.Read(read =>
+                                                                    {
+                                                                        read.Action("GetCurrencyList", "Common");
+                                                                    });
+                                                                })
+                                )
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 pull-right">
+                            <div class="form-group pull-right">
+                                <button id="btnMarketSearch" type="button" class="k-button btn-orange">Search</button>
+                                <button id="btnMarketReset" type="button" class="k-button btn-orange">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* GRID HERE *@
+
+    <fieldset id="clientGrid">
+        <legend></legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @(Html.Kendo().Grid<ClientMasterModel>()
+                        .Name("gridClient")
+                        .Columns(columns =>
+                        {
+
+                            columns.Bound(m => m.FullName).Filterable(false);
+                            columns.Bound(m => m.BoughtCurrencies).Filterable(false);
+                            columns.Bound(m => m.SoldCurrencies).Filterable(false);
+                            columns.Bound(m => m.LeadCategory).Filterable(false);
+                            columns.Bound(m => m.CompanyName).Filterable(true);
+                            columns.Bound(m => m.TraderName).Filterable(false);
+                            columns.Bound(m => m.ClientSource).Filterable(false).Title("Source");
+                            //columns.Bound(m => m.AccountNo).Filterable(true).Width(120).ClientTemplate("#=myClientSideTemplate(data)#");
+                            //columns.Bound(m => m.strAccountNo).Filterable(true);
+                            columns.Bound(m => m.MobileNo).Filterable(true).Hidden(true);
+                            columns.Bound(m => m.EmailAddress).Filterable(false);
+                            columns.Bound(m => m.RegiterDateString).Filterable(false);
+                            //columns.Bound(m => m).ClientTemplate("<input type=\"checkbox\" name=\"IsMarketOrder_#=ClientId#\" onchange='StatusChanged(this)' id=\"IsMarketOrder_#=ClientId#\" class=\"k-checkbox chkStatus\" value=#= (IsMarketOrder == 1)? 'Active' : 'Inactive'#  #= (IsMarketOrder == 1)? checked='checked' : ''# ><label class=\"control-label k-checkbox-label\" for=\"IsMarketOrder_#=ClientId#\"></label>").Title("Market Order").Filterable(false).Sortable(false).Width(50);
+                            //columns.Bound(m => m.MarketOrder).Filterable(false).Width(50);
+                            if (WebHelper.CanEdit() || WebHelper.CanDelete())
+                            {
+                                columns.Command(command =>
+                                {
+                                    command.Custom("View").Text("<span class='fa fa-info' style='padding:1px; title='View'></span>").Click("viewClient").HtmlAttributes(new { @style = "margin:2px;background: #0833b7;color:white;", @class = "restrictCall"});
+
+                                    if (WebHelper.CanEdit())
+                                    {
+                                        command.Custom("Edit").Text("<span class='k-icon k-edit-white' title='Edit'></span>").Click("onInsert").HtmlAttributes(new { @style = "margin:2px;background: #0833b7;color:white;", @class = "restrictCall" });
+                                    }
+                                    //if (WebHelper.CanDelete())
+                                    //{
+                                    //    command.Custom("Delete").Text("<span class='k-icon k-delete-white'></span>").Click("onDelete").HtmlAttributes(new { @style = "margin:2px;background:#ff1962;color:white;" });
+                                    //    //command.Destroy().Text(" ").HtmlAttributes(new { @style = "margin:2px" });
+                                    //}
+                                    if (WebHelper.CanEdit())
+                                    {
+                                        command.Custom("MarketOrderAction").Text("<span class='k-icon k-mo-white' title='Market Order Setting'></span>").Click("MarketOrderUpdateAction").HtmlAttributes(new { @style = "margin:2px;background:#0833b7;color:white;", @class = "restrictCall" });
+                                    }
+                                })
+                                .HeaderHtmlAttributes(Common.CenterColumnStyle)
+                                .HtmlAttributes(Common.CenterColumnStyle)
+                                .Title("Action")
+                                .Width(200);
+                            }
+                        })
+                        .ToolBar(toolbar =>
+                        {
+                            if (WebHelper.CanAdd())
+                            {
+                                toolbar.Custom().Text("Add Client").Url(Url.Action("ManageClient", "Client")).HtmlAttributes(new { @class = "k-button k-button-icontext", @Style = "height:38px" });
+                                toolbar.Excel();
+                            }
+
+                        })
+                        .Editable(e => e.Mode(GridEditMode.PopUp))
+                        .Pageable(x =>
+                        {
+                            x.Refresh(true);
+                            x.PageSizes(new int[] { 10, 20, 50, 100 });
+                        })
+                        .Excel(excel => excel.FileName("Clients.xlsx").Filterable(true))@*.AllPages(true)*@
+                        //.Filterable(f => f.Enabled(true))
+                        .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
+                        .Navigatable()
+                        .Sortable(sortable => sortable.AllowUnsort(false))
+                        .NoRecords()
+                        .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .ServerOperation(true)
+                            .PageSize(ConfigItems.GridPageSize)
+                            .Model(model =>
+                            {
+                                model.Id(d => d.ClientId);
+                            })
+                           .Destroy(delete => delete.Action("DeleteClient", "Client"))
+                           .Read(read => read.Action("GetClientList", "Client").Data("ParaClientData"))
+                           .Events(events => events.RequestEnd("onRequestEnd"))
+                        ))
+            </div>
+        </div>
+    </fieldset>
+    <fieldset id="marketorderGrid" style="display:none">
+        <legend></legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @(Html.Kendo().Grid<MarketOrderSettingModel>()
+                        .Name("gridMarketOrderClientIndex")
+                        .Columns(columns =>
+                        {
+                            columns.Bound(m => m.MarketOrderId).Visible(true).ClientTemplate(
+                                "# if (ClientId > 0) { #" +
+                                "<a class='active restrictCall' href='" + Url.Action("ManageClient", "Client") + "?ClientId=#=ClientId #'>" + "#=FullName#" + "</a>" +
+                                "# } else { #" +
+                                "<a class='active restrictCall' href='" + Url.Action("ManageProspect", "Prospect") + "?ProspectId=#=ProspectId #'>" + "#=FullName#" + "</a>" +
+                                "# } #"
+                                ).Title("Client Name").Width(200);
+                            columns.Bound(m => m.CompanyName).Visible(true).Title("Company Name").Width(200);
+                            columns.Bound(m => m.TraderName).Visible(true).Title("Trader Name").Width(150);
+                            columns.Bound(m => m.AccountNo).Visible(true).Title("Account No").Width(150);
+                            columns.Bound(m => m.From_To_currency).Visible(true).Title("From - To").Width(150);
+                            columns.Bound(m => m.DateCondition).Visible(true).Title("Date Condition").Width(170);
+                            //columns.Template(t => { }).ClientTemplate("<span>#= FromCurrencyName +'-' +  ToCurrencyName) #</span>").Title("Group Name");
+                            // columns.Bound(m => m.FromCurrencyName + " " + m.ToCurrencyName).Visible(true).Title("From-To Currency").Width(150);
+                            //columns.Bound(m => m.FromCurrencyName).Visible(true).Title("From Currency").Width(150);
+                            //columns.Bound(m => m.ToCurrencyName).Visible(true).Title("To Currency").Width(150);
+                            //columns.Bound(m => m.Filter).Visible(true).Title("Date Condition").Width(80);
+                            //columns.Bound(m => m.FromDate).Visible(true).Title("From Date").Width(100);
+                            //columns.Bound(m => m.ToDate).Visible(true).Title("To Date").Width(100);
+                            columns.Bound(m => m.Operator).Visible(true).Title("Condition").Width(40).HtmlAttributes(new { style = "text-align: center" });
+                            columns.Bound(m => m.MarketRate).Width(150);
+                            //columns.Bound(m => m.MarketRate_condition).Visible(true).Title("Market Rate").Width(150);
+                            columns.Bound(m => m.ClientRate).Width(150);
+                            columns.Bound(m => m.Amount).Width(150).Format("{0:n2}");
+                            columns.Bound(m => m.Comments).Width(150);
+                            //columns.Bound(m => m.strCreatedDate).Visible(true).Title("Created Date").Width(150);
+                            columns.Bound(m => m.Status).Visible(true).Title("Status").Width(100);
+                            columns.Command(command =>
+                            {
+                                if (WebHelper.CanEdit())
+                                {
+                                    command.Edit().CancelText("Cancel").Text(" ").UpdateText("Save");
+                                }
+                                if (WebHelper.CanDelete())
+                                {
+                                    command.Destroy().Text(" ");
+                                }
+                                command.Custom("Action").Text("<i class='k-icon k-i-tick'></i>").Click("UpdateAction");
+                            })
+                                .HeaderHtmlAttributes(Common.CenterColumnStyle)
+                                .HtmlAttributes(Common.CenterColumnStyle)
+                                .Title("Action")
+                                .Width(300);
+                        })
+                        .Editable(e => e.Mode(GridEditMode.PopUp))
+                        .Pageable(x =>
+                        {
+                            x.Refresh(true);
+                            x.PageSizes(new int[] { 10, 20, 50, 100 });
+                        })
+                        .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
+                        .Navigatable()
+                        .Sortable(sortable => sortable.AllowUnsort(false))
+                        .NoRecords()
+                        .Events(grid => grid.Edit("EditMarketOrder"))
+                        .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .ServerOperation(false)
+                            .PageSize(ConfigItems.GridPageSize)
+                            .Model(model =>
+                            {
+                                model.Id(d => d.MarketOrderId);
+                            })
+                          .Model(model => model.Id(p => p.ClientId))
+                          .Model(model => model.Id(p => p.ProspectId))
+                          .Update(update => update.Action("SaveMarketOrderSetting", "Client"))
+                          .Destroy(delete => delete.Action("DeleteMarketOrderSetting", "Client"))
+                          .Read(read => read.Action("GetMarketOrderSettingList", "Client").Data("paraClientId"))
+                          .Events(events => events.RequestEnd("onMarketOrderRequestEnd"))
+                        ))
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script>
+    $(document).ready(function () {
+        var havePermission ='@WebHelper.CanView()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+        kendoGridScroll();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const myParam = urlParams.get('IsMarketOrder');
+        if (myParam && myParam == 1) {
+            //hide client grid display marketorder grid marketorderSearchPanel
+            $("#titleMarketOrder").show();
+            $("#marketorderSearchPanel").show();
+            $("#marketorderGrid").show();
+            $("#titleClient").hide();
+            $("#clientSearchPanel").hide();
+            $("#clientGrid").hide();
+        }
+        else {
+            //hide marketorder grid display marketorder grid
+            $("#titleMarketOrder").hide();
+            $("#marketorderSearchPanel").hide();
+            $("#marketorderGrid").hide();
+            $("#titleClient").show();
+            $("#clientSearchPanel").show();
+            $("#clientGrid").show();
+        }
+        SetMultiDDLMaketOrderStatusList();
+
+    });
+
+    function myClientSideTemplate(data) {
+        var returnString = '';
+        if (data.ClientSource == "GCPartner") {
+            returnString = data.GcPartnerClientId;
+        }
+        else if (data.ClientSource == "ScioPay") {
+            returnString = data.ScioPayAccountId;
+        }
+        else {
+            returnString = data.AccountNo == null ? "" : data.AccountNo;
+        }
+        return returnString
+    }
+
+    function SetMultiDDLMaketOrderStatusList() {
+	$("#MarketOrderStatus").data("kendoMultiSelect").value('');
+        var markerOrderStatusList = 'Created,Triggered';
+        var SplitString = markerOrderStatusList.split(',');
+        for (var i = 0; i < SplitString.length; i++) {
+            var multiselectItem = $('#MarketOrderStatus').data('kendoMultiSelect');
+            var selected = multiselectItem.value();
+            var res = $.merge($.merge([], selected), [SplitString[i]]);
+            multiselectItem.value(res);
+        }
+    }
+    $('.k-pager-refresh').click(function () {
+        $('.Search').val('');
+        $("#AwaitingAction").data("kendoDropDownList").value(2);
+        $("#MarketOrder").data("kendoDropDownList").value(2);
+    });
+
+    $('#btnReset').click(function () {
+        $('.Search').val('');
+        var SearchSalePerson = $('#SearchClientSalesperson').data("kendoDropDownList");
+        var SearchJuniorSalePerson = $('#SearchClientJuniorSalesPerson').data("kendoDropDownList");
+        var SearchTrader = $('#SearchClientTrader').data("kendoDropDownList");
+        if (SearchSalePerson != null) {
+            $("#SearchClientSalesperson").data("kendoDropDownList").value(0);
+        }
+        if (SearchJuniorSalePerson != null) {
+            $("#SearchClientJuniorSalesPerson").data("kendoDropDownList").value(0);
+        }
+        if (SearchTrader != null) {
+            $("#SearchClientTrader").data("kendoDropDownList").value(0);
+        }
+        var currencyBoughtId = $('#SearchCurrenciesBought').data("kendoDropDownList");
+        if (currencyBoughtId != null) {
+            $("#SearchCurrenciesBought").data("kendoDropDownList").value(0);
+        }
+        var currencySoldId = $('#SearchCurrenciesSold').data("kendoDropDownList");
+        if (currencySoldId != null) {
+            $("#SearchCurrenciesSold").data("kendoDropDownList").value(0);
+        }
+        var leadCategoryId = $('#SearchLeadCategory').data("kendoDropDownList");
+        if (leadCategoryId != null) {
+            $("#SearchLeadCategory").data("kendoDropDownList").value(0);
+        }
+        var sectorCategoryId = $('#SearchSectorCategory').data("kendoDropDownList");
+        if (sectorCategoryId != null) {
+            $("#SearchSectorCategory").data("kendoDropDownList").value(0);
+        }
+
+        var businessCategoryId = $('#SearchBusinessCategory').data("kendoDropDownList");
+        if (businessCategoryId != null) {
+            $("#SearchBusinessCategory").data("kendoDropDownList").value(0);
+        }
+        var TraderId = $('#TradePersonsList').data("kendoDropDownList"); //changes by devanshee 15/04/2022
+        if (TraderId != null) {
+            $("#TradePersonsList").data("kendoDropDownList").value(0);
+        }
+        var currencyBoughtTxt = null;
+        if (currencyBoughtId.value() > 0) {
+            currencyBoughtTxt = currencyBoughtId.text().trim();
+        }
+        var currencySoldTxt = null;
+        if (currencySoldId.value() > 0) {
+            currencySoldTxt = currencySoldId.text().trim();
+        }
+        var ClientSource = $('#SearchSource').data("kendoDropDownList");
+        if (ClientSource != null) {
+            $("#SearchSource").data("kendoDropDownList").value(0);
+        }
+        $("#AwaitingAction").data("kendoDropDownList").value(2);
+        $("#MarketOrder").data("kendoDropDownList").value(2);
+        $('#gridClient').data('kendoGrid').dataSource.read({
+            FullName: $('#txtFullName').val().trim(),
+            CompanyName: $('#txtCompanyName').val().trim(),
+            TraderName: "",
+           // AccountNo: $('#txtAccountNo').val().trim(),
+            EmailAddress: $('#txtEmailAddress').val().trim(),
+            CommunicationDetail: $('#txtCommunication').val().trim(),
+            SearchSalesPersonId: SearchSalePerson != null ? SearchSalePerson.value().trim() : null,
+            SearchTraderId: SearchTrader != null ? SearchTrader.value().trim() : null,
+            BoughtCurrency: currencyBoughtTxt,
+            SoldCurrency: currencySoldTxt,
+            LeadCategoryId: leadCategoryId != null ? leadCategoryId.value().trim() : null,
+        /*SectorCategoryId: sectorCategoryId != null ? sectorCategoryId.value().trim() : null,*/
+            SectorCategoryId: sectorCategoryId != 0 ? sectorCategoryId.value() : 0,
+            BusinessCategoryId: businessCategoryId != null ? businessCategoryId.value().trim() : null,
+            TraderId: TraderId != null ? TraderId.value().trim() : null,
+            //TraderId: TraderId != 0 ? TraderId.value() : 0, //changes by devanshee 15/04/2022
+            AwaitingAction: $("#AwaitingAction").data("kendoDropDownList").value(),
+            MarketOrder: $("#MarketOrder").data("kendoDropDownList").value(),
+            ClientSource: ClientSource != null ? ClientSource.value().trim() : null
+        });
+    });
+
+    $("#btnSearch").click(function () {
+        var userTypeId = @ProjectSession.LoginUserDetails.UserTypeId; //devanshee------
+
+
+        if ($('#gridClient').data('kendoGrid').dataSource.page() != 1) {
+            $('#gridClient').data('kendoGrid').dataSource.page(1);
+        }
+        var searchSalePerson = $('#SearchClientSalesperson').data("kendoDropDownList");
+        var searchJuniorSalePerson = $('#SearchClientJuniorSalesPerson').data("kendoDropDownList");
+      //  var searchTrader = $('#SearchClientTrader').data("kendoDropDownList"); //devanshee
+        var currencyBoughtId = $('#SearchCurrenciesBought').data("kendoDropDownList");
+        var currencySoldId = $('#SearchCurrenciesSold').data("kendoDropDownList");
+        var leadCategoryId = $('#SearchLeadCategory').data("kendoDropDownList");
+        var sectorCategoryId = $('#SearchSectorCategory').data("kendoDropDownList");
+        var businessCategoryId = $('#SearchBusinessCategory').data("kendoDropDownList");
+
+        var currencyBoughtTxt = null;
+        if (currencyBoughtId.value() > 0) {
+            currencyBoughtTxt = currencyBoughtId.text().trim();
+        }
+        var currencySoldTxt = null;
+        if (currencySoldId.value() > 0) {
+            currencySoldTxt = currencySoldId.text().trim();
+        }
+        //---
+        if (userTypeId == 2) {
+            var searchTrader = $('#TradePersonsList').data("kendoDropDownList");
+        }
+        else {
+            var searchTrader = $('#SearchClientTrader').data("kendoDropDownList");
+        }//---
+        var ClientSource = $('#SearchSource').data("kendoDropDownList");
+
+
+        $('#gridClient').data('kendoGrid').dataSource.read({
+            FullName: $('#txtFullName').val().trim(),
+            CompanyName: $('#txtCompanyName').val().trim(),
+            TraderName: "",
+            //AccountNo: $('#txtAccountNo').val().trim(),
+            EmailAddress: $('#txtEmailAddress').val().trim(),
+            CommunicationDetail: $('#txtCommunication').val().trim(),
+            SearchSalesPersonId: searchSalePerson != null ? searchSalePerson.value().trim():null,
+            SearchJuniorSalesPersonId: searchJuniorSalePerson != null ? searchJuniorSalePerson.value().trim():null,
+            SearchTraderId: searchTrader != null ? searchTrader.value().trim() : null,
+            BoughtCurrency: currencyBoughtTxt,
+            SoldCurrency: currencySoldTxt,
+            LeadCategoryId: leadCategoryId != null ? leadCategoryId.value().trim() : null,
+            SectorCategoryId: sectorCategoryId != 0 ? sectorCategoryId.value() : 0,
+           /* SectorCategoryId: sectorCategoryId != null ? sectorCategoryId.value().trim() : null,*/
+            BusinessCategoryId: businessCategoryId != null ? businessCategoryId.value().trim() : null,
+            AwaitingAction: $("#AwaitingAction").data("kendoDropDownList").value(),
+            MarketOrder: $("#MarketOrder").data("kendoDropDownList").value(),
+            ClientSource: ClientSource != null ? ClientSource.value().trim() : null
+        });
+
+    });
+
+
+    //Shows the notifications
+    function onRequestEnd(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridClient').data('kendoGrid').dataSource.read({ FullName: $('#txtFullName').val().trim(), CompanyName: $('#txtCompanyName').val().trim(), TraderName: $('#txtTraderName').val().trim(), AccountNo: $('#txtAccountNo').val().trim(), EmailAddress: $('#txtEmailAddress').val().trim(), CommunicationDetail: $('#txtCommunication').val().trim(), AwaitingAction: $("#AwaitingAction").data("kendoDropDownList").value(), MarketOrder: $("#MarketOrder").data("kendoDropDownList").value() });
+        }
+        DisplayResponseMessage(para);
+    }
+
+    function ParaClientData() {
+
+        var salePerson = $('#SearchClientSalesperson').data("kendoDropDownList");
+        var juniorSalePerson = $('#SearchClientJuniorSalesPerson').data("kendoDropDownList");
+        var trader = $('#SearchClientTrader').data("kendoDropDownList");
+        var currencyBoughtId = $('#SearchCurrenciesBought').data("kendoDropDownList");
+        var currencySoldId = $('#SearchCurrenciesSold').data("kendoDropDownList");
+        var leadCategoryId = $('#SearchLeadCategory').data("kendoDropDownList");
+        var sectorCategoryId = $('#SearchSectorCategory').data("kendoDropDownList");
+
+        var businessCategoryId = $('#SearchBusinessCategory').data("kendoDropDownList");
+
+        var currencyBoughtTxt = null;
+        if (currencyBoughtId.value() > 0) {
+            currencyBoughtTxt = currencyBoughtId.text().trim();
+        }
+        var currencySoldTxt = null;
+        if (currencySoldId.value() > 0) {
+            currencySoldTxt = currencySoldId.text().trim();
+        }
+        var ClientSource = $('#SearchSource').data("kendoDropDownList");
+        return {
+            AwaitingAction: $("#AwaitingAction").data("kendoDropDownList").value(),
+            MarketOrder: $("#MarketOrder").data("kendoDropDownList").value(),
+            FullName: $('#txtFullName').val().trim(),
+            CompanyName: $('#txtCompanyName').val().trim(),
+           // AccountNo: $('#txtAccountNo').val().trim(),
+            EmailAddress: $('#txtEmailAddress').val().trim(),
+            CommunicationDetail: $('#txtCommunication').val().trim(),
+            SearchSalesPersonId: salePerson != null ? salePerson.value().trim() : null,
+            SearchJuniorSalesPersonId: juniorSalePerson != null ? juniorSalePerson.value().trim() : null,
+            SearchTraderId: trader != null ? trader.value().trim() : null,
+            BoughtCurrency: currencyBoughtTxt,
+            SoldCurrency: currencySoldTxt,
+            LeadCategoryId: leadCategoryId != null ? leadCategoryId.value().trim() : null,
+            /*SectorCategoryId: sectorCategoryId != null ? sectorCategoryId.value().trim() : null,*/
+            SectorCategoryId: sectorCategoryId != 0 ? sectorCategoryId.value() : 0,
+            BusinessCategoryId: businessCategoryId != null ? businessCategoryId.value().trim() : null,
+            AwaitingAction: $("#AwaitingAction").data("kendoDropDownList").value(),
+            MarketOrder: $("#MarketOrder").data("kendoDropDownList").value(),
+            ClientSource: ClientSource != null ? ClientSource.value().trim() : null
+        }
+    }
+    function viewClient(e) {
+        var clientId = 0;
+
+        if (e != 0) {
+            e.preventDefault();
+            var tr = $(e.target).closest("tr");
+            var data = this.dataItem(tr);
+
+            if (data != null) {
+                clientId = data.ClientId;
+            }
+        }
+        var urllink = '@Url.Action("ViewClient", "Client")?ClientId=' + clientId;
+        window.location.href = urllink;
+
+    }
+    function onInsert(e) {
+        var clientId = 0;
+
+        if (e != 0) {
+            e.preventDefault();
+            var tr = $(e.target).closest("tr");
+            var data = this.dataItem(tr);
+
+            if (data != null) {
+                clientId = data.ClientId;
+            }
+        }
+        var urllink = '@Url.Action("ManageClient", "Client")?ClientId=' + clientId;
+        location.href = urllink;
+        //window.open(urllink + '?ClientId=' + clientId);
+    }
+
+    function MarketOrderUpdateAction(e) {
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        window.open('@Url.Action("ManageClient", "Client")?ClientId=' + dataItem.ClientId + '&displayOnlyMarketOrder=' + true);
+    }
+
+        function StatusChanged(e) {
+
+        bootbox.confirm("Are you sure want to change status?", function (result) {
+            if (result) {
+                var id = e.id;
+                var clientId = id.toString().split('_')[1];
+                var status;
+                if (e.value === "Active") {
+                    status = false;
+                }
+                else {
+                    status = true;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: encodeURI('@Url.Action("ChangeMarketOrderStatus", "Client")'),
+                    data: { ClientId: clientId, Status: status },
+                    cache: false,
+                    async: false,
+                    //dataType: 'json',
+                    error: function (jqXHR, exception) {
+                    },
+                    success: function (data) {
+                        if (data) {
+                            DisplayResponseMessageForAjax(data);
+                            $('#gridClient').data('kendoGrid').dataSource.read();
+                        }
+                    }
+                });
+            }
+            else {
+                if ($('#' + e.id).val() == "Active") {
+                    $('#' + e.id).prop('checked', true);
+                }
+                else {
+                    $('#' + e.id).attr('checked', false);
+                }
+            }
+        });
+    }
+    function onDelete(e) {
+        var current = this;
+        bootbox.confirm("Are you sure you want to delete this record?",
+            function(result) {
+                if (result) {
+                    var clientId = 0;
+
+                    if (e != 0) {
+                        e.preventDefault();
+                        var tr = $(e.target).closest("tr");
+                        var data = current.dataItem(tr);
+
+                        if (data != null) {
+                            clientId = data.ClientId;
+
+                            $.ajax({
+                                type: "POST",
+                                url: encodeURI('@Url.Action("DeleteClient", "Client")'),
+                                data: { clientId: clientId },
+                                cache: false,
+                                async: false,
+                                error: function (jqXHR, exception) {
+                                },
+                                success: function (data) {
+                                    if (data) {
+                                        DisplayResponseMessageForAjax(data);
+                                        $('#gridClient').data('kendoGrid').dataSource.read();
+                                    }
+                                }
+
+                            });
+                        }
+                    }
+                }
+            }
+        );
+    }
+
+    $("#btnMarketSearch").click(function () {
+        var multiselectItem = $('#MarketOrderStatus').data('kendoMultiSelect');
+        var selected = multiselectItem.value();
+
+        if ($('#gridMarketOrderClientIndex').data('kendoGrid').dataSource.page() != 1) {
+            $('#gridMarketOrderClientIndex').data('kendoGrid').dataSource.page(1);
+        }
+
+        $('#gridMarketOrderClientIndex').data('kendoGrid').dataSource.read({ FullName: $('#txtMarketFullName').val().trim(), EmailAddress: $('#txtMarketEmailAddress').val().trim(), CompanyName: $('#txtMarketCompanyName').val().trim(), MarketOrderStatus: selected.toString(), FromCurrency: $("#SearchFromCurrency").data("kendoDropDownList").value(), ToCurrency: $("#SearchToCurrency").data("kendoDropDownList").value() });
+
+    });
+
+    $('#btnMarketReset').click(function () {
+		SetMultiDDLMaketOrderStatusList();
+        var multiselectItem = $('#MarketOrderStatus').data('kendoMultiSelect');
+        var selected = multiselectItem.value();
+
+        $('.Search').val('');
+        $("#SearchFromCurrency").data("kendoDropDownList").value(0);
+        $("#SearchToCurrency").data("kendoDropDownList").value(0);
+
+        $('#gridMarketOrderClientIndex').data('kendoGrid').dataSource.read({ FullName: $('#txtMarketFullName').val().trim(), EmailAddress: $('#txtMarketEmailAddress').val().trim(), CompanyName: $('#txtMarketCompanyName').val().trim(), MarketOrderStatus: selected.toString(), FromCurrency: $("#SearchFromCurrency").data("kendoDropDownList").value(), ToCurrency: $("#SearchToCurrency").data("kendoDropDownList").value() });
+
+    });
+
+    function onMarketOrderRequestEnd(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridMarketOrderClientIndex').data('kendoGrid').dataSource.read();
+        }
+        DisplayResponseMessage(para);
+    }
+
+    function UpdateAction(e) {
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        if (parseInt(dataItem.MarketOrderId) > 0) {
+            $.ajax({
+                data: { ID: dataItem.MarketOrderId, Status: "Actioned" },
+                // type: 'POST',
+                url: '@Url.Action("MarketOrderSettingUpdateStatus", "Client")',
+            }).done(function (data) {
+
+                if (data) {
+                    ShowSuccessMessage('Market order actioned successfully.');
+                    $('#gridMarketOrderClientIndex').data('kendoGrid').dataSource.read();
+                }
+                else {
+                    ShowErrorMessage('Something went wrong.')
+                }
+
+            });
+        }
+    }
+
+    function EditMarketOrder(e) {
+        var window = e.container.data("kendoWindow");
+        var clientID = e.model.ClientId;
+        var ProspectId = e.model.ProspectId;
+        console.log(ProspectId);
+        e.model.set("ClientId", clientID);
+        e.model.set("ProspectId", ProspectId);
+        $('label[for=FilterId]').text("Date Condition");
+        if (e.model.isNew()) {
+            window.title("Add Market Order");
+        }
+        else {
+            var data = e.model;
+            if (data.Filter == "Range") {
+                $('label[for=StartDate]').text("Start Date");
+                $('label[for=EndDate]').show()
+                $("#EndDate").closest(".k-widget").show();
+            } else {
+                $('label[for=EndDate]').hide();
+                $("#EndDate").closest(".k-widget").hide();
+                $('label[for=StartDate]').text("Date");
+            }
+
+            window.title("Edit Market Order");
+        }
+    };
+
+    $("#gridMarketOrderClientIndex").delegate("tbody>tr", "dblclick", function () {
+        if (!$(this).hasClass('k-grid-edit-row')) {
+            $("#gridMarketOrderClientIndex").data("kendoGrid").editRow($(this));
+        }
+    });
+
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+
+    function onchangeNotifictionFilter(e) {
+        var selectedData = e.sender.value();
+        if (selectedData == "3") { //Range
+            $('label[for=StartDate]').text("Start Date");
+            $('label[for=EndDate]').show()
+            $("#EndDate").closest(".k-widget").show();
+        } else {
+            $('label[for=EndDate]').hide();
+            $("#EndDate").closest(".k-widget").hide();
+            $('label[for=StartDate]').text("Date");
+            $("#EndDate").val("");
+        }
+
+    }
+
+    function paraClientId() {
+        var multiselectItem = $('#MarketOrderStatus').data('kendoMultiSelect');
+        var selected = multiselectItem.value();
+        var marketOrderStatus = "Triggered,Created";
+
+        return {
+            FullName: $('#txtMarketFullName').val().trim(),
+            EmailAddress: $('#txtMarketEmailAddress').val().trim(),
+            CompanyName: $('#txtMarketCompanyName').val().trim(),
+            MarketOrderStatus: marketOrderStatus,
+            FromCurrency: $("#SearchFromCurrency").data("kendoDropDownList").value(),
+            ToCurrency: $("#SearchToCurrency").data("kendoDropDownList").value(),
+            ClientId: 0,
+            ProspectId: 0
+        }
+    }
+    function filterBusinessSectorByCategoryId() {
+            return {
+                CategoryId: $("#SearchBusinessCategory").data("kendoDropDownList").value(),
+
+            };
+    }
+
+    //---
+    function filterSalesPersonByTradeId() {
+        return {
+            UserId: $("#TradePersonsList").data("kendoDropDownList").value(),
+
+        };
+    }
+    function onChange() {
+        console.log("event: change");
+    }
+    function onSelect(e) {
+        if ("console" in window) {
+            if (e.item) {
+                var dataItem = this.dataItem(e.item);
+                console.log("event :: select (" + dataItem.Text + " : " + dataItem.Value + ")");
+            } else {
+                console.log("event :: select");
+            }
+        }
+    }
+     //---
+
+    $(window).on('keypress', function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#btnSearch").click();
+            $("#btnMarketSearch").click();
+        }
+    });
+
+    function urllink() {
+         var urllink = '@Url.Action("UploadClients", "Client")';
+          window.location.href = urllink;
+    }
+
+</script>

@@ -1,0 +1,21 @@
+﻿@using Kendo.Mvc.UI
+@model object
+
+
+@(Html.Kendo().DropDownListFor(m => m)
+                  .OptionLabel("Select Name")
+                  .DataTextField("FullName")
+                  .DataValueField("UserId").HtmlAttributes(new { @style = "width:100% !important;" })
+
+                  .DataSource(source =>
+                  {
+
+                      source.Read(read =>
+                      {
+                          read.Action("GetUserList", "Common");
+                      })
+                      .Custom()
+                      .Group(b => b.Add("UserType", typeof(string)));
+                  })
+
+)

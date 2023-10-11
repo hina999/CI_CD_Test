@@ -1,0 +1,59 @@
+﻿@using FXAdminTransferConnex.Entities
+@using Kendo.Mvc.UI
+
+
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        @if (ProjectSession.LoginUserDetails.UserTypeId == SystemEnum.UserType.SalesPerson.GetHashCode())
+        {
+            <h6 class="panel-title dashboard-title">
+                SALES PERSON COMMISSION OF LAST 6 WEEKS
+                <span>
+                    <span class="fa fa-file-pdf-o" type="button" title="Export PDF" onclick="ExportChart('#chartLast6WeeksCommission', 'Last6WeeksSalesPersonCommissionChart', 'PDF')"> </span>
+
+                    <span class="fa fa-file-image-o" type="button" title="Export Image" onclick="ExportChart('#chartLast6WeeksCommission', 'Last6WeeksSalesPersonCommissionChart', 'PNG')"> </span>
+                </span>
+            </h6>
+        }
+        else if (ProjectSession.LoginUserDetails.UserTypeId == SystemEnum.UserType.SuperAdmin.GetHashCode())
+        {
+
+            <h6 class="panel-title dashboard-title">
+                TRADER COMMISSION OF LAST 6 WEEKS
+                <span>
+                    <span class="fa fa-file-pdf-o" type="button" title="Export PDF" onclick="ExportChart('#chartLast6WeeksCommission', 'Last6WeeksCommissionChart', 'PDF')"> </span>
+
+                    <span class="fa fa-file-image-o" type="button" title="Export Image" onclick="ExportChart('#chartLast6WeeksCommission', 'Last6WeeksCommissionChart', 'PNG')"> </span>
+                </span>
+            </h6>
+        }
+        else
+        {
+            <h6 class="panel-title dashboard-title">
+                MY COMMISSION OF LAST 6 WEEKS
+                <span>
+                    <span class="fa fa-file-pdf-o" type="button" title="Export PDF" onclick="ExportChart('#chartLast6WeeksCommission', 'Last6WeeksCommissionChart', 'PDF')"> </span>
+
+                    <span class="fa fa-file-image-o" type="button" title="Export Image" onclick="ExportChart('#chartLast6WeeksCommission', 'Last6WeeksCommissionChart', 'PNG')"> </span>
+                </span>
+            </h6>
+        }
+
+
+    </div>
+    <div class="panel-body">
+        @(Html.Kendo().Chart<Last6WeeksCommissionModel>()
+                                  .Name("chartLast6WeeksCommission")
+                                  .ChartArea(chartArea => chartArea.Background("transparent"))
+                                  .Legend(x => x.Visible(false)).Theme("material")
+                                  .DataSource(ds => ds.Read(read => read.Action("GetLast6WeeksCommission", "Dashboard")))
+                                  .Series(series => { series.Line(model => model.TotalCommission).Name("Total Commission"); })
+                                  .Series(series => { series.Line(model => model.TargetCommission).Name("Target Commission"); })
+                                  .CategoryAxis(axis => axis.Categories(model => model.WeekId).Labels(labels => labels.Rotation(-90).Template("Week No #=value#")).Crosshair(c => c.Visible(true)))
+                                  .ValueAxis(axis => axis.Numeric().Labels(labels => labels.Format("{0:C2}")))
+                                  .Tooltip(tooltip => tooltip.Visible(true).Template("Week No #=category#<br />Commission: #= kendo.format('{0:C}',value) # <br /> " +
+                                                                                             "Week start date: #= kendo.format('{0:" + FXAdminTransferConnex.Common.ConfigItems.DateFormate + "}',dataItem.WeekStartDate) # <br /> " +
+                                                                                             "Week end date: #= kendo.format('{0:" + FXAdminTransferConnex.Common.ConfigItems.DateFormate + "}',dataItem.WeekEndDate) #")))
+    </div>
+</div>

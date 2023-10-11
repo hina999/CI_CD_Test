@@ -1,0 +1,36 @@
+﻿@using Kendo.Mvc.UI
+@model object
+
+
+@(Html.Kendo().DropDownListFor(m => m)
+    .Name("TaskTypeId")
+    .OptionLabel("Select Task Type")
+    .DataTextField("TaskType")
+    .DataValueField("TaskTypeId").HtmlAttributes(new { @style = "width:100% !important;" })
+    .DataSource(source =>
+    {
+        source.Read(read =>
+        {
+            read.Action("GetTaskTypeList", "Common");
+        });
+    }))
+
+@*@(Html.Kendo().DropDownListFor(m => m)
+                      .Name("TaskTypeId")
+                      .OptionLabel("Select Task Type")
+                      .DataTextField("TaskType")
+                      .DataValueField("TaskTypeId").HtmlAttributes(new { @style = "width:100% !important;" }))*@
+
+<script>
+    //var ddl = $('#TaskTypeId').data("kendoDropDownList");
+    $.ajax({
+            url: '@Url.Action("GetTaskTypeList", "Common")',
+            async: false,
+            type: 'GET',
+            success: function (data) {
+                let obj = data.find(o => o.TaskType.toString().toLowerCase() === 'call');
+                localStorage.setItem("defaultTaskType", obj.TaskTypeId);
+                //ddl.setDataSource(data);
+            }
+        });
+</script>

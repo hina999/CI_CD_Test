@@ -1,0 +1,510 @@
+﻿@using Kendo.Mvc.UI;
+@using FXAdminTransferConnex.Entities
+@using FXAdminTransferConnexApp;
+@model FXAdminTransferConnex.Entities.TargetCommissionModel
+@{
+    ViewBag.Title = "Manage Target Commission";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("ManageTargetCommission", "Commission", FormMethod.Post, new { @id = "TargetCommissionForm" }))
+{
+    @Html.HiddenFor(m => m.TargetCommissionId)
+    @Html.HiddenFor(m => m.TargetType)
+    @Html.HiddenFor(m => m.IsActive)
+    <div class="content">
+        <legend>Target Commission Details</legend>
+        <fieldset>
+            <legend></legend>
+            <div class="panel panel-default">
+              
+                <div id="divTargetCommission" class="panel-body target-body-page in">
+                    <div class="row">
+                        <div class="col-md-10"></div>
+                        <div class="col-md-2">
+                            <button class="btn btn-orange mt-5" id="btnTargetCommissionSubmit" onclick="return validateTargetCommission()" type="button">Save</button>
+                            <a href="@Url.Action("Index", "Commission")" class="btn btn-orange mt-5">Cancel</a>
+                        </div>
+                        
+                    </div>
+                    
+
+                    <div class="row pt-10">
+                        <div class="col-md-12">
+                            <div class="col-md-12 table-responsive" id="divDailyDuration">
+                                @(Html.Kendo().Grid
+                     <TargetDurationModel>
+                     ()
+                     .Name("gridDailyTargetDurationList")
+                     .Columns(columns =>
+                     {
+                     columns.Bound(x => x.DTDay).Title("Date").Width(250).Format("{0:dd/MM/yyyy}");
+                     columns.Bound(x => x.StrDay).Title("Day").Width(250);
+                     columns.Bound(x => x.TargetCommission).Title("Target Commission (£)").Width(250)
+                     .ClientTemplate(@"<input type='number' class= 'k-textbox'  value='#= TargetCommission #' />")
+                     .HtmlAttributes(WebHelper.StatusColumnStyle);
+                     })
+                     .Pageable(x =>
+                     {
+                     x.Refresh(true);
+                     x.PageSizes(new int[] { 10, 20, 50, 100 });
+                     })
+                     .Editable(editable => editable.Mode(GridEditMode.InCell))
+                     .Pageable(x => x.Enabled(false))
+                     .NoRecords()
+                     .DataSource(dataSource => dataSource
+                     .Ajax()
+                     .ServerOperation(false)
+                     .Batch(true)
+                     .Model(model =>
+                     {
+                     model.Id(m => m.TargetCommissionId);
+                     model.Field(m => m.DTDay).Editable(false);
+                     model.Field(m => m.StrDay).Editable(false);
+                     model.Field(m => m.TargetCommission).Editable(false);
+                     })
+                     .Read(read => read.Action("TargetDurationList", "Commission").Data("additionalInfo"))
+                     ))
+                            </div>
+                            <div class="col-md-12 table-responsive" id="divMonthlyDuration">
+                                @(Html.Kendo().Grid
+                     <TargetDurationModel>
+                     ()
+                     .Name("gridMonthlyTargetDurationList")
+                     .Columns(columns =>
+                     {
+                     columns.Bound(x => x.Month).Title("Month").Width(250);
+                     columns.Bound(x => x.TargetCommission).Title("Target Commission (£)").Width(250)
+                     .ClientTemplate(@"<input type='number' class= 'k-textbox'  value='#= TargetCommission #' />")
+                     .HtmlAttributes(WebHelper.StatusColumnStyle);
+                     })
+                     .Pageable(x =>
+                     {
+                     x.Refresh(true);
+                     x.PageSizes(new int[] { 10, 20, 50, 100 });
+                     })
+                     .Editable(editable => editable.Mode(GridEditMode.InCell))
+                     .Pageable(x => x.Enabled(false))
+                     .NoRecords()
+                     .DataSource(dataSource => dataSource
+                     .Ajax()
+                     .ServerOperation(false)
+                     .Batch(true)
+                     .Model(model =>
+                     {
+                     model.Id(m => m.TargetCommissionId);
+                     model.Field(m => m.Name).Editable(false);
+                     model.Field(m => m.Month).Editable(false);
+                     model.Field(m => m.TargetCommission).Editable(false);
+                     })
+                     .Read(read => read.Action("TargetDurationList", "Commission").Data("additionalInfo"))
+                     ))
+                            </div>
+                            <div class="col-md-12 table-responsive" id="divWeeklyDuration">
+                                @(Html.Kendo().Grid
+                     <TargetDurationModel>
+                     ()
+                     .Name("gridWeeklyTargetDurationList")
+                     .Columns(columns =>
+                     {
+                     columns.Bound(x => x.weekNum).Title("Week No").Width(250).EditorTemplateName("ReadOnlyTemplate");
+                     columns.Bound(x => x.weekStart).Title("Week Start").Width(250).Format("{0:dd/MM/yyyy}").EditorTemplateName("ReadOnlyTemplate");
+                     columns.Bound(x => x.weekFinish).Title("Week Finish").Width(250).Format("{0:dd/MM/yyyy}");
+                     columns.Bound(x => x.TargetCommission).Title("Target Commission (£)").Width(250)
+                     .ClientTemplate(@"<input type='number' class= 'k-textbox'  value='#= TargetCommission #' />")
+                     .HtmlAttributes(WebHelper.StatusColumnStyle);
+                     })
+                     .Pageable(x =>
+                     {
+                     x.Refresh(true);
+                     x.PageSizes(new int[] { 10, 20, 50, 100 });
+                     })
+                     .Editable(editable => editable.Mode(GridEditMode.InCell))
+                     .Pageable(x => x.Enabled(false))
+                     .NoRecords()
+                     .DataSource(dataSource => dataSource
+                     .Ajax()
+                     .ServerOperation(false)
+                     .Batch(true)
+                     .Model(model =>
+                     {
+                     model.Id(m => m.TargetCommissionId);
+                     model.Field(m => m.Name).Editable(false);
+                     model.Field(m => m.weekNum).Editable(false);
+                     model.Field(m => m.weekStart).Editable(false);
+                     model.Field(m => m.weekFinish).Editable(false);
+                     model.Field(m => m.TargetCommission).Editable(false);
+                     })
+                     .Read(read => read.Action("TargetDurationList", "Commission").Data("additionalInfo"))
+                     ))
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+}
+<script type="text/javascript">
+   var TargetTypeChanged = false;
+   $(document).ready(function () {
+       $("#TraderrequiredDiv").hide();
+       $("#SalespersonrequiredDiv").hide();
+       $("#TargetYearrequiredDiv").hide();
+       if (@Model.TargetCommissionId> 0) {
+           $("#divTrader").hide();
+           $("#divSalesPerson").hide();
+           $("#divMonthlyDuration").hide();
+           $("#divWeeklyDuration").hide();
+
+           var targetFor = (@Model.TraderId> 0) ? "Trader" : (@Model.SalesPersonId> 0) ? "SalesPerson" : "Company";
+           //$("input[name='TargetTo'][value='" + targetFor + "']").attr('checked', 'checked');
+          if (targetFor == "Trader") {
+               $("#divTrader").show();
+           }
+           else if (targetFor == "SalesPerson") {
+               $("#divSalesPerson").show();
+           }
+           var targetType = '@Model.TargetType';
+         //  $("input[name='TargetType'][value='" + targetType + "']").attr('checked', 'checked');
+           if (targetType == 'Monthly') {
+               $("#divMonthlyDuration").show();
+               $("#divWeeklyDuration").hide();
+               $("#divDailyDuration").hide();
+           }
+           else if (targetType == 'Weekly') {
+               $("#divWeeklyDuration").show();
+               $("#divMonthlyDuration").hide();
+               $("#divDailyDuration").hide();
+           }
+           else if (targetType == 'Daily') {
+               $("#divDailyDuration").show();
+               $("#divMonthlyDuration").hide();
+               $("#divWeeklyDuration").hide();
+           }
+       }
+       else {
+           $("#divTrader").show();
+           $("#divSalesPerson").hide();
+           $("#TargetType").val("Daily");
+           $("#IsActive").val(true);
+           $("#divMonthlyDuration").hide();
+           $("#divWeeklyDuration").hide();
+           $('#gridDailyTargetDurationList').data('kendoGrid').dataSource.read();
+           $("#divDailyDuration").show();
+           $("#TargetYear").data("kendoDropDownList").value(new Date().getFullYear());
+       }
+
+       checkAddeditPermission();
+   });
+   function validateTargetCommission() {
+       var isValid = true;
+       $("#TraderrequiredDiv").hide();
+       $("#SalespersonrequiredDiv").hide();
+       $("#TargetYearrequiredDiv").hide();
+       
+       
+       var ddlTargetYear = '@Model.TargetYear';
+       if (!ddlTargetYear) {
+           $("#TargetYearrequiredDiv").show();
+           isValid = false;
+       }
+     
+       var targetType = '@Model.TargetType';
+       if (isValid == true) {
+           if (targetType == "Daily") {
+               SaveDailyTargetCommission();
+           }
+           else if (targetType == "Monthly") {
+               SaveMonthlyTargetCommission();
+           }
+           else if (targetType == "Weekly") {
+               SaveWeeklyTargetCommission();
+           }
+       } else {
+           return false;
+       }
+   }
+   function convertstrToDate(inputFormat) {
+       function pad(s) { return (s < 10) ? '0' + s : s; }
+       var d = new Date(inputFormat)
+       return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join('/')
+   }
+   function SaveDailyTargetCommission() {
+       var targetCommList = [];
+       var targetCommJson;
+       var Dailytable = $("#gridDailyTargetDurationList table");
+       Dailytable.find('tr').each(function (i) {
+          if (i != 0) {
+               var $tds = $(this).find('td'),
+                   DTDay = $tds.eq(0).text(),
+                   StrDay = $tds.eq(1).text(),
+                  TargetCommission = $tds.eq(2).find('input').val();
+
+              var dateParts = DTDay.split("/");
+              DTDay = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+
+              var element = {};
+              element.strDayDT = convertstrToDate(DTDay);
+              element.StrDay = StrDay;
+           element.TargetCommission = TargetCommission;
+          
+               targetCommList.push(element);
+           }
+       });
+       var DailyDurationData = $("#gridDailyTargetDurationList").data("kendoGrid").dataSource.data();
+       var DailyparamValue = kendo.stringify(DailyDurationData);
+
+       if (DailyparamValue && DailyparamValue == "[]") {
+           ShowErrorMessage("No record to save.");
+       }
+       else {
+           
+           targetCommJson = JSON.stringify(targetCommList);
+           targetCommJson = JSON.stringify(JSON.parse(JSON.stringify(targetCommList)));
+          
+       }
+       var targetType = '@Model.TargetType';
+
+       var targetTo = $("input[name='TargetTo']:checked").val();
+       var trader = $("#TraderId").data("kendoDropDownList");
+       var traderId = null;
+       if (trader) {
+           traderId = trader.value();
+       }
+       var salesPerson = $("#SalesPersonId").data("kendoDropDownList");
+       var salesPersonId = null;
+       if (salesPerson) {
+           salesPersonId = salesPerson.value();
+       }
+
+       var targetYear = '@Model.TargetYear';
+       $('.loader').show();
+           $.ajax({
+               url: '@Url.Action("ManageTargetCommission", "Commission")',
+               async: false,
+               type: 'POST',
+               data: { TargetCommissionId:@Model.TargetCommissionId, strData: targetCommJson, TargetType: targetType, TargetFor: targetTo, TargetYear: targetYear, TraderId: traderId, SalePersonId: salesPersonId },
+               success: function (data) {
+                   $('.loader').hide();
+                   if (data.IsSuccess) {
+                       ShowSuccessMessage("Target Commisssion Saved Successfully.");
+                   }
+                   else {
+                       ShowErrorMessage("Something went wrong please try again later.");
+                   }
+               }
+           });
+   }
+   function SaveWeeklyTargetCommission() {
+       var targetCommList = [];
+       var targetCommJson;
+
+       var Weeklytable = $("#gridWeeklyTargetDurationList table");
+       Weeklytable.find('tr').each(function (i) {
+           if (i != 0) {
+               var $tds = $(this).find('td'),
+                   weekNum = $tds.eq(0).text(),
+                   weekStart = $tds.eq(1).text(),
+                   weekFinish = $tds.eq(2).text(),
+                   TargetCommission = $tds.eq(3).find('input').val();
+
+               var StartdateParts = weekStart.split("/");
+               weekStart = new Date(+StartdateParts[2], StartdateParts[1] - 1, +StartdateParts[0]);
+
+               var FinishdateParts = weekFinish.split("/");
+               weekFinish = new Date(+FinishdateParts[2], FinishdateParts[1] - 1, +FinishdateParts[0]);
+               var element = {};
+               element.weekNum = weekNum;
+               element.strweekStart = convertstrToDate(weekStart);
+               element.strweekFinish = convertstrToDate(weekFinish);
+               element.TargetCommission = TargetCommission;
+               targetCommList.push(element);
+           }
+       });
+
+       var WeeklyDurationData = $("#gridWeeklyTargetDurationList").data("kendoGrid").dataSource.data();
+       var WeeklyparamValue = kendo.stringify(WeeklyDurationData);
+
+       if (WeeklyparamValue && WeeklyparamValue == "[]") {
+           ShowErrorMessage("No record to save.");
+       }
+       else {
+           targetCommJson = JSON.stringify(targetCommList);
+           targetCommJson = JSON.stringify(JSON.parse(JSON.stringify(targetCommList)));
+       }
+     
+       var targetType = '@Model.TargetType';
+       var targetTo = $("input[name='TargetTo']:checked").val();
+       var trader = $("#TraderId").data("kendoDropDownList");
+       var traderId = null;
+       if (trader) {
+           traderId = trader.value();
+       }
+       var salesPerson = $("#SalesPersonId").data("kendoDropDownList");
+       var salesPersonId = null;
+       if (salesPerson) {
+           salesPersonId = salesPerson.value();
+       }
+     
+       var targetYear = '@Model.TargetYear';
+       $('.loader').show();
+           $.ajax({
+               url: '@Url.Action("ManageTargetCommission", "Commission")',
+               async: false,
+               type: 'POST',
+               data: { TargetCommissionId:@Model.TargetCommissionId, strData: targetCommJson, TargetType: targetType, TargetFor: targetTo,TargetYear: targetYear, TraderId: traderId, SalePersonId: salesPersonId },
+               success: function (data) {
+                   $('.loader').hide();
+                   if (data.IsSuccess) {
+                       ShowSuccessMessage("Target Commisssion Saved Successfully.");
+                   }
+                   else {
+                       ShowErrorMessage("Something went wrong please try again later.");
+                   }
+               }
+           });
+   }
+   function SaveMonthlyTargetCommission() {
+       var targetCommList = [];
+       var targetCommJson;
+   var Monthlytable = $("#gridMonthlyTargetDurationList table");
+       Monthlytable.find('tr').each(function (i) {
+           if (i != 0) {
+               var $tds = $(this).find('td'),
+                   Month = $tds.eq(0).text(),
+                   TargetCommission = $tds.eq(1).find('input').val();
+
+               var element = {};
+               element.Month = Month;
+               element.TargetCommission = TargetCommission;
+               targetCommList.push(element);
+           }
+       });
+
+       var MonthlyDurationData = $("#gridMonthlyTargetDurationList").data("kendoGrid").dataSource.data();
+       var MonthlyparamValue = kendo.stringify(MonthlyDurationData);
+
+       if (MonthlyparamValue && MonthlyparamValue == "[]") {
+           ShowErrorMessage("No record to save.");
+       }
+       else {
+           targetCommJson = JSON.stringify(targetCommList);
+           targetCommJson = JSON.stringify(JSON.parse(JSON.stringify(targetCommList)));
+       }
+
+       var targetType = '@Model.TargetType';
+
+
+       var targetTo = $("input[name='TargetTo']:checked").val();
+       var trader = $("#TraderId").data("kendoDropDownList");
+       var traderId = null;
+       if (trader) {
+           traderId = trader.value();
+       }
+       var salesPerson = $("#SalesPersonId").data("kendoDropDownList");
+       var salesPersonId = null;
+       if (salesPerson) {
+           salesPersonId = salesPerson.value();
+       }
+      
+       var targetYear = '@Model.TargetYear';
+       $('.loader').show();
+           $.ajax({
+               url: '@Url.Action("ManageTargetCommission", "Commission")',
+               async: false,
+               type: 'POST',
+               data: { TargetCommissionId:@Model.TargetCommissionId, strData: targetCommJson, TargetType: targetType, TargetFor: targetTo,TargetYear: targetYear, TraderId: traderId, SalePersonId: salesPersonId },
+               success: function (data) {
+                   $('.loader').hide();
+                   if (data.IsSuccess) {
+                       ShowSuccessMessage("Target Commisssion Saved Successfully.");
+                   }
+                   else {
+                       ShowErrorMessage("Something went wrong please try again later.");
+                   }
+               }
+           });
+   }
+   function checkAddeditPermission() {
+       var havePermission = "false";
+       if (@Model.TargetCommissionId > 0) {
+           havePermission = '@WebHelper.CanEdit()';
+       } else {
+           havePermission = '@WebHelper.CanAdd()';
+       }
+       if (havePermission.toLowerCase()=="false") {
+           var urllink = '@Url.Action("PermissionDenied", "Common")';
+           window.location.href = urllink;
+       }
+   }
+   $(document).on("change", "input[name='TargetTo']", function () {
+       var selectedVal = this.value;
+       $("#divTrader").hide();
+       $("#divSalesPerson").hide();
+       if (selectedVal == "Trader") {
+           $("#SalesPersonId").data("kendoDropDownList").value("");
+           $("#divTrader").show();
+       }
+       else if (selectedVal == "SalesPerson") {
+           $("#TraderId").data("kendoDropDownList").value("");
+           $("#divSalesPerson").show();
+       }
+   });
+   $(document).on("change", "input[name='TargetType']", function () {
+       TargetTypeChanged = true;
+       var selectedVal = this.value;
+       TargetTypeChange(selectedVal);
+   });
+   function TargetTypeChange(selectedVal) {
+       $("#divMonthlyDuration").hide();
+       $("#divWeeklyDuration").hide();
+       $("#divDailyDuration").hide();
+
+       if (selectedVal == "Monthly") {
+           $('#gridMonthlyTargetDurationList').data('kendoGrid').dataSource.read();
+           $("#divMonthlyDuration").show();
+       }
+       else if (selectedVal == "Weekly") {
+           $('#gridWeeklyTargetDurationList').data('kendoGrid').dataSource.read();
+           $("#divWeeklyDuration").show();
+       }
+       else if (selectedVal == "Daily") {
+           $('#gridDailyTargetDurationList').data('kendoGrid').dataSource.read();
+           $("#divDailyDuration").show();
+       }
+       $("#TargetType").val(selectedVal);
+   }
+   function isActiveClick() {
+       var isActiveStatus = $("#chkActive").is(':checked');
+       $("#IsActive").val(isActiveStatus);
+   }
+    function additionalInfo() {
+        
+        var abctest = '@Model.TargetYear';
+       var TargetCommissionId =@Model.TargetCommissionId;
+       console.log($("input[name='TargetType']:checked").val());
+
+       return {
+           SelectedYear : '@Model.TargetYear',
+           Type: (@Model.TargetCommissionId==0 || TargetTypeChanged == true) ? $("input[name='TargetType']:checked").val():'@Model.TargetType' ,
+           TargetCommissionId: TargetCommissionId,
+
+       };
+
+   }
+   function TargetYearChange() {
+       var selectedVal=$("input[name='TargetType']:checked").val();
+       TargetTypeChange(selectedVal);
+   }
+</script>
+<style type="text/css">
+    .k-radio:checked + .k-radio-label:after {
+        background-color: #007bff !important;
+        border-radius: 50%;
+    }
+
+    .k-radio:checked + .k-radio-label:before, .k-radio:checked + .k-radio-label:hover:before {
+        border-color: #007bff !important;
+    }
+</style>

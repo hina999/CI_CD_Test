@@ -1,0 +1,392 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<div class="content">
+    <div class="panel panel-default">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label client">Client:</label>
+                        @(Html.Kendo().DropDownList()
+    .Name("DDLClients")
+    .HtmlAttributes(new { style = "width:100%;" })
+    .OptionLabel("Select Client")
+    .DataTextField("CompanyName")
+    .DataValueField("EmailAddress")
+    .DataSource(source =>
+    {
+        source.Read(read =>
+        {
+            read.Action("GetClientListForDropdown", "Common");
+        });
+    }).Events(e => {e.Change("ClentChange");})
+                        )
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label client">Prospect:</label>
+                        @(Html.Kendo().DropDownList()
+                        .Name("DDLProspects")
+                        .HtmlAttributes(new { style = "width:100%;" })
+                        .OptionLabel("Select Prospect")
+                        .DataTextField("CompanyName")
+                        .DataValueField("EmailId")
+                        .DataSource(source =>
+                        {
+                            source.Read(read =>
+                            {
+                                read.Action("GetProspectListForDropdown", "Common");
+                            });
+                        }).Events(e => { e.Change("ProspectChange"); })
+                        )
+                    </div>
+                </div>
+                @*<div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label client">Email Address:</label>
+                        <input id="txtEmailAddress" type="text" placeholder="Email" class="k-textbox" />
+                    </div>
+                </div>*@
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label client">To:</label>
+                                <input id="txtEmailAddress" type="text" placeholder="Email" class="k-textbox" />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label">Subject:</label>
+                                <input id="txtMailSubjectCalc" type="text" placeholder="Subject" class="k-textbox" />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label">Body</label>
+                                <textarea rows="6" id="txtMailBodyForCalc" class="k-textbox"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 pull-right">
+                            <div class="form-group pull-right">
+                                <button id="btnSendMail" type="button" class="k-button btn-orange">Send Mail</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var htmlBody = `
+        <p><span>Hello</span></p>
+        <p><span>Please find below savings</span></p>
+        <table border="0" cellspacing="0" cellpadding="0" border="0" align="center"
+            style="width: 100%;border-collapse: collapse;">
+            <tbody>
+                <tr style="height: 33.75pt;">
+                    <td nowrap="" valign="bottom" style="width: 20%;padding: 0.0in 5.4pt 0.0in 5.4pt;height: 33.75pt;">
+                        <p align="center" style="text-align: center;">
+                            <span style="font-size: 16.0pt;font-family: Arial, sans-serif;color: rgb(8,51,183);">BUY</span>
+                        </p>
+                    </td>
+                    <td nowrap="" valign="bottom" style="width: 20%;padding: 0.0in 5.4pt 0.0in 5.4pt;height: 33.75pt;">
+                        <p align="center" style="text-align: center;">
+                            <span style="font-size: 16.0pt;font-family: Arial, sans-serif;color: rgb(8,51,183);">Transfer</span>
+                            <span style="font-size: 16.0pt;font-family: Arial, sans-serif;color: rgb(238,12,98);">Connex</span>
+                        </p>
+                    </td>
+                    <td nowrap="" valign="bottom" style="width: 20%;padding: 0.0in 5.4pt 0.0in 5.4pt;height: 33.75pt;">
+                        <p align="center" style="text-align: center;">
+                            <span style="font-size: 16.0pt;font-family: Arial, sans-serif;color: rgb(8,51,183);">Clients Rate</span>
+                        </p>
+                    </td>
+                    <td nowrap="" valign="bottom" style="width: 20%;padding: 0.0in 5.4pt 0.0in 5.4pt;height: 33.75pt;">
+                        <p align="center" style="text-align: center;">
+                            <span style="font-size: 16.0pt;font-family: Arial, sans-serif;color: rgb(8,51,183);">SELL</span>
+                        </p>
+                    </td>
+                    <td nowrap="" valign="bottom" style="width: 20%;padding: 0.0in 5.4pt 0.0in 5.4pt;height: 33.75pt;">
+                        <p align="center" style="text-align: center;">
+                            <span style="font-size: 16.0pt;font-family: Arial, sans-serif;color: rgb(238,12,98);">Savings</span>
+                        </p>
+                    </td>
+                </tr>
+                <tr style="height: 20.0pt;">
+                    <td nowrap="" valign="bottom" style="width: 20%;padding: 0.0in 5.4pt 0.0in 5.4pt;height: 20.0pt;">
+                        <p align="center" style="text-align: center;">
+                            <span style="font-size: 16.0pt;font-family: Arial, sans-serif;color: rgb(64,64,64);">{{BuyAmt}}</span>
+                        </p>
+                    </td>
+                    <td nowrap="" valign="bottom" style="width: 20%;padding: 0.0in 5.4pt 0.0in 5.4pt;height: 20.0pt;">
+                        <p align="center" style="text-align: center;">
+                            <span style="font-size: 16.0pt;font-family: Arial, sans-serif;color: rgb(64,64,64);">{{TXRate}}</span>
+                        </p>
+                    </td>
+                    <td nowrap="" valign="bottom" style="width: 20%;padding: 0.0in 5.4pt 0.0in 5.4pt;height: 20.0pt;">
+                        <p align="center" style="text-align: center;"><span
+                                style="font-size: 16.0pt;font-family: Arial, sans-serif;color: rgb(64,64,64);">{{ClientRate}}</span>
+                        </p>
+                    </td>
+                    <td nowrap="" valign="bottom" style="width: 20%;padding: 0.0in 5.4pt 0.0in 5.4pt;height: 20.0pt;">
+                        <p align="center" style="text-align: center;">
+                            <span style="font-size: 16.0pt;font-family: Arial, sans-serif;color: rgb(64,64,64);">{{SellAmt}}</span>
+                        </p>
+                    </td>
+                    <td nowrap="" valign="bottom" style="width: 20%;padding: 0.0in 5.4pt 0.0in 5.4pt;height: 20.0pt;">
+                        <p align="center" style="text-align: center;">
+                            <span style="font-size: 16.0pt;font-family: Arial, sans-serif;color: rgb(238,12,98);">{{SavingAmt}}</span>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p><span>&nbsp;</span></p>
+        <p>
+            <span style="font-size: 9.5pt;font-family: Arial, sans-serif;color: rgb(67,67,67);">Kind regards,</span>
+        </p>
+        <p>
+            <b>
+                <span style="font-size: 10.0pt;font-family: Open Sans;color: rgb(8,51,183);">{{Sender}}</span>
+            </b>
+        </p>
+        <p>
+            <span style="font-size: 10.0pt;font-family: Open Sans;color: rgb(255,25,98);">Transfer Connex Ltd</span>
+        </p>
+        <p>
+            <b>
+                <span style="font-size: 10.0pt;font-family: Open Sans;color: rgb(72,75,84);">+44 (0)203 861 6580</span>
+            </b>
+        </p>
+        <p>
+            <span style="color: black;">
+                <a href="http://www.transferconnex.com/" target="_blank">
+                    <b>
+                        <span style="font-size: 10.0pt;font-family: Open Sans;color: rgb(72,75,84);">www.transferconnex.com</span>
+                    </b>
+                </a>
+            </span>
+        </p>
+        <p>
+            <span style="font-size: 8.0pt;font-family: Open Sans;color: rgb(59,56,56);">
+                Payment Services for
+                Transfer Connex Limited are provided by The Currency Cloud. The Currency Cloud Limited is registered with
+                the FCA (Financial Conduct Authority) under the E-Money Licence Holder Regulations 2009 (Reg. No. 900199)
+                for the provision of payment services.
+            </span>
+        </p>
+        <p>
+            <span style="font-size: 8.0pt;font-family: Open Sans;color: rgb(59,56,56);">
+                The Currency Cloud Limited
+                is licensed and regulated by HMRC as a Money Services Business (MSB) License Number 12272696 The Currency
+                Cloud Limited is registered with the UK Data Protection Act - Registration Number Z1550331
+            </span>
+        </p>
+        <p>
+            <span style="font-size: 8.0pt;font-family: Open Sans;color: rgb(59,56,56);">
+                This communication is for
+                informational purposes only. It is not intended as an offer or solicitation for the purchase or sale of any
+                financial instrument or as an official confirmation of any transaction. All market prices, data and other
+                information are not warranted as to completeness or accuracy and are subject to change without notice. Any
+                comments or statements made herein do not necessarily reflect those of Transfer Connex Limited, its
+                subsidiaries and affiliates.
+            </span>
+        </p>
+        <p>
+            <span style="font-size: 8.0pt;font-family: Open Sans;color: rgb(59,56,56);">
+                Additionally, the
+                information transmitted is intended only for the person or entity to which it is addressed and may contain
+                confidential and/or privileged material. Any review, retransmission, dissemination or other use of, or
+                taking of any action in reliance upon this information by persons or entities other than the intended
+                recipient is prohibited. If you received this in error please contact the sender and delete the material
+                from any computer.
+            </span>
+        </p>
+        <p><span>&nbsp;</span></p>`;
+
+    $(document).ready(function () {
+    });
+
+    function ClentChange(e) {
+        $("#DDLProspects").data("kendoDropDownList").value(0);
+        var Client = $("#DDLClients").data("kendoDropDownList").value().trim();
+        $("#txtEmailAddress").val(Client);
+    }
+
+    function ProspectChange(e) {
+        $("#DDLClients").data("kendoDropDownList").value(0);
+        var Prospect = $("#DDLProspects").data("kendoDropDownList").value().trim();
+        $("#txtEmailAddress").val(Prospect);
+    }
+
+    function CreateEmailBodyBuy() {
+        setClient();
+
+        var BuyAmt = parseFloat($("#txtAmount").val()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        var TXRate = $("#txtTransferConnex").val();
+        var ClientRate = $("#txtClientrate").val();
+        var SellAmt = parseFloat($("#txtSellAmount").val()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        var SavingAmt = parseFloat($("#txtSavings").val()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        var Sender = '@ProjectSession.LoginUserDetails.FirstName' + ' ' + '@ProjectSession.LoginUserDetails.LastName';
+
+        var FinalHTML = htmlBody.replace("{{BuyAmt}}", BuyAmt).replace("{{TXRate}}", TXRate).replace("{{ClientRate}}", ClientRate).replace("{{ClientRate}}", ClientRate).replace("{{SellAmt}}", SellAmt).replace("{{SavingAmt}}", SavingAmt).replace("{{Sender}}", Sender);
+
+        CKEDITOR.instances.txtMailBodyForCalc.setData(FinalHTML);
+    }
+
+    function CreateEmailBodySell() {
+        setClient();
+
+        var BuyAmt = parseFloat($("#txtBuyAmount_Sell").val()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        var TXRate = $("#txtTransferConnex_Sell").val();
+        var ClientRate = $("#txtClientrate_Sell").val();
+        var SellAmt = parseFloat($("#txtAmount_Sell").val()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        var SavingAmt = parseFloat($("#txtSavings_Sell").val()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        var Sender = '@ProjectSession.LoginUserDetails.FirstName' + ' ' + '@ProjectSession.LoginUserDetails.LastName';
+
+        
+
+        var FinalHTML = htmlBody.replace("{{BuyAmt}}", BuyAmt).replace("{{TXRate}}", TXRate).replace("{{ClientRate}}", ClientRate).replace("{{ClientRate}}", ClientRate).replace("{{SellAmt}}", SellAmt).replace("{{SavingAmt}}", SavingAmt).replace("{{Sender}}", Sender);
+
+        CKEDITOR.instances.txtMailBodyForCalc.setData(FinalHTML);
+    }
+
+    function setClient() {
+        //localStorage.setItem("RingCentralClient", "Bulldog Licensing CM");
+        var currentClient = localStorage.getItem("RingCentralClient");
+        var currentClientType = localStorage.getItem("RingCentralClientType");
+        if (currentClient != null && currentClient != "") {
+            if (currentClientType != null && currentClientType != "" && currentClientType.toString().toLowerCase() === "prospect") {
+                var dropdownlist = $("#DDLProspects").data("kendoDropDownList");
+                dropdownlist.search(currentClient);
+                //dropdownlist.refresh();
+            }
+            else {
+                var dropdownlist = $("#DDLClients").data("kendoDropDownList");
+                dropdownlist.search(currentClient);
+                //dropdownlist.refresh();
+            }
+        }
+    }
+
+    $('#btnSendMail').click(function () {
+        var Subject = $("#txtMailSubjectCalc").val();
+        var MailBody = CKEDITOR.instances.txtMailBodyForCalc.getData();
+
+        var Client = $("#DDLClients").data("kendoDropDownList").value();
+        var Prospect = $("#DDLProspects").data("kendoDropDownList").value();
+        var EmailAddress = $("#txtEmailAddress").val();
+
+        var items = [];
+        
+        if (EmailAddress != null && EmailAddress != "") {
+            if (EmailAddress.includes(",")) {
+                items = EmailAddress.split(",");
+            }
+            else {
+                items.push(EmailAddress);
+            }
+        }
+
+        var status = true;
+
+        if (Subject == null || Subject == "") {
+            //bootbox.alert('Mail subject is required');
+            ShowErrorMessage('Mail subject is required');
+            status = false;
+            return;
+        }
+        if (MailBody == null || MailBody == "") {
+            ShowErrorMessage('Mail body is required');
+            status = false;
+            return;
+        }
+        if (items.length == 0) {
+            ShowErrorMessage('Please select at least one client/prospect or enter email address.');
+            status = false;
+            return;
+        }
+
+        items = [];
+
+        if (EmailAddress.includes(",")) {
+            items = EmailAddress.split(",");
+        }
+        else {
+            items.push(EmailAddress);
+        }
+
+        if (status) {
+            bootbox.confirm("Are you sure want to send email? ", function (result) {
+                if (result) {
+                    $.ajax({
+                        url: '@Url.Action("SendMail", "BulkEmail")',
+                        async: false,
+                        type: 'POST',
+                        data: { emaillist: items, subject: Subject, body: MailBody },
+                        success: function (data) {
+                            console.log(data);
+                            if (data.IsError == 1) {
+                                var currentClientType = localStorage.getItem("RingCentralClientType");
+                                var currentClientId = localStorage.getItem("RingCentralClientId");
+                                if (currentClientType != null && currentClientType != "" && currentClientType.toString().toLowerCase() === "prospect") {
+                                    UpdateProspecrCommunication(currentClientId, MailBody.split('<p><span>&nbsp;</span></p>')[0]);
+                                }
+                                else {
+                                    UpdateClientCommunication(currentClientId, MailBody.split('<p><span>&nbsp;</span></p>')[0]);
+                                }
+                                ClearAll_Email();
+                            }
+                            DisplayResponseMessageForAjax(data);
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+    function UpdateClientCommunication(clientId, MailBody) {
+        $.ajax({
+            url: '@Url.Action("UpdatePastCommDetail", "Client")',
+            async: false,
+            type: 'POST',
+            data: { ClientId: clientId, PastCommDetail: MailBody },
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    function UpdateProspecrCommunication(prospectId, MailBody) {
+        $.ajax({
+            url: '@Url.Action("UpdateCommunicationDetail", "Prospect")',
+            async: false,
+            type: 'POST',
+            data: { ProspectId: prospectId, CommDetail: MailBody },
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    function ClearAll_Email() {
+        $("#DDLClients").data("kendoDropDownList").value(0);
+        $("#DDLProspects").data("kendoDropDownList").value(0);
+        $("#txtEmailAddress").val('');
+        $('#EmailModal').modal('toggle');
+    }
+</script>
+<script>
+    CKEDITOR.replace('txtMailBodyForCalc');
+</script>

@@ -1,0 +1,45 @@
+﻿
+@using Kendo.Mvc.UI;
+@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnexApp
+@using FXAdminTransferConnex.Common
+
+@model FXAdminTransferConnex.Entities.RegionMasterModel
+
+@{
+    ViewBag.Title = "ManageRegion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("ManageRegion", "Region", FormMethod.Post))
+{
+
+    @Html.HiddenFor(m => m.RegionID)
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h2 class="category-title">
+                Region Detail
+            </h2>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Region Name:</label>
+                            @Html.TextBoxFor(m => m.RegionName, new { @placeholder = "Region name", @class = "form-control", @tabindex = "1" })
+                            @Html.ValidationMessageFor(m => m.RegionName)                           
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12">
+                    <a href="@Url.Action("Index","Region")" class="btn btn-orange mt-5 mr-10 pull-right" tabindex="16">Cancel</a>
+                    <button class="btn btn-orange mt-5 mr-10 pull-right" type="submit" tabindex="15">Save</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+}
+

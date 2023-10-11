@@ -1,0 +1,431 @@
+﻿@using FXAdminTransferConnex.Entities;
+@model FXAdminTransferConnex.Entities.TaskSchedulerModel
+@using FXAdminTransferConnexApp
+<style>
+    .editor-lable {
+        padding: 10px;
+    }
+</style>
+<div class="content">
+    @{
+        /**/
+        if (ProjectSession.LoginUserDetails.UserTypeId == (int)SystemEnum.UserType.SuperAdmin || ProjectSession.LoginUserDetails.UserTypeId == (int)SystemEnum.UserType.Trader)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body pb-0">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                @if (ProjectSession.LoginUserDetails.UserTypeId == (int)SystemEnum.UserType.SuperAdmin)
+                                {
+                                <div class="col-lg-3 col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Users</label>
+                                        @(Html.Kendo().DropDownList()
+                                                                        .Name("UserList")
+                                                                        .DataTextField("FullName")
+                                                                        .DataValueField("UserId")
+                                                                        .OptionLabel("-- Select--")
+                                                                        .DataSource(source =>
+                                                                        {
+                                                                            source.Read(read =>
+                                                                            {
+                                                                                read.Action("GetUserList", "Common");
+                                                                            })
+                                                                            .Custom()
+                                                                            .Group(b => b.Add("UserType", typeof(string))); 
+                                                                        })
+                                                                        .HtmlAttributes(new { style = "width: 100%" })
+                                        )
+                                    </div>
+                                </div>
+                                }
+                                @if (ProjectSession.LoginUserDetails.UserTypeId == (int)SystemEnum.UserType.Trader)
+                                {
+                                    <div class="col-lg-3 col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Sales Persons</label>
+                                            @(Html.Kendo().DropDownList()
+                                                                            .Name("SalesPersonsList")
+                                                                            .DataTextField("Text")
+                                                                            .DataValueField("Value")
+                                                                            .OptionLabel("-- Select Sales Person--")
+                                                                            .DataSource(source =>
+                                                                            {
+                                                                                source.Read(read =>
+                                                                                {
+                                                                                    read.Action("GetSalesPersonListByTrader", "Common");
+                                                                                });
+                                                                            })
+                                                                            .HtmlAttributes(new { style = "width: 100%" })
+                                            )
+                                        </div>
+                                    </div>
+                                }
+
+                                <div class="col-lg-3 col-sm-6 pull-right pt-20">
+                                    <div class="form-group pull-right">
+                                        <button id="btnSearch" type="button" class="k-button btn-orange">Search</button>
+                                        <button id="btnReset" type="button" class="k-button btn-orange">Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+    <div id="calender"></div>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header " style="background-color:#54a3da;border-bottom-color:none;color:white">
+                    <button type="button" class="close" style="color:white" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Task Reminder</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.HiddenFor(m => m.TaskID)
+                    @Html.HiddenFor(m => m.ClientId)
+                    @Html.HiddenFor(m => m.ProspectId)
+
+                    <div class="editor-lable"><strong><lable>Subject</lable></strong></div>
+                    <div class="editor-field"> @Html.EditorFor(m => m.Title, new { @class = "", @required = "required" })</div>
+
+                    <div class="editor-lable"><strong><lable>TaskType</lable></strong></div>
+                    <div class="editor-field"> @Html.EditorFor(m => m.TaskTypeId, new { @class = "" })</div>
+
+                    <div class="editor-lable"><strong><lable>Assign To</lable></strong></div>
+                    <div class="editor-field"> @Html.EditorFor(m => m.AssignToId, new { @class = "" })</div>
+
+                    <div class="editor-lable"><strong><lable>Start</lable></strong></div>
+                    <div class="editor-field">
+                        @(Html.Kendo()
+                                                        .DateTimePickerFor(m => m.Start)
+                                                        .Format(FXAdminTransferConnex.Common.ConfigItems.DateTimeFormat)
+                                                        .HtmlAttributes(new { @class = "dropdown", style = "width: 100%" })
+                        )
+                    </div>
+
+                    <div class="editor-lable"><strong><lable>Notes</lable></strong></div>
+                    <div class="editor-field"> @Html.EditorFor(m => m.Notes, new { @class = "" })</div>
+
+                    <hr />
+
+                    <div id="clientDetail">
+                        <div class="editor-lable"><strong><lable>Client Detail</lable></strong></div>
+
+                        <div class="editor-lable"><strong><lable>Full Name</lable></strong></div>
+                        <div class="editor-field"> @Html.TextBoxFor(m => m.ClientFullName, new { @class = "k-textbox", @readonly = "readonly" })</div>
+
+                        <div class="editor-lable"><strong><lable>Company Name</lable></strong></div>
+                        <div class="editor-field"> @Html.TextBoxFor(m => m.ClientCompanyName, new { @class = "k-textbox", @readonly = "readonly" })</div>
+
+                        <div class="editor-lable"><strong><lable>Email Address</lable></strong></div>
+                        <div class="editor-field"> @Html.TextBoxFor(m => m.ClientEmailAddress, new { @class = "k-textbox", @readonly = "readonly" })</div>
+
+                        <div class="editor-lable"><strong><lable>Mobile No</lable></strong></div>
+                        <div class="editor-field"> @Html.TextBoxFor(m => m.ClientMobileNo, new { @class = "k-textbox", @readonly = "readonly" })</div>
+
+                        <div class="editor-lable"><strong><lable>Alternate Mobile No</lable></strong></div>
+                        <div class="editor-field"> @Html.TextBoxFor(m => m.ClientAltMobileNo, new { @class = "k-textbox", @readonly = "readonly" })</div>
+
+                        <a href="javascript:;" onclick="gotoClientPage()">Go to Client Page</a>
+                    </div>
+
+                    <div id="prospectDetail">
+                        <div class="editor-lable"><strong><lable>Prospect Detail</lable></strong></div>
+
+                        <div class="editor-lable"><strong><lable>Full Name</lable></strong></div>
+                        <div class="editor-field"> @Html.TextBoxFor(m => m.ProspectFullName, new { @class = "k-textbox", @readonly = "readonly" })</div>
+
+                        <div class="editor-lable"><strong><lable>Company Name</lable></strong></div>
+                        <div class="editor-field"> @Html.TextBoxFor(m => m.ProspectCompanyName, new { @class = "k-textbox", @readonly = "readonly" })</div>
+
+                        <div class="editor-lable"><strong><lable>Email Address</lable></strong></div>
+                        <div class="editor-field"> @Html.TextBoxFor(m => m.ProspectEmailAddress, new { @class = "k-textbox", @readonly = "readonly" })</div>
+
+                        <div class="editor-lable"><strong><lable>Mobile No</lable></strong></div>
+                        <div class="editor-field"> @Html.TextBoxFor(m => m.ProspectMobileNo, new { @class = "k-textbox", @readonly = "readonly" })</div>
+
+                        <div class="editor-lable"><strong><lable>Alternate Mobile No</lable></strong></div>
+                        <div class="editor-field"> @Html.TextBoxFor(m => m.ProspectAltMobileNo, new { @class = "k-textbox", @readonly = "readonly" })</div>
+
+                        <a href="javascript:;" onclick="gotoProspectPage()">Go to Prospect Page</a>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-orange mt-5 mr-10 pull-right" data-dismiss="modal">Close</button>
+                    <button type="button" style="background:#e42307" class="btn btn-orange mt-5 mr-10 pull-right" onclick="OnDismiss(this)">Dismiss</button>
+                    <button type="button" class="btn btn-orange mt-5 mr-10 pull-right" onclick="OnComplete()">End Task</button>
+                    <button type="button" class="btn btn-orange mt-5 mr-10 pull-right" onclick="OnSubmit()">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <link href="~/Content/css/fullcalendar.min.css" rel="stylesheet" />
+    <script src="~/Content/js/moment.min.js"></script>
+    <script src="~/Content/js/fullcalendar.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var havePermission ='@WebHelper.CanView()';
+            if (havePermission.toLowerCase()=="false") {
+                var urllink = '@Url.Action("PermissionDenied", "Common")';
+                window.location.href = urllink;
+            }
+            loadCalenderData(null);
+        });
+
+        function loadCalenderData(userID) {
+            var events = [];
+            var redirectUrl = encodeURI('@Url.Action("GetTaskReminderList", "TaskReminder")');
+            $.ajax({
+                type: "GET",
+                url: redirectUrl,
+                data: { UserId: userID },
+                success: function (data) {
+                    $.each(data, function (i, v) {
+                        var a = v.TaskReminderDatetimeString.split(' ');
+                        var date = a[0].split("/");
+                        var date1 = date[2] + "-" + date[1] + "-" + date[0] + " " + a[1];
+                        var dt = new Date(date1);
+
+                        var compnyName = '';
+                        if (parseInt(v.ClientId) > 0) {
+                            compnyName = v.ClientCompanyName
+                        }
+                        else {
+                            if (parseInt(v.ProspectId) > 0) {
+                                compnyName = v.ProspectCompanyName
+                            }
+                        }
+
+                        events.push({
+                            title: compnyName,
+                            //start: v.Start != null ? moment(v.Start) : null,
+                            start: dt != null ? moment(dt) : null,
+                            color: v.ThemeColor,
+                            allDay: v.IsFullDay,
+                            TaskID: v.TaskID,
+                            AssignToId: v.AssignToId,
+                            TaskTypeId: v.TaskTypeId,
+                            Notes: v.Notes,
+                            ClientId: v.ClientId,
+                            ClientName: v.ClientFullName,
+                            ClientCompanyName: v.ClientCompanyName,
+                            ClientEmailAddress: v.ClientEmailAddress,
+                            ClientMobileNo: v.ClientMobileNo,
+                            ClientAltMobileNo: v.ClientAltMobileNo,
+                            ProspectId: v.ProspectId,
+                            ProspectName: v.ProspectFullName,
+                            ProspectCompanyName: v.ProspectCompanyName,
+                            ProspectEmailAddress: v.ProspectEmailAddress,
+                            ProspectMobileNo: v.ProspectMobileNo,
+                            ProspectAltMobileNo: v.ProspectAltMobileNo,
+                            Subject: v.Subject
+                        });
+                    });
+                    GenerateCalender(events);
+                },
+                error: function (error) {
+                    alert('failed');
+                }
+            });
+        }
+
+        function GenerateCalender(events) {
+            $('#calender').fullCalendar('destroy');
+            $('#calender').fullCalendar({
+                contentHeight: 700,
+                defaultDate: new Date(),
+                timeFormat: 'h(:mm)a',
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,basicWeek,basicDay'
+                },
+                eventLimit: true,
+                eventColor: '#378006',
+                events: events,
+                eventClick: function (calEvent, jsEvent, view) {
+                    $('#myModal #eventTitle').text(calEvent.title);
+
+                    $('#TaskID').val((calEvent.TaskID));
+                    $('#Title').val((calEvent.Subject));
+                    $("#TaskTypeId").data('kendoDropDownList').value(calEvent.TaskTypeId);
+                    $("#AssignToId").data('kendoDropDownList').value(calEvent.AssignToId);
+                    $('#Start').val((moment(calEvent.start).format('DD/MM/YYYY HH:mm')));
+                    //$('#Start').val((calEvent.start));
+                    $('#Notes').val((calEvent.Notes));
+
+
+                    $('#ClientId').val((calEvent.ClientId));
+                    $('#ClientFullName').val((calEvent.ClientName));
+                    $('#ClientCompanyName').val((calEvent.ClientCompanyName));
+                    $('#ClientEmailAddress').val((calEvent.ClientEmailAddress));
+                    $('#ClientMobileNo').val((calEvent.ClientMobileNo));
+                    $('#ClientAltMobileNo').val((calEvent.ClientAltMobileNo));
+
+                    $('#ProspectId').val((calEvent.ProspectId));
+                    $('#ProspectFullName').val((calEvent.ProspectName));
+                    $('#ProspectCompanyName').val((calEvent.ProspectCompanyName));
+                    $('#ProspectEmailAddress').val((calEvent.ProspectEmailAddress));
+                    $('#ProspectMobileNo').val((calEvent.ProspectMobileNo));
+                    $('#ProspectAltMobileNo').val((calEvent.ProspectAltMobileNo));
+
+                    if (parseInt($('#ClientId').val()) > 0) {
+                        $('#clientDetail').show();
+                        $('#prospectDetail').hide();
+                    }
+                    if (parseInt($('#ProspectId').val()) > 0) {
+                        $('#clientDetail').hide();
+                        $('#prospectDetail').show();
+                    }
+
+                    $('#myModal').modal();
+                }
+            });
+        }
+
+        function gotoClientPage() {
+            var clientId = $("#ClientId").val();
+            var urllink = '@Url.Action("ManageClient", "Client")';
+            window.location.href = urllink + "?ClientId=" + clientId;
+            //window.open(urllink + "?ClientId=" + clientId);
+        }
+
+        function gotoProspectPage() {
+            var prospectId = $("#ProspectId").val();
+            var urllink = '@Url.Action("ManageProspect", "Prospect")';
+            window.location.href = urllink + "?ProspectId=" + prospectId;
+            //window.open(urllink + "?ProspectId=" + prospectId);
+        }
+
+        function OnSubmit() {
+
+            if ($('#Title').val() == '' || $('#Title').val() === null || $('#Title').val() === undefined) {
+                ShowErrorMessage('Subject is required');
+                return false;
+            }
+
+            if ($('#TaskTypeId').val() == '' || $('#TaskTypeId').val() == null || $('#TaskTypeId').val() == undefined) {
+                ShowErrorMessage('Task type is required');
+                return false;
+            }
+
+            if ($('#AssignToId').val() == '' || $('#AssignToId').val() == null || $('#AssignToId').val() == undefined) {
+                ShowErrorMessage('Assign to is required');
+                return false;
+            }
+
+            if ($('#Start').val() == '' || $('#Start').val() == null || $('#Start').val() == undefined) {
+                ShowErrorMessage('Start time is required');
+                return false;
+            }
+            else {
+
+                var Model = {
+                    TaskID: $("#TaskID").val(),
+                    Subject: $("#Title").val(),
+                    TaskTypeId: $("#TaskTypeId").val(),
+                    AssignToId: $("#AssignToId").val(),
+                    Start: $('#Start').val(),
+                    Notes: $("#Notes").val()
+                };
+
+                var redirectUrl = '@Url.Action("Update", "TaskReminder")';
+
+                $.ajax({
+                    type: "Post",
+                    url: redirectUrl,
+                    data: Model,
+                    success: function (result) {
+                        if (result == 1) {
+                            ShowSuccessMessage("Task reminder updated successfully.");
+                            setTimeout(function () { window.location.reload(true); }, 2000);
+                        }
+                        else {
+                            ShowErrorMessage('Operation failed');
+                        }
+                    },
+                    error: function (error) {
+                        ShowErrorMessage('Operation failed');
+                    }
+                });
+            }
+        }
+
+        function OnDismiss() {
+            var TaskID = $("#TaskID").val();
+             var redirectUrl = '@Url.Action("Dismiss", "TaskReminder")';
+            $.ajax({
+                type: "Post",
+                url: redirectUrl,
+                data: { taskID: TaskID },
+                success: function (result) {
+                    if (result == true) {
+                        ShowSuccessMessage("Task reminder dismissed successfully.");
+                        setTimeout(function () { window.location.reload(true); }, 2000);
+                    }
+                    else {
+                        ShowErrorMessage('Operation failed');
+                    }
+                },
+                error: function (error) {
+                    alert('failed');
+                }
+            })
+        }
+
+        function OnComplete() {
+            var TaskID = $("#TaskID").val();
+             var redirectUrl = '@Url.Action("Complete", "TaskReminder")';
+            $.ajax({
+                type: "Post",
+                url: redirectUrl,
+                data: { taskID: TaskID },
+                success: function (result) {
+                    if (result == true) {
+                        ShowSuccessMessage("Task reminder completed successfully.");
+                        setTimeout(function () { window.location.reload(true); }, 2000);
+                    }
+                    else {
+                        ShowErrorMessage('Operation failed');
+                    }
+                },
+                error: function (error) {
+                    alert('failed');
+                }
+            })
+        }
+
+        $("#btnReset").click(function () {
+            //if ($('#txtsearch').val() !== "") {
+            if ($("#UserList").data("kendoDropDownList")) {
+                $("#UserList").data("kendoDropDownList").value(0);
+                loadCalenderData(null);
+            }
+            if ($("#SalesPersonsList").data("kendoDropDownList")) {
+                $("#SalesPersonsList").data("kendoDropDownList").value(0);
+                loadCalenderData(null);
+            }
+            //}
+        });
+
+        $("#btnSearch").click(function () {
+            //if ($('#txtsearch').val() !== "") {
+            if ($("#UserList").data("kendoDropDownList")) {
+                loadCalenderData($("#UserList").data("kendoDropDownList").value());
+            }
+            if ($("#SalesPersonsList").data("kendoDropDownList")) {
+                loadCalenderData($("#SalesPersonsList").data("kendoDropDownList").value());
+            }
+            //}
+        });
+    </script>
+}

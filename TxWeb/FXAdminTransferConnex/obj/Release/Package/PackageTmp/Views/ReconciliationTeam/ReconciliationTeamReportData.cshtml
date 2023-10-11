@@ -1,0 +1,113 @@
+﻿@using FXAdminTransferConnex.Entities;
+@{
+    var teamMemberList = (ReconciliationTeamModel)ViewData["ReconciliationTeamReport"];
+}
+
+<table class="display" style="width:100%">
+    <thead>
+        <tr style="border: 1px solid black">
+            <th style="padding:10px 30px;">Name</th>
+            <th style="padding:10px 30px;color:#7030A0;">Leads</th>
+            <th style="padding:10px 30px;color:#2E72C4;">R/C</th>
+            <th style="padding:10px 30px;color:#00B050;">Reg</th>
+            <th style="padding:10px 30px;color:#FF0000;">Dings</th>
+            <th style="padding:10px 30px;">Comms (£)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            long? traderId = 0;
+            int RecordCount = 0;
+            int LeadCount = 0;
+            int RNCCount = 0;
+            int REGCount = 0;
+            int DingCount = 0;
+            decimal Commission = 0;
+
+            if (teamMemberList != null)
+            {
+                foreach (var item in teamMemberList.MemberList)
+                {
+                    RecordCount = RecordCount + 1;
+                    LeadCount = LeadCount + item.LeadCount.Value;
+                    RNCCount = RNCCount + item.RNCCount.Value;
+                    REGCount = REGCount + item.REGCount.Value;
+                    DingCount = DingCount + item.DingCount.Value;
+                    Commission = Commission + item.Commission.Value;
+
+                    if (traderId != item.TraderId)
+                    {
+                        if (traderId != 0)
+                        {
+                            var newList = teamMemberList.MemberList.Where(x => x.TraderId == traderId);
+                            <tr style="border-left: 1px solid black;border-right: 1px solid black;">
+                                <td style="padding: 10px 30px;font-weight:bold;">Total</td>
+                                <td style="padding: 10px 30px;color:#7030A0;">@newList.Sum(x => x.LeadCount)</td>
+                                <td style="padding: 10px 30px;color:#2E72C4;">@newList.Sum(x => x.RNCCount)</td>
+                                <td style="padding: 10px 30px;color:#00B050;">@newList.Sum(x => x.REGCount)</td>
+                                <td style="padding: 10px 30px;color:#FF0000;">@newList.Sum(x => x.DingCount)</td>
+                                <td style="padding: 10px 30px;">@newList.Sum(x => x.Commission).Value.ToString("n2")</td>
+                            </tr>
+                        }
+                        <tr style="border-top: 1px solid black;border-bottom: 1px solid black;">
+                            <td style="padding:10px 30px;" colspan="6"></td>
+                        </tr>
+                        
+                        var TraderName = teamMemberList.MemberList.Where(x => x.TraderId == item.TraderId).Select(x => x.TraderName).FirstOrDefault();
+                        <tr style="border-left: 1px solid black;border-right: 1px solid black;">
+                            <td style="padding: 10px 30px;font-weight:bold;">Trader</td>
+                            <td style="padding: 10px 30px;font-weight:bold;" colspan="5">@TraderName</td>
+                      
+                        </tr>
+                        <tr style="border-left: 1px solid black;border-right: 1px solid black;">
+                            <td style="padding: 10px 30px;">@item.FullName</td>
+                            <td style="padding: 10px 30px;color:#7030A0;">@item.LeadCount</td>
+                            <td style="padding: 10px 30px;color:#2E72C4;">@item.RNCCount</td>
+                            <td style="padding: 10px 30px;color:#00B050;">@item.REGCount</td>
+                            <td style="padding: 10px 30px;color:#FF0000;">@item.DingCount</td>
+                            <td style="padding: 10px 30px;">@item.Commission.Value.ToString("n2")</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr style="border-left: 1px solid black;border-right: 1px solid black;">
+                            <td style="padding: 10px 30px;">@item.FullName</td>
+                            <td style="padding: 10px 30px;color:#7030A0;">@item.LeadCount</td>
+                            <td style="padding: 10px 30px;color:#2E72C4;">@item.RNCCount</td>
+                            <td style="padding: 10px 30px;color:#00B050;">@item.REGCount</td>
+                            <td style="padding: 10px 30px;color:#FF0000;">@item.DingCount</td>
+                            <td style="padding: 10px 30px;">@item.Commission.Value.ToString("n2")</td>
+                        </tr>
+                        if (RecordCount == teamMemberList.MemberList.Count)
+                        {
+                            var newList = teamMemberList.MemberList.Where(x => x.TraderId == traderId);
+                            <tr style="border-left: 1px solid black;border-right: 1px solid black;">
+                                <td style="padding: 10px 30px;font-weight:bold;">Total</td>
+                                <td style="padding: 10px 30px;color:#7030A0;">@newList.Sum(x => x.LeadCount)</td>
+                                <td style="padding: 10px 30px;color:#2E72C4;">@newList.Sum(x => x.RNCCount)</td>
+                                <td style="padding: 10px 30px;color:#00B050;">@newList.Sum(x => x.REGCount)</td>
+                                <td style="padding: 10px 30px;color:#FF0000;">@newList.Sum(x => x.DingCount)</td>
+                                <td style="padding: 10px 30px;">@newList.Sum(x => x.Commission).Value.ToString("n2")</td>
+                            </tr>
+                        }
+                    }
+
+                    traderId = item.TraderId;
+
+
+                }
+                <tr style="border-top: 1px solid black;">
+                    <td style="padding:10px 30px;" colspan="6"></td>
+                </tr>
+                <tr style="font-weight:bold;">
+                    <td style="padding: 10px 30px;">Total</td>
+                    <td style="padding: 10px 30px;color:#7030A0;">@LeadCount</td>
+                    <td style="padding: 10px 30px;color:#2E72C4;">@RNCCount</td>
+                    <td style="padding: 10px 30px;color:#00B050;">@REGCount</td>
+                    <td style="padding: 10px 30px;color:#FF0000;">@DingCount</td>
+                    <td style="padding: 10px 30px;">@Commission.ToString("n2")</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

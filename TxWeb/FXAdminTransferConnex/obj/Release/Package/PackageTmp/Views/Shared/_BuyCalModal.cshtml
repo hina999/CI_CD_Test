@@ -1,0 +1,262 @@
+﻿@*<div class="row">
+        <div class="col-md-12">
+            <div class="col-md-4 pt-10">
+                <span>Buy Currency</span>
+            </div>
+            <div class="col-md-8">
+                @(Html.Kendo().DropDownList()
+                .HtmlAttributes(new { style = "width:100%" })
+                .Name("BuyCurrencies")
+                .DataTextField("CCY")
+                .DataValueField("CCYId")
+                .OptionLabel("Select Currency")
+                .DataSource(source =>
+                {
+                    source.Read(read =>
+                    {
+                        read.Action("GetCurrencyList", "Common");
+                    });
+                })
+                )
+            </div>
+        </div>
+    </div>*@
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>Buy Amount</span>
+        </div>
+        <div class="col-md-8">
+            <input type="number" id="txtAmount" class="form-control customheight" />
+        </div>
+    </div>
+</div>
+@*<div class="row pt-5">
+        <div class="col-md-12">
+            <div class="col-md-4 pt-10">
+                <span>Sell Currency</span>
+            </div>
+            <div class="col-md-8">
+                @(Html.Kendo().DropDownList()
+                .HtmlAttributes(new { style = "width:100%" })
+                .Name("SellCurrencies")
+                .DataTextField("CCY")
+                .DataValueField("CCYId")
+                .OptionLabel("Select Currency")
+                .DataSource(source =>
+                {
+                    source.Read(read =>
+                    {
+                        read.Action("GetCurrencyList", "Common");
+                    });
+                })
+                )
+            </div>
+        </div>
+    </div>*@
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>TC Rate</span>
+        </div>
+        <div class="col-md-8">
+            <input type="text" id="txtTransferConnex" onchange="validateFloatKeyPress(this);" class="form-control customheight" />
+        </div>
+    </div>
+</div>
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>Clients Rate</span>
+        </div>
+        <div class="col-md-8">
+            <input type="text" id="txtClientrate" onchange="validateFloatKeyPress(this);" class="form-control customheight" />
+        </div>
+    </div>
+</div>
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>Commission Rate %</span>
+        </div>
+        <div class="col-md-8">
+            <input type="number" id="txtCommissionRate" onchange="validateFloatKeyPress(this);" class="form-control customheight" />
+        </div>
+    </div>
+</div>
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+
+        </div>
+        <div class="col-md-8">
+            <button type="button" class="btn btn-primary" onclick="CalculateRate()">Calculate</button>
+        </div>
+    </div>
+</div>
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4  pt-10">
+            <span>Sell Amount</span>
+        </div>
+        <div class="col-md-8">
+            <input type="text" id="txtSellAmount" class="form-control customheight" disabled="disabled" />
+        </div>
+    </div>
+</div>
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>TC Cost</span>
+        </div>
+        <div class="col-md-8">
+            <input type="text" id="txtTCCost" class="form-control customheight" disabled="disabled" />
+        </div>
+    </div>
+</div>
+
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>Savings</span>
+        </div>
+        <div class="col-md-8">
+            <input type="text" id="txtSavings" class="form-control customheight" disabled="disabled" />
+        </div>
+    </div>
+</div>
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>Commission</span>
+        </div>
+        <div class="col-md-8">
+            <input type="text" id="txtCommission" class="form-control customheight" disabled="disabled" />
+        </div>
+    </div>
+</div>
+<div class="row pt-5">
+    <div class="col-md-12">
+        <div class="col-md-4 pt-10">
+            <span>Pips</span>
+        </div>
+        <div class="col-md-8">
+            <input type="text" id="txtPips" class="form-control customheight" disabled="disabled" />
+        </div>
+    </div>
+</div>
+
+<script>
+    function validateFloatKeyPress(el) {
+        var v = parseFloat(el.value);
+        el.value = (isNaN(v)) ? '' : v.toFixed(4);
+    }
+
+    function CalculateRate() {
+        var amt = $("#txtAmount").val();
+        var commRate = $("#txtCommissionRate").val();
+        //var buycur = $("#BuyCurrencies").data("kendoDropDownList").text();
+        //var sellcur = $("#SellCurrencies").data("kendoDropDownList").text();
+
+        var txrate = $("#txtTransferConnex").val();
+        var clientrate = $("#txtClientrate").val();
+
+        var Status = true;
+        $('#valamt').remove();
+        $('#valcommRate').remove();
+        $('#valcommRate_').remove();
+        $('#valbuycur').remove();
+        $('#valsellcur').remove();
+
+        $('#valtxrate').remove();
+        $('#valclientrate').remove();
+        $('#valtxrate_').remove();
+        $('#valclientrate_').remove();
+
+        if (!commRate || commRate <= 0) {
+            $("#txtCommissionRate").val(0);
+            commRate = 0;
+            //Status = false;
+            //$('#txtCommissionRate').after('<div style="position:inherit;"><span role="alert" id="valcommRate" style="padding-bottom:0px ;padding-top:0px" data-valmsg-for="files" data-for="files" class="text-danger"><span class="k-icon k-warning"> </span>Commission is required.</span></div>');
+        }
+
+        if (commRate > 100) {
+            Status = false;
+            $('#txtCommissionRate').after('<div style="position:inherit;"><span role="alert" id="valcommRate_" style="padding-bottom:0px ;padding-top:0px" data-valmsg-for="files" data-for="files" class="text-danger"><span class="k-icon k-warning"> </span>Invalid commission.</span></div>');
+        }
+
+        if (!txrate || txrate <= 0) {
+            Status = false;
+            $('#txtTransferConnex').after('<div style="position:inherit;"><span role="alert" id="valtxrate" style="padding-bottom:0px ;padding-top:0px" data-valmsg-for="files" data-for="files" class="text-danger"><span class="k-icon k-warning"> </span>TC rate is required.</span></div>');
+        }
+
+        if (txrate > 100) {
+            Status = false;
+            $('#txtTransferConnex').after('<div style="position:inherit;"><span role="alert" id="valtxrate_" style="padding-bottom:0px ;padding-top:0px" data-valmsg-for="files" data-for="files" class="text-danger"><span class="k-icon k-warning"> </span>Invalid rate.</span></div>');
+        }
+
+        if (!clientrate || clientrate <= 0) {
+            Status = false;
+            $('#txtClientrate').after('<div style="position:inherit;"><span role="alert" id="valclientrate" style="padding-bottom:0px ;padding-top:0px" data-valmsg-for="files" data-for="files" class="text-danger"><span class="k-icon k-warning"> </span>Client rate is required.</span></div>');
+        }
+
+        if (clientrate > 100) {
+            Status = false;
+            $('#txtClientrate').after('<div style="position:inherit;"><span role="alert" id="valclientrate_" style="padding-bottom:0px ;padding-top:0px" data-valmsg-for="files" data-for="files" class="text-danger"><span class="k-icon k-warning"> </span>Invalid rate.</span></div>');
+        }
+
+        if (!amt || amt <= 0) {
+            Status = false;
+            $('#txtAmount').after('<div style="position:inherit;"><span role="alert" id="valamt" style="padding-bottom:0px ;padding-top:0px" data-valmsg-for="files" data-for="files" class="text-danger"><span class="k-icon k-warning"> </span>Amount is required.</span></div>');
+        }
+
+
+        if (Status) {
+          
+            var fixDigit = 2;
+            var fixDigitpips = 4;
+            var SellAmount = parseFloat($("#txtAmount").val()) / parseFloat($("#txtClientrate").val());
+            $("#txtSellAmount").val(SellAmount.toFixed(fixDigit));
+            var TCCost = parseFloat($("#txtAmount").val()) / parseFloat($("#txtTransferConnex").val());
+            $("#txtTCCost").val(TCCost.toFixed(fixDigit));
+            var Savings = SellAmount - TCCost;
+            $("#txtSavings").val(Savings.toFixed(fixDigit));
+            var Commission = (Savings / 100) * parseFloat($("#txtCommissionRate").val());
+            $("#txtCommission").val(Commission.toFixed(fixDigit));
+            var pips = parseFloat($("#txtTransferConnex").val()) - parseFloat($("#txtClientrate").val());
+            $("#txtPips").val(pips.toFixed(fixDigitpips));
+        }
+    }
+
+    function ClearAll() {
+        $("#txtAmount").val('');
+        $("#txtTransferConnex").val('');
+        $("#txtClientrate").val('');
+        $("#txtCommissionRate").val('');
+        $("#txtSellAmount").val('');
+        $("#txtTCCost").val('');
+        $("#txtSavings").val('');
+        $("#txtCommission").val('');
+        $("#txtPips").val('');
+
+        $('#valamt').remove();
+        $('#valcommRate').remove();
+        $('#valcommRate_').remove();
+        $('#valbuycur').remove();
+        $('#valsellcur').remove();
+
+        $('#valtxrate').remove();
+        $('#valclientrate').remove();
+        $('#valtxrate_').remove();
+        $('#valclientrate_').remove();
+    }
+</script>
+<style>
+    .customheight {
+        height: 30px;
+    }
+
+        .customheight:disabled {
+            background-color: lightyellow;
+        }
+</style>

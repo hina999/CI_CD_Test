@@ -1,0 +1,103 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+@{
+    var userAssignList = (List<UserAccessPermissions>)ViewData["userRightsList"];
+}
+<style type="text/css">
+    .tblrights_data {
+        border-bottom: 1px solid #54a3da;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <table width="100%" class="tblMenu">
+            <tr class="rightsMenuHeader">
+                <td height="40px;" class="pl-10"><strong>Menu</strong> </td>
+                <td>
+                    <div class="checkbox orange  mt-5 mb-5">
+                        <input rolename="view" onchange="CheckAll(this);" id="chk_all_view" name="chk_all_view" type="checkbox" />
+                        <label for="chk_all_view"><b>View</b></label>
+                    </div>
+                </td>
+                <td>
+                    <div class="checkbox orange  mt-5 mb-5">
+                        <input rolename="create" onchange="CheckAll(this);" id="chk_all_create" name="chk_all_create" type="checkbox" />
+                        <label for="chk_all_create"><b>Create</b></label>
+                    </div>
+                </td>
+                <td>
+                    <div class="checkbox orange  mt-5 mb-5">
+                        <input rolename="edit" onchange="CheckAll(this);" id="chk_all_edit" name="chk_all_edit" type="checkbox" />
+                        <label for="chk_all_edit"><b>Edit</b></label>
+                    </div>
+                </td>
+                <td>
+                    <div class="checkbox orange  mt-5 mb-5">
+                        <input rolename="delete" onchange="CheckAll(this);" id="chk_all_delete" name="chk_all_delete" type="checkbox" />
+                        <label for="chk_all_delete"><b>Delete</b></label>
+                    </div>
+                </td>
+            </tr>
+            @if (userAssignList != null)
+            {
+                foreach (var obj in userAssignList)
+                {
+
+                    <tr group="menu" class="rightstblbody" menuid="@obj.MenuId">
+                        @if (obj.ParentMenuId != null)
+                        {
+                            <td class="pl-30 tblrights_data">@obj.Name</td>
+                        }
+                        else
+                        {
+                            <td class="pl-10 tblrights_data">@obj.Name</td>
+                        }
+                        <td align="center" class="tblrights_data">
+                            @{ string isViewChecked = @obj.IsView == true ? "checked=true" : ""; }
+
+                            <div class=" checkbox orange mt-5 mb-5">
+                                <input id="chk_view_@obj.MenuId" rolename="view" name="chk_view_@obj.MenuId" onclick="onviewStatusChange('@obj.MenuId')" type="checkbox" @isViewChecked />
+                                <label for="chk_view_@obj.MenuId"></label>
+                            </div>
+                        </td>
+                        <td align="center" class="tblrights_data">
+                            @{ string isCreateChecked = @obj.IsAdd == true ? "checked=true" : ""; }
+                            @if (obj.Controller != null &&
+                                 obj.Controller != "Dashboard" && obj.Controller != "Report" && obj.Controller != "RingCentralHelper")
+                            {
+                                <div class="checkbox orange  mt-5 mb-5">
+                                    <input id="chk_create_@obj.MenuId" rolename="create" name="chk_create_@obj.MenuId" onclick="oncreateStatusChange('@obj.MenuId')" type="checkbox" @isCreateChecked />
+                                    <label for="chk_create_@obj.MenuId"></label>
+                                </div>
+                            }
+                        </td>
+                        <td align="center" class="tblrights_data">
+                            @{ string isEditChecked = @obj.IsEdit == true ? "checked=true" : ""; }
+                            @if (obj.Controller != null &&
+                                 obj.Controller != "Dashboard" && obj.Controller != "Report" && obj.Controller != "RingCentralHelper")
+                            {
+                                <div class="checkbox orange  mt-5 mb-5">
+                                    <input id="chk_edit_@obj.MenuId" rolename="edit" name="chk_edit_@obj.MenuId" onclick="oneditStatusChange('@obj.MenuId')" type="checkbox" @isEditChecked />
+                                    <label for="chk_edit_@obj.MenuId"></label>
+                                </div>
+                            }
+                        </td>
+                        <td align="center" class="tblrights_data">
+                            @{ string isDeleteChecked = @obj.IsDelete == true ? "checked=true" : ""; }
+                            @if (obj.Controller != null && obj.Controller != "Client" &&
+                                 obj.Controller != "Dashboard" && obj.Controller!= "Report" && obj.Controller != "RingCentralHelper")
+                            {
+                                <div class="checkbox orange  mt-5 mb-5">
+                                    <input id="chk_delete_@obj.MenuId" rolename="delete" name="chk_delete_@obj.MenuId" onclick="ondeleteStatusChange('@obj.MenuId')" type="checkbox" @isDeleteChecked />
+                                    <label for="chk_delete_@obj.MenuId"></label>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+</div>

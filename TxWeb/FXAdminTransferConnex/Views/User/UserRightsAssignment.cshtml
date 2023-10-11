@@ -1,0 +1,222 @@
+﻿
+@using Kendo.Mvc.UI;
+@using FXAdminTransferConnex.Entities
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+
+@model FXAdminTransferConnex.Entities.UserAssignRightsModel
+@{
+    ViewBag.Title = "UserRightsAssignment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@using (Html.BeginForm("SaveUserRightsAssignment", "User", FormMethod.Post, new { @id = "UserRightsAssignmentForm", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(x => x.strRoleRights)
+    <div class="content">
+        <legend>Rights Assignment</legend>
+        <div class="row">
+            <div class="col-md-12 pl-0">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label">User Type:</label>
+                        @(Html.Kendo().DropDownList()
+                        .Name("UserTypeId")
+                        .OptionLabel("Select User Type")
+                        .HtmlAttributes(new { style = "width:100%;" })
+                        .DataTextField("Text")
+                        .DataValueField("Value").HtmlAttributes(new { @class = "form-control", @style = "width:100% !important" })
+                        .BindTo(ViewBag.UserTypeList))
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label">User:</label>
+                        @(Html.Kendo().DropDownListFor(x => x.UserId)
+                        .HtmlAttributes(new { style = "width:100%;" })
+                        .OptionLabel("Select User")
+                        .Events(e => e.Change("onchangeuser"))
+                        .DataTextField("Text")
+                        .DataValueField("Value")
+                        .DataSource(source =>
+                        {
+                            source.Read(read =>
+                            {
+
+                                read.Action("GetUserByRole", "Common")
+                                    .Data("filterUserByType");
+
+                            })
+                                .ServerFiltering(true);
+                        })
+                        .Enable(false)
+                        .AutoBind(false)
+                        .CascadeFrom("UserTypeId")
+                        )
+                    </div>
+                </div>
+                <div class="col-md-2 mb-5 userassign-save-btn">
+                    <button class="btn btn-orange mt-5" type="submit" onclick="return SaveUserRole()">Save</button>
+                </div>
+            </div>
+        </div>
+        <div id="partialRightAssignDiv" class="userright-table-list">
+            @Html.Partial("_RightsAssigntblPartial")
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var havePermission ='@WebHelper.CanView()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+
+    });
+    function CheckAll(_this) {
+        var flag = $(_this).is(":checked");
+        var roleName = $(_this).attr("rolename");
+        $('input[rolename="' + roleName + '"]').each(function () {
+            if (flag == true) {
+                $(this).prop("checked", true);
+            }
+            else {
+                $(this).prop("checked", false);
+                if (roleName == "view") {
+                    $('input[rolename=create]').prop("checked", false);
+                    $('input[rolename=edit]').prop("checked", false);
+                    $('input[rolename=delete]').prop("checked", false);
+                }
+
+            }
+        });
+    }
+
+    function filterUserByType(e) {
+        return {
+            UserTypeId: $("#UserTypeId").data("kendoDropDownList").value(),
+        };
+    }
+    function onchangeuser() {
+        $.ajax({
+            data: { userTypeId: $("#UserTypeId").val(),userId: $("#UserId").val() },
+            type: "GET",
+            url: '@Url.Action("GetAccessPermissionsByUserId", "User")'
+        }).done(function (data) {
+            $('.loader').hide();
+            $("#partialRightAssignDiv").html(data);
+            selectedAllCheck();
+
+        });
+    }
+    function SaveUserRole() {
+        var roleRights = new Array();
+        $('tr[group="menu"]').each(function () {
+            var menuId = $(this).attr("menuId");
+            roleRights.push({
+                MenuId: menuId,
+                IsView: $('#chk_view_' + menuId + '').is(":checked"),
+                IsAdd: $('#chk_create_' + menuId + '').is(":checked"),
+                IsEdit: $('#chk_edit_' + menuId + '').is(":checked"),
+                IsDelete: $('#chk_delete_' + menuId + '').is(":checked")
+            })
+        });
+
+
+        $("#strRoleRights").val(JSON.stringify(roleRights));
+        console.log(roleRights);
+
+    }
+    function onviewStatusChange(viewId) {
+        var status = $("#chk_view_" + viewId).is(":checked");
+        if (!status) {
+            $("#chk_create_" + viewId).prop("checked", false);
+            $("#chk_edit_" + viewId).prop("checked", false);
+            $("#chk_delete_" + viewId).prop("checked", false);
+            $("#chk_all_view").prop("checked", false);
+            $("#chk_all_create").prop("checked", false);
+            $("#chk_all_edit").prop("checked", false);
+            $("#chk_all_delete").prop("checked", false);
+        }
+        if (($('input[rolename=view]').length-1) == $('input[rolename=view]:checked').length) {
+            $("#chk_all_view").prop("checked", true);
+        } else {
+            $("#chk_all_view").prop("checked", false);
+        }
+    }
+    function oncreateStatusChange(createId) {
+        var status = $("#chk_create_" + createId).is(":checked");
+        if (!status) {
+            $("#chk_all_create").prop("checked", false);
+        }
+        if (($('input[rolename=create]').length - 1) == $('input[rolename=create]:checked').length) {
+            $("#chk_all_create").prop("checked", true);
+        } else {
+            $("#chk_all_create").prop("checked", false);
+        }
+    }
+    function oneditStatusChange(editId) {
+        var status = $("#chk_edit_" + editId).is(":checked");
+        if (!status) {
+            $("#chk_all_edit").prop("checked", false);
+        }
+        if (($('input[rolename=edit]').length - 1) == $('input[rolename=edit]:checked').length) {
+            $("#chk_all_edit").prop("checked", true);
+        } else {
+            $("#chk_all_edit").prop("checked", false);
+        }
+    }
+    function ondeleteStatusChange(deleteId) {
+        var status = $("#chk_delete_" + deleteId).is(":checked");
+        if (!status) {
+            $("#chk_all_delete").prop("checked", false);
+        }
+        if (($('input[rolename=delete]').length - 1) == $('input[rolename=delete]:checked').length) {
+            $("#chk_all_delete").prop("checked", true);
+        } else {
+            $("#chk_all_delete").prop("checked", false);
+        }
+    }
+    function selectedAllCheck() {
+        if (($('input[rolename=view]').length-1) == $('input[rolename=view]:checked').length) {
+            $("#chk_all_view").prop("checked", true);
+        } else {
+            $("#chk_all_view").prop("checked", false);
+        }
+
+        if (($('input[rolename=create]').length - 1) == $('input[rolename=create]:checked').length) {
+            $("#chk_all_create").prop("checked", true);
+        } else {
+            $("#chk_all_create").prop("checked", false);
+        }
+
+        if (($('input[rolename=edit]').length - 1) == $('input[rolename=edit]:checked').length) {
+            $("#chk_all_edit").prop("checked", true);
+        } else {
+            $("#chk_all_edit").prop("checked", false);
+        }
+
+        if (($('input[rolename=delete]').length - 1) == $('input[rolename=delete]:checked').length) {
+            $("#chk_all_delete").prop("checked", true);
+        } else {
+            $("#chk_all_delete").prop("checked", false);
+        }
+    }
+
+</script>
+<style>
+    .rightsMenuHeader {
+        background: #6B5B95;
+        color: white
+    }
+
+    .rightstblbody {
+        background: #F7CAC9;
+    }
+</style>

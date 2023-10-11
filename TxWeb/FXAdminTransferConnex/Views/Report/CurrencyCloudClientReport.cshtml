@@ -1,0 +1,302 @@
+﻿@using Kendo.Mvc.UI
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnexApp;
+
+@{
+    ViewBag.Title = "CurrencyCloudClientReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <legend>Currency Cloud Client Report - No Deals</legend>
+
+    <div class="panel panel-default client-registration">
+        <div class="panel-heading cursor-pointer mb-20" data-toggle="collapse" data-target="#div1">
+            <h4 class="panel-title">
+                <span class="fa fa-minus mr-10"></span>
+                Advance Search
+            </h4>
+        </div>
+        <div id="div1" class="collapse panel-body collapse in">
+            <div class="row">
+                <div class="col-md-12">
+                    @*<div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label">Client Name:</label>
+                            <input type="text" id="txtClientName" placeholder="Client Name" class="form-control Search"  />
+                        </div>
+                    </div>*@
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="control-label">Company Name:</label>
+                            <input type="text" name="txtCompany" placeholder="Company Name" class="form-control" id="txtCompany" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="control-label">Account Number:</label>
+                            <input id="txtAccountNo" type="text" placeholder="Account Number" class="k-textbox Search" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="control-label">No Trade From Date:</label>
+                            @Html.Kendo().DatePicker().Name("NoTradeFromDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:100%" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="control-label">No Trade To Date:</label>
+                            @Html.Kendo().DatePicker().Name("NoTradeToDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:100%" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    @{
+                        if (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode() &&
+                            ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.Trader.GetHashCode())
+                        {
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @(Html.Kendo().DropDownList()
+                                    .Name("SearchSalesperson")
+                                    .HtmlAttributes(new { style = "width:100%;" })
+                                    .OptionLabel("Select Sales person")
+                                    .DataTextField("Text")
+                                    .DataValueField("Value")
+                                    .DataSource(source =>
+                                    {
+                                        source.Read(read =>
+                                        {
+                                            read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode() });
+                                        });
+                                    })
+                                    )
+                                </div>
+                            </div>
+                        }
+                    }
+                    @{
+                        if (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode() &&
+                            ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.Trader.GetHashCode())
+                        {
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @(Html.Kendo().DropDownList()
+                                    .Name("SearchJuniorSalesperson")
+                                    .HtmlAttributes(new { style = "width:100%;" })
+                                    .OptionLabel("Select Junior Sales person")
+                                    .DataTextField("Text")
+                                    .DataValueField("Value")
+                                    .DataSource(source =>
+                                    {
+                                        source.Read(read =>
+                                        {
+                                            read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode() });
+                                        });
+                                    })
+                                    )
+                                </div>
+                            </div>
+                        }
+                    }
+                    @{
+                        if ((ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode()) &&
+                            (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.Trader.GetHashCode()))
+                        {
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @(Html.Kendo().DropDownList()
+                                    .Name("SearchTrader")
+                                    .HtmlAttributes(new { style = "width:100%;" })
+                                    .OptionLabel("Select Trader")
+                                    .DataTextField("Text")
+                                    .DataValueField("Value")
+                                    .DataSource(source =>
+                                    {
+                                        source.Read(read =>
+                                        {
+                                            read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.Trader.GetHashCode() });
+                                        });
+                                    })
+                                    )
+                                </div>
+                            </div>
+                        }
+                    }
+                    <div class="col-lg-3 col-sm-4">
+                        <div class="form-group">
+                            <button id="btnCCSync" type="button" class="btn-orange">Sync Currency Cloud</button>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-sm-6 pull-right">
+                        <div class="form-group">
+                            <button id="btnSearch" type="button" class="btn-orange">Search</button>
+                            <button id="btnReset" type="button" class="btn-orange">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <fieldset>
+        <legend></legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @(Html.Kendo().Grid<CurrencyCloudReportModel>()
+                .Name("gridCurrencyCloud")
+                .Columns(columns =>
+                {
+                    //columns.Bound(m => m.FullName).Width(150);
+                    columns.Bound(m => m.CompanyName).Width(300).ClientTemplate("<a  href='" + Url.Action("ManageClient", "Client") + "?ClientId=#= ClientId #'" + ">#=CompanyName#</a>");
+                    columns.Bound(m => m.AccountNo);
+                    columns.Bound(m => m.MobileNo);
+                    columns.Bound(m => m.AltMobileNo);
+                    columns.Bound(m => m.EmailAddress);
+                    columns.Bound(m => m.RegiterDateString);
+                })
+                .Editable(e => e.Mode(GridEditMode.PopUp))
+                .Pageable(x =>
+                {
+                    x.Refresh(false);
+                    x.PageSizes(new int[] { 10, 20, 50, 100 });
+                })
+                .ToolBar(t => t.Excel())
+                .Excel(excel => excel.FileName("CurrencyCloudClients.xlsx").Filterable(true).AllPages(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                .Navigatable()
+                .Sortable(sortable => sortable.AllowUnsort(false))
+                .NoRecords()
+                .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .ServerOperation(false)
+                    .PageSize(ConfigItems.GridPageSize)
+                    .Model(model =>
+                    {
+                        model.Id(d => d.ClientId);
+                    })
+
+                 .Read(read => read.Action("GetCurrencyCloudClientList", "Report").Data("OnData"))
+                ))
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script>
+    $(document).ready(function () {
+        var havePermission ='@WebHelper.CanView()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+        kendoGridScroll();
+    });
+
+    function ReadGrid() {
+        $('#gridCurrencyCloud').data('kendoGrid').dataSource.read();
+    }
+
+    function OnData() {
+        var salePerson = $('#SearchSalesperson').data("kendoDropDownList");
+        var juniorSalePerson = $('#SearchJuniorSalesperson').data("kendoDropDownList");
+        var trader = $('#SearchTrader').data("kendoDropDownList");
+        return {
+            ClientName: $("#txtClientName").val(),
+            AccountNo: $("#txtAccountNo").val(),
+            NoTradeFromDate: $("#NoTradeFromDate").data("kendoDatePicker").value(),
+            NoTradeToDate: $("#NoTradeToDate").data("kendoDatePicker").value(),
+            CompanyName: $("#txtCompany").val(),
+            SalesPersonId: salePerson != null ? salePerson.value().trim() : null,
+            JuniorSalesPersonId: juniorSalePerson != null ? juniorSalePerson.value().trim() : null,
+            TraderId: trader != null ? trader.value().trim() : null
+        }
+    }
+
+    $('#btnReset').click(function () {
+        $('.Search').val('');
+        $("#txtClientName").val('');
+        $("#txtCompany").val('');
+        $("#NoTradeFromDate").data("kendoDatePicker").value('');
+        $("#NoTradeToDate").data("kendoDatePicker").value('');
+
+        var salePerson = $('#SearchSalesperson').data("kendoDropDownList");
+        var juniorSalePerson = $('#SearchJuniorSalesperson').data("kendoDropDownList");
+        var trader = $('#SearchTrader').data("kendoDropDownList");
+        if (salePerson != null) {
+            $("#SearchSalesperson").data("kendoDropDownList").value(0);
+        }
+        if (juniorSalePerson != null) {
+            $("#SearchJuniorSalesperson").data("kendoDropDownList").value(0);
+        }
+        if (trader != null) {
+            $("#SearchTrader").data("kendoDropDownList").value(0);
+        }
+
+        ReadGrid();
+    });
+
+    $("#btnSearch").click(function () {
+        if (ValidDates())
+            ReadGrid();
+    });
+
+    $('.Search').keypress(function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            if (ValidDates())
+                ReadGrid();
+        }
+    });
+
+    function ValidDates() {
+        if ($("#NoTradeFromDate").data("kendoDatePicker").value() != null || $("#NoTradeToDate").data("kendoDatePicker").value() != null) {
+            if ($("#NoTradeFromDate").data("kendoDatePicker").value() == null) {
+                bootbox.alert("Please select No-Trade From Date");
+                return false;
+            }
+            if ($("#NoTradeToDate").data("kendoDatePicker").value() == null) {
+                bootbox.alert("Please select No-Trade To Date");
+                return false;
+            }
+
+            if ($("#NoTradeFromDate").data("kendoDatePicker").value() != null && $("#NoTradeToDate").data("kendoDatePicker").value() != null) {
+                return true;
+            }
+        }
+        else {
+            return true;
+        }
+    }
+
+    $("#btnCCSync").click(function () {
+        var url = '@Url.Action("ImportCurrencyCloudClients", "Report")';
+
+        $.ajax({
+            url: url,
+            cache: false,
+            dataType: 'json',
+            data: undefined,
+            timeout: 99999999999999,
+            success: function (data) {
+                if (data != null || data != '') {
+                    $('#gridCurrencyCloud').data('kendoGrid').dataSource.read();
+                    console.log(data);
+                    var msg = "Import Client = " + data.ImportClientCount
+                    showMessageOnly(msg);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                showMessageOnly("The following error occured4: " + errorThrown, 'popup-error');
+            },
+            always: function () {
+            }
+        });
+    });
+</script>

@@ -1,0 +1,322 @@
+﻿@using Kendo.Mvc.UI;
+@using FXAdminTransferConnexApp
+@model FXAdminTransferConnex.Entities.ClientMasterModel
+
+@{
+    ViewBag.Title = "ViewClient";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<link href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet" />
+<style>
+    .client-pers-details-main h5 {
+        font-weight: 600
+    }
+
+    .client-det-heading {
+        color: #0833b7;
+    }
+
+    .fa.fa-pencil {
+        float: left;
+        margin-right: 10px
+    }
+
+    .mb-2 {
+        margin-bottom: 20px;
+    }
+
+    .btn-edit-details i {
+        color: #ffffff;
+    }
+
+    .client-pers-details-main h4 {
+        background-color: #0833b7;
+        padding: 5px;
+    }
+
+        .client-pers-details-main h4 span {
+            color: white;
+        }
+
+    .led-green {
+        margin: 12px auto;
+        width: 12px;
+        height: 12px;
+        background-color: #32ae31;
+        border-radius: 50%;
+    }
+
+    .led-red {
+        margin: 12px auto;
+        width: 12px;
+        height: 12px;
+        background-color: #a71818;
+        border-radius: 50%;
+    }
+    .cke_top {
+        display: none !important
+    }
+    .IsActive {
+        margin-top: 8px;
+        margin-right: 9px;
+    }
+    .ClientFullName {
+        color: #0833b7;
+        margin-right: 20px;
+    }
+
+    .ClientCompanyName {
+        color: #ff1962;
+    }
+</style>
+
+<div class="content">
+    <legend id="titleClient">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="mt-0 client-det-heading pull-left">Client Name : <span class="ClientFullName">@Model.FullName</span> Company Name: <span class="ClientCompanyName">@Model.CompanyName</span></h3>
+                <a class="btn btn-primary pull-right btn-edit-details" href="@Url.Action("ManageClient", "Client")?ClientId=@Model.ClientId"><i class="fa fa-pencil"></i> Edit</a>
+            </div>
+        </div>
+    </legend>
+    <div class="panel panel-default" id="clientSearchPanel">
+        <div class="panel-body">
+            @Html.HiddenFor(m => m.ClientId)
+            <div class="row client-pers-details-main">
+                <div class="col-sm-6">
+                    <div class="row text-center">
+                        <div class="col-sm-12">
+                            <h4><span>Client Personal Details</span></h4>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6 d-flex-inline">
+                            <h5>Full Name</h5>
+                            <p>@Model.FullName</p>
+                        </div>
+                        <div class="col-sm-6 d-flex-inline">
+                            <h5>Company Name</h5>
+                            <p>@Model.CompanyName</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 d-flex-inline" style="white-space:nowrap;">
+                            <h5>Address</h5>
+                            <p>@Model.AddressLine1</p>
+                            <p>@Model.AddressLine2</p>
+                            @if (Model.State_County == null)
+                            {
+                                <p>@Model.City_Town,@Model.Country</p>
+                            }
+                            else
+                            {
+                                <p>@Model.City_Town,@Model.State_County,@Model.Country</p>
+                            }
+                        </div>
+                        <div class="col-sm-3 d-flex-inline">
+                            <h5> Mobile No</h5>
+                            <p>@Model.MobileNo</p>
+                        </div>
+                        <div class="col-sm-3 d-flex-inline">
+                            <h5>Alternate Mobile</h5>
+                            <p>@Model.AltMobileNo</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 d-flex-inline">
+                            <h5>Email Address</h5>
+                            <p>@Model.EmailAddress</p>
+                        </div>
+                        <div class="col-sm-3 d-flex-inline">
+                            <h5>Account No</h5>
+                            <p>@Model.AccountNo</p>
+                        </div>
+                        <div class="col-sm-3 d-flex-inline">
+                            <h5>Regiter Date</h5>
+                            <p>@Model.RegiterDateString</p>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-sm-12">
+                            <h4><span>Client Details</span></h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 d-flex-inline">
+                            <h5>Default Margin:</h5>
+                            <p>@Model.DefaultMargin</p>
+                        </div>
+                        <div class="col-sm-4 d-flex-inline">
+                            <h5>Margin Posted:</h5>
+                            <p>@Model.MarginPosted</p>
+                        </div>
+                        <div class="col-sm-4 d-flex-inline">
+                            <h5>Trade Currencies</h5>
+                            <p>@Model.Currencies</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 d-flex-inline">
+                            <h5>Lead Category</h5>
+                            <p>@Model.LeadCategory</p>
+                        </div>
+                        <div class="col-sm-4 d-flex-inline">
+                            <h5>Currencies Sold:</h5>
+                            <p>@Model.SoldCurrencies</p>
+                        </div>
+                        <div class="col-sm-4 d-flex-inline">
+                            <h5>Currencies Bought</h5>
+                            <p>@Model.BoughtCurrencies</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4 d-flex-inline">
+                            <h5>Sales Person</h5>
+                            <p>@Model.SalesPersonName</p>
+                        </div>
+                        <div class="col-sm-4 d-flex-inline">
+                            <h5>Trader</h5>
+                            <p>@Model.TraderName</p>
+                        </div>
+                        <div class="col-sm-4 d-flex-inline">
+                            <h5>Affiliate</h5>
+                            <p>@Model.AffiliateName</p>
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-sm-4 d-flex-inline">
+                            <h5>Awaiting Action</h5>
+                            @if (Model.IsAwaitingAction == true)
+                            {
+                                @*<div class="led-green" style="margin-left:30px;" title="Yes"></div>*@
+                                <div class="" style="margin-left:30px;" title="Yes">Yes</div>
+                            }
+                            else
+                            {
+                                @*<div class="led-red" style="margin-left:30px;" title="No"></div>*@
+                                <div class="" style="margin-left:30px;" title="No">No</div>
+                            }
+                        </div>
+                        <div class="col-md-4 d-flex-inline">
+                            <h5>Awaiting Action Notes</h5>
+                            <p>@Model.AwaitingAction</p>
+                        </div>
+                        <div class="col-md-4 d-flex-inline">
+                            <h5>Business Category</h5>
+                            <p>@Model.CategoryName</p>
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 d-flex-inline">
+                            <h5>Market Order</h5>
+                            @if (Model.IsMarketOrder == true)
+                            {
+                                @*<div class="led-green" style="margin-left:30px;" title="Yes"></div>*@
+                                <div class="" style="margin-left:30px;" title="Yes">Yes</div>
+                            }
+                            else
+                            {
+                                @*<div class="led-red" style="margin-left:30px;" title="No"></div>*@
+                                <div class="" style="margin-left:30px;" title="No">No</div>
+                            }
+                        </div>
+                        <div class="col-md-4 d-flex-inline">
+                            <h5>Market Order Notes</h5>
+                            <p>@Model.MarketOrder</p>
+                        </div>
+                        <div class="col-md-4 d-flex-inline">
+                            <h5>Business Sector</h5>
+                            <p>@Model.SectorName</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h5>Past Communication Details</h5>
+                        </div>
+                        <div class="col-sm-2 pr-0 text-right">
+                            <h5>
+                                Is Active :
+                            </h5>
+                        </div>
+                        <div class="col-sm-1">
+                            @if (Model.IsActive == true)
+                            {
+                                <div class="IsActive" title="Yes">Yes</div>
+                            }
+                            else
+                            {
+                                <div class="IsActive" title="No">No</div>
+                            }
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Html.TextAreaFor(m => m.PastCommDetail, new { @class = "form-control", disabled = "disabled" })
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+            <hr />
+            <div class="row client-pers-details-main">
+                <div class="col-sm-12">
+                    <h4><span>Task Reminders</span></h4>
+                </div>
+                <div class="col-sm-12">
+                    @{
+                        Html.RenderPartial("~/Views/Client/_TaskReminder.cshtml", Model);
+                    }
+                </div>
+            </div>
+            <hr />
+            <div class="row client-pers-details-main">
+                <div class="col-sm-12">
+                    <h4><span>Market Order List</span></h4>
+                </div>
+                <div class="col-sm-12 table-responsive">
+                    @{
+                        Html.RenderPartial("~/Views/Client/_MarketOrder.cshtml", Model);
+                    }
+                </div>
+            </div>
+            <hr />
+            <div class="row client-pers-details-main">
+                <div class="col-sm-12">
+                    <h4><span>Client Deals</span></h4>
+                </div>
+                <div class="col-sm-12 table-responsive">
+                    @Html.Partial("_ClientDeal", Model)
+                </div>
+            </div>
+            <hr />
+            <div class="row client-pers-details-main">
+                <div class="col-sm-12">
+                    <h4><span>Call Log List</span></h4>
+                </div>
+                <div class="col-sm-12 table-responsive">
+                    @{
+                        Html.RenderPartial("~/Views/RingcentralHelper/_ClientProspectCallLogList.cshtml", Model);
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    CKEDITOR.replace('PastCommDetail');
+    CKEDITOR.config.height = 470;
+</script>

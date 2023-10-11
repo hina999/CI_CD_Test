@@ -1,0 +1,105 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+
+@(Html.Kendo().Grid<TaskReminderModel>()
+            .Name("gridProspectTaskReminder")
+            .Columns(columns =>
+            {
+                columns.Bound(m => m.Subject).Title("Subject").Width(150);
+                columns.Bound(m => m.TaskType).Visible(true).Title("Task Type").Width(150);
+                columns.Bound(m => m.AssignToName).Visible(true).Title("Assign To").Width(150);
+                columns.Bound(m => m.TaskReminderDatetimeString).Title("Reminder Date time").Width(150);
+                columns.Bound(m => m.Notes).Width(150);
+                columns.Command(command =>
+                {
+                    command.Edit().CancelText("Cancel").Text(" ").UpdateText("Save");
+                    command.Destroy().Text(" ");
+                })
+                    .HeaderHtmlAttributes(Common.CenterColumnStyle)
+                    .HtmlAttributes(Common.CenterColumnStyle)
+                    .Title("Action")
+                    .Width(150);
+            })
+            .ToolBar(toolbar =>
+            {
+                toolbar.Create().Text("Add Task Reminder").HtmlAttributes(new { @id = "prospectTaskRemind" });
+
+            })
+            .Editable(e => e.Mode(GridEditMode.PopUp))
+            .Pageable(x =>
+            {
+                x.Refresh(true);
+                x.PageSizes(new int[] { 10, 20, 50, 100 });
+            })
+            .Selectable(selectable => selectable
+            .Mode(GridSelectionMode.Single))
+            .Navigatable()
+            .Sortable(sortable => sortable.AllowUnsort(false))
+            .NoRecords()
+            .Events(grid => grid.Edit("Edit"))
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .ServerOperation(false)
+                .PageSize(ConfigItems.GridPageSize)
+                .Model(model =>
+                {
+                    model.Id(d => d.TaskId);
+                })
+              .Create(update => update.Action("SaveTaskReminder", "Prospect").Data("SetDate"))
+              .Update(update => update.Action("SaveTaskReminder", "Prospect").Data("SetDate"))
+              .Destroy(delete => delete.Action("DeleteTaskReminder", "Prospect"))
+              .Read(read => read.Action("GetTaskReminderList", "Prospect").Data("paraProspectId"))
+              .Events(events => events.RequestEnd("onProspectRequestEnd"))
+            ))
+
+<script>
+
+    $(document).ready(function () {
+        kendoGridScroll();
+    });
+
+    //Shows the notifications
+    function onProspectRequestEnd(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridProspectTaskReminder').data('kendoGrid').dataSource.read();
+        }
+        DisplayResponseMessage(para);
+    }
+    
+    function paraProspectId() {
+        return {
+            ProspectId: $('#ProspectId').val()
+        }
+    }
+
+    function SetDate() {
+        var date =  $("#TaskReminderDatetimeString").data("kendoDateTimePicker").value();
+
+        return {
+            TaskDateTime: js_dd_mm_yyyy_hh_mm(date)
+        }
+    }
+
+    function Edit(e) {
+        $("input").attr("autocomplete", "off");
+        var window = e.container.data("kendoWindow");
+        e.model.set("ProspectId", $('#ProspectId').val());
+
+        if (e.model.isNew()) {
+            e.model.set("AssignToId",@ProjectSession.LoginUserDetails.UserId);
+            e.model.set("TaskTypeId", localStorage.getItem("defaultTaskType"));
+            window.title("Add Task Reminder");
+        }
+        else {
+            window.title("Edit Task Reminder");
+        }
+    };
+
+    $("#gridProspectTaskReminder").delegate("tbody>tr", "dblclick", function () {
+        if(!$(this).hasClass('k-grid-edit-row')) {
+            $("#gridProspectTaskReminder").data("kendoGrid").editRow($(this));
+        }
+     });
+</script>

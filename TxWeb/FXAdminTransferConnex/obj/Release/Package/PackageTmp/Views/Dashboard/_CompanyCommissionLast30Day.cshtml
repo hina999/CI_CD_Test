@@ -1,0 +1,32 @@
+﻿
+@using FXAdminTransferConnex.Entities
+@using Kendo.Mvc.UI
+
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h6 class="panel-title dashboard-title" id="div1">
+            COMPANY COMMISSION OF LAST 30 DAYS
+            <span>
+                <span class="fa fa-file-pdf-o" title="Export PDF" type="button" onclick="ExportChart('#chart30DaysCompanyCommission', 'Last30DaysCompanyCommissionChart', 'PDF')"></span>
+
+                <span class="fa fa-file-image-o" title="Export Image" type="button" onclick="ExportChart('#chart30DaysCompanyCommission', 'Last30DaysCompanyCommissionChart', 'PNG')"></span>
+            </span>
+        </h6>
+    </div>
+
+    <div class="panel-body chartArea">
+        @(Html.Kendo().Chart<Last30DaysCommissionModel>()
+                                  .Name("chart30DaysCompanyCommission")
+                                  .ChartArea(chartArea => chartArea.Background("transparent"))
+                                  .Legend(x => x.Visible(false))
+                                  .DataSource(ds => ds.Read(read => read.Action("GetLast30DaysCompanyCommission", "Dashboard")))
+                                  .Series(series => { series.Column(model => model.TotalCommission).Name("Total Company Commission"); })
+                                  .Series(series => { series.Column(model => model.TargetCommission).Name("Targeted Company Commission"); })
+                                  .Theme("material")
+                                  .CategoryAxis(axis => axis.Categories(model => model.DateString).Labels(labels => labels.Rotation(-90)).Crosshair(c => c.Visible(true)))
+                                  .ValueAxis(axis => axis.Numeric().Labels(labels => labels.Format("{0:C2}")))
+                                  .Tooltip(tooltip => tooltip.Visible(true).Shared(true).Format("{0:C2}")))
+    </div>
+</div>
+

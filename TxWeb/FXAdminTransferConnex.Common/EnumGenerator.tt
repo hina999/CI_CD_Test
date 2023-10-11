@@ -1,0 +1,211 @@
+﻿<#@ template hostspecific="true" language="C#" #>
+<#@ output extension=".generated.cs" #>
+<#@ Assembly Name="System.Data" #>
+<#@ assembly name="System.xml" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Configuration" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Configuration" #>
+<#@ output extension=".txt" #>
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
+
+<#
+    string tableName = "Enums";
+    string path = Path.GetDirectoryName(Host.TemplateFile);
+    string columnId = "KeyValue";
+    string columnName = "KeyName";
+	string columnType = "EnumType";
+	string displayOrder="DisplayOrder";
+  
+    string connectionString =  @"data source=192.168.1.147;initial catalog=FXBackOfficeSystem;User Id=sa;Password=123";
+#>
+using System;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace  FXAdminTransferConnex.Common
+{
+
+public  class Enums
+{
+	#region Enum
+	   <#
+			 SqlConnection conn = new SqlConnection( connectionString);
+				string command = string.Format("select {0}  from {1}  group by {0} ; select * from {1} order by {2} ", columnType, tableName, displayOrder);
+				SqlCommand comm = new SqlCommand(command, conn);
+				SqlDataAdapter sqladapter = new SqlDataAdapter(comm);
+				 System.Data.DataSet ds = new  System.Data.DataSet();
+				conn.Open();
+				sqladapter.Fill(ds);
+				for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+				{
+				 string enumtype = ds.Tables[0].Rows[i][0].ToString();
+				#>
+
+	    /// <summary>
+		/// <#= tableName #> auto generated enumeration
+		/// </summary>
+		public enum <#= enumtype #>
+		{  
+
+		<#
+					ds.Tables[1].DefaultView.RowFilter = "EnumType='" + enumtype + "'";
+					DataTable dtnew = ds.Tables[1].DefaultView.ToTable();
+	  for (int j = 0; j < dtnew.Rows.Count; j++)
+		{
+	 #>/// <summary>
+		/// <#= dtnew.Rows[j][2].ToString() #> Enum Value setting.
+		/// </summary>
+		[Display(Name = "<#= Convert.ToString(dtnew.Rows[j][4]) #>")]
+		[Description("<#= Convert.ToString(dtnew.Rows[j][4]) #>")]
+		<#= Pascalize(dtnew.Rows[j][2].ToString()) #> = <#= dtnew.Rows[j][3].ToString() #> <#= j < dtnew.Rows.Count-1 ? ",\r\n" :string.Empty  #>
+	<#
+		}
+	#>  }
+
+	<#
+		}
+	#>
+ #endregion
+
+   #region Property
+
+   /// <summary>
+   /// Gets or sets the identifier.
+   /// </summary>
+   /// <value>The identifier.</value>
+   public int ID { get; set; }
+
+   /// <summary>
+   /// Gets or sets the name.
+   /// </summary>
+   /// <value>The name.</value>
+   public string Name { get; set; }
+
+   #endregion
+
+   #region Methods
+
+   /// <summary>
+   /// Get the ENUM Name from ENUM Value
+   /// </summary>
+   /// <param name="objEnumType">ENUM Type like type of(ENUM Type)</param>
+   /// <param name="value">ENUM value</param>
+   /// <returns>string - Name of ENUM</returns>
+   public static string GetEnumName(Type objEnumType, int value)
+   {
+       EnumList lstEnum = GetEnumList(objEnumType);
+       Enums objSystemEnum;
+       objSystemEnum = lstEnum.Find(delegate(Enums systemEnum)
+       {
+           return systemEnum.ID == value;
+       });
+
+       if (objSystemEnum != null)
+       {
+           return objSystemEnum.Name;
+       }
+       else
+       {
+           return string.Empty;
+       }
+   }
+
+   /// <summary>
+   /// Get the ENUM List from given ENUM type
+   /// </summary>
+   /// <param name="objEnumType">ENUM Type like type-of(ENUM Type)</param>
+   /// <returns>List of ENUM with Name Value pair</returns>
+   public static EnumList GetEnumList(Type objEnumType)
+   {
+       Array values = Enum.GetValues(objEnumType);
+       EnumList lstEnum = new EnumList();
+       Enums objEnum;
+       for (int i = 0; i < values.Length; i++)
+       {
+           objEnum = new Enums();
+           objEnum.ID = values.GetValue(i).GetHashCode();
+           objEnum.Name = Convert.ToString(values.GetValue(i)).Replace("_", " ");
+           lstEnum.Add(objEnum);
+       }
+
+       return lstEnum;
+   }
+
+   /// <summary>
+   /// Get the ENUM List from given ENUM type
+   /// To Add Custom option in list
+   /// </summary>
+   /// <param name="objEnumType">ENUM Type like type-of(ENUM Type)</param>
+   /// <param name="optional">The optional.</param>
+   /// <returns>List of ENUM with Name Value pair</returns>
+   public static EnumList GetEnumList(Type objEnumType, string optional)
+   {
+       Array values = Enum.GetValues(objEnumType);
+       EnumList lstEnum = new EnumList();
+       Enums objEnum;
+       if (!string.IsNullOrEmpty(optional))
+       {
+           lstEnum.Add(new Enums() { Name = optional });
+       }
+
+       for (int i = 0; i < values.Length; i++)
+       {
+           objEnum = new Enums();
+           objEnum.ID = values.GetValue(i).GetHashCode();
+           objEnum.Name = Convert.ToString(values.GetValue(i)).Replace("_", " ");
+           lstEnum.Add(objEnum);
+       }
+
+       return lstEnum;
+   }
+
+   
+   #endregion
+}
+
+  /// <summary>
+    /// Class ENUMS List.
+    /// </summary>
+    public class EnumList : List<Enums>
+    {
+    }
+
+	public static class EnumExtensionMethods
+    {
+        public static string GetDescription(this Enum enumValue)
+        {
+            object[] attr = enumValue.GetType().GetField(enumValue.ToString())
+                .GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            return attr.Length > 0
+               ? ((DescriptionAttribute)attr[0]).Description
+               : enumValue.ToString();
+        }
+
+        public static T ParseEnum<T>(this string stringVal)
+        {
+            return (T)Enum.Parse(typeof(T), stringVal);
+        }
+    }
+}
+<#+
+    private string Pascalize(object value)
+    {
+        Regex rx = new Regex(@"(?:[^a-zA-Z0-9]*)(?<first>[a-zA-Z0-9])(?<reminder>[a-zA-Z0-9]*)(?:[^a-zA-Z0-9]*)");
+        return rx.Replace(value.ToString(), m => m.Groups["first"].ToString().ToUpper() + m.Groups["reminder"].ToString().ToLower());
+    }
+
+    private string GetSubNamespace()
+    {
+        Regex rx = new Regex(@"(?:.+Services\s)");
+        string path = Path.GetDirectoryName(Host.TemplateFile);
+        return rx.Replace(path, string.Empty).Replace("\\", ".").Split(':')[1];
+    }
+#>

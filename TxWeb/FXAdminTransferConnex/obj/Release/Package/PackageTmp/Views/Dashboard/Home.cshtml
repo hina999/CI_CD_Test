@@ -1,0 +1,154 @@
+﻿@using FXAdminTransferConnex.Entities
+@using Kendo.Mvc.UI
+@using FXAdminTransferConnexApp
+@model UserDashboardConfigurationModel
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <fieldset>
+        <legend>
+
+            Dashboard&nbsp;
+            @if (ProjectSession.LoginUserDetails != null && (ProjectSession.LoginUserDetails.UserTypeId == SystemEnum.UserType.SuperAdmin.GetHashCode() || ProjectSession.LoginUserDetails.UserTypeId == SystemEnum.UserType.Trader.GetHashCode() || ProjectSession.LoginUserDetails.UserTypeId == SystemEnum.UserType.SalesPerson.GetHashCode()))
+            {
+                <span style="font-size:12px;"><a href="@Url.Action("Index", "TaskReminder")">(View task reminders)</a></span>
+            }
+        </legend>
+    </fieldset>
+
+
+<div class="row">
+
+    @if (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode())
+    {
+        <div class="col-md-6">
+            @Html.Partial("_CompanyCommissionLast12Month")
+        </div>
+    }
+    <div class="col-md-6">
+        @Html.Partial("_CommissionLast12Month")
+    </div>
+    @if (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode())
+    {
+        <div class="col-md-6">
+            @Html.Partial("_CompanyCommissionLast30Day")
+        </div>
+    }
+    <div class="col-md-6">
+        @Html.Partial("_CommissionLast30Day")
+    </div>
+    @if (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode())
+    {
+        <div class="col-md-6">
+            @Html.Partial("_CompanyCommissionLast5Day")
+        </div>
+    }
+    <div class="col-md-6">
+        @Html.Partial("_CommissionLast5Day")
+    </div>
+    @if (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode())
+    {
+        <div class="col-md-6">
+            @Html.Partial("_CompanyCommissionLast6Week")
+        </div>
+    }
+    <div class="col-md-6">
+        @Html.Partial("_CommissionLast6Week")
+    </div>
+
+    @if (ProjectSession.LoginUserDetails.UserTypeId == SystemEnum.UserType.SuperAdmin.GetHashCode())
+    {
+        <div class="col-md-6">
+            @Html.Partial("_TraderCommissionChart")
+        </div>
+        <div class="col-md-6">
+            @Html.Partial("_SalesPersonCommissionChart")
+        </div>
+    }
+    @if (ProjectSession.LoginUserDetails.UserTypeId == SystemEnum.UserType.SuperAdmin.GetHashCode() ||
+         ProjectSession.LoginUserDetails.UserTypeId == SystemEnum.UserType.Trader.GetHashCode() ||
+         ProjectSession.LoginUserDetails.UserTypeId == SystemEnum.UserType.SalesPerson.GetHashCode())
+    {
+        <div class="col-md-12">
+            @Html.Partial("_Top10ClientCommission")
+        </div>
+    }
+    <div class="col-md-6">
+        @Html.Partial("_Last5DayInCallLogChart")
+    </div>
+    <div class="col-md-6">
+        @Html.Partial("_Last5DayOutCallLogChart")
+    </div>
+    <div class="col-md-6">
+        @Html.Partial("_YesterdaysInCallLogChart")
+    </div>
+    <div class="col-md-6">
+        @Html.Partial("_YesterdaysOutCallLogChart")
+    </div>
+
+
+    <div class="col-md-12" id="partialRightAssignDiv">
+        @Html.Partial("_ReconciliationTeamReportData")
+    </div>
+
+
+</div>
+</div>
+<script>
+    $(document).ready(function () {
+        var havePermission ='@WebHelper.CanView()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+        kendoGridScroll();
+
+        if ('@ProjectSession.LoginUserDetails.UserTypeId' == '1') {
+            getTraderKamount();
+            getSalesPersonKamount();
+        }
+        loadReport();
+    });
+
+    function ExportChart(chartId, fileName, FileType) {
+
+        var chart = $(chartId).getKendoChart();
+        if (FileType == "PNG") {
+            fileName += ".png";
+            chart.exportImage().done(function (data) {
+                kendo.saveAs({
+                    dataURI: data,
+                    fileName: fileName
+                });
+            });
+        }
+        else {
+            fileName += ".pdf";
+            chart.exportPDF({ paperSize: "auto", margin: { left: "1cm", top: "1cm", right: "1cm", bottom: "1cm" } }).done(function (data) {
+                kendo.saveAs({
+                    dataURI: data,
+                    fileName: fileName
+                });
+            });
+        }
+    }
+
+
+
+     function loadReport() {
+        
+        $.ajax({
+           /* data: { strFromDate: FfinalDate, strToDate: TfinalDate },*/
+            type: "GET",
+            url: '@Url.Action("ReconciliationTeamReportData", "Dashboard")'
+        }).done(function (data) {
+            $('.loader').hide();
+            $("#partialRightAssignDiv").html(data);
+        });
+    }
+
+
+</script>

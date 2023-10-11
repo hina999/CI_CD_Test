@@ -1,0 +1,72 @@
+﻿@using Kendo.Mvc.UI
+@{
+    Layout = null;
+}
+
+<script>
+    function ShowErrorMessageImport(message) {
+        $("#error-notification-div1").slideDown();
+        $("#errormsgImport").text(message);
+        setTimeout(function () {
+            $("#error-notification-div1").slideUp();
+            $("#errormsgImport").text('');
+        }, 5000);
+    }
+    function ValidateFileExtention(e) {
+        var validFileExtensions = 'xls,xlsx';
+        if (validFileExtensions != NaN && validFileExtensions != '') {
+            var validFileExtension = validFileExtensions.toLowerCase().split(',');
+            var files = e.files;
+            var isValid = true;
+
+            $.each(files, function () {
+                var selectedfileExtension = this.extension.toLowerCase().replace(".", "");
+                var found = $.inArray(selectedfileExtension, validFileExtension) > -1;
+                if (!found) {
+                    isValid = false;
+                    e.preventDefault();
+                }
+            });
+
+            if (!isValid) {
+                ShowErrorMessageImport('Please Select Valid File To Import');
+            }
+            else {
+                return true;
+            }
+        }
+    }
+</script>
+
+<div style="width:95%;">
+    <div class="error-notification alert alert-danger" id="error-notification-div1" style="display:none;">
+        <button type="button" class="close closeErrormsg">&times;</button>
+        <img id="imgJobApplyMsg" src="@Url.Content("~/Content/images/ic-error.png")" alt=""/>
+        <span id="errormsgImport">
+        </span>
+    </div>
+    <fieldset>
+        @using (Html.BeginForm("UploadStagingDeal", "StagingDeal", FormMethod.Post, new { @id = "formUpload", enctype = "multipart/form-data" }))
+        {
+
+            <legend>Import File <a href="~/Sample File/TransferConnex.xls"><i class="fa fa-download" aria-hidden="true"> Download Sample File</i></a>  </legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.Kendo().Upload().Name("ImportStagingDeal").Multiple(false).ShowFileList(true).Events(e => e.Select("ValidateFileExtention"))
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <br />
+                            <button id="search" type="button" onclick="return SaveUploadValidate();" class="k-button btn-orange">Import</button>
+                        </div>
+
+                        </div>
+                </div>
+            </div>
+        }
+    </fieldset>
+</div>
+

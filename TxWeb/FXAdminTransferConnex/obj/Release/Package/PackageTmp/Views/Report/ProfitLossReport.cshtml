@@ -1,0 +1,265 @@
+﻿@using Kendo.Mvc.UI
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnexApp;
+
+@*@{
+        ViewBag.Title = "ClientMarginReport";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }*@
+
+<div class="content">
+    <legend>P&L Report</legend>
+
+    <div class="panel panel-default client-registration">
+        <div class="panel-heading cursor-pointer mb-20" data-toggle="collapse" data-target="#div1">
+            <h4 class="panel-title">
+                <span class="fa fa-minus mr-10"></span>
+                Advance Search
+            </h4>
+        </div>
+        <div id="div1" class="collapse panel-body collapse in">
+            <div class="col-md-12">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label">Deal No:</label>
+                        <input type="text" id="txtDealNo" placeholder="Deal No" class="form-control Search" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label">Company Name:</label>
+                        <input type="text" name="txtCompany" placeholder="Company Name" class="form-control" id="txtCompany" />
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label">Account Number:</label>
+                        <input id="txtAccountNo" type="text" placeholder="Account Number" class="k-textbox Search" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label">Client Name:</label>
+                        <input type="text" id="txtClientName" placeholder="Client Name" class="form-control Search" />
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label">From Date:</label>
+                        @Html.Kendo().DatePicker().Name("FromDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:100%" })
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label">To Date:</label>
+                        @Html.Kendo().DatePicker().Name("ToDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:100%" })
+                    </div>
+                </div>
+                @{
+                    if (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode() &&
+                        ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.Trader.GetHashCode())
+                    {
+                        <div class="col-sm-3">
+                            <label class="control-label">Select Sales person:</label>
+                            <div class="form-group">
+                                @(Html.Kendo().DropDownList()
+                                .Name("SearchSalesperson")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .OptionLabel("Select Sales person")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode() });
+                                    });
+                                })
+                                )
+                            </div>
+                        </div>
+                    }
+                }
+                @{
+                    if (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode() &&
+                        ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.Trader.GetHashCode())
+                    {
+                        <div class="col-sm-3">
+                            <label class="control-label">Select Junior Sales person:</label>
+                            <div class="form-group">
+                                @(Html.Kendo().DropDownList()
+                                .Name("SearchJuniorSalesperson")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .OptionLabel("Select Junior Sales person")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode() });
+                                    });
+                                })
+                                )
+                            </div>
+                        </div>
+                    }
+                }
+                @{
+                    if ((ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.SalesPerson.GetHashCode()) &&
+                        (ProjectSession.LoginUserDetails.UserTypeId != SystemEnum.UserType.Trader.GetHashCode()))
+                    {
+                        <div class="col-sm-3">
+                            <label class="control-label">Select Trader:</label>
+                            <div class="form-group">
+                                @(Html.Kendo().DropDownList()
+                                .Name("SearchTrader")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .OptionLabel("Select Trader")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.Trader.GetHashCode() });
+                                    });
+                                })
+                                )
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="col-md-12">
+                <div class="col-sm-12 text-right">
+                    <div class="form-group">
+                        <button id="btnSearch" type="button" class="btn-orange">Search</button>
+                        <button id="btnReset" type="button" class="btn-orange">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <fieldset>
+        <legend></legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                @(Html.Kendo().Grid<ProfitLossReportModel>()
+                .Name("gridProfitLoss")
+                .Columns(columns =>
+                {
+                    columns.Bound(m => m.DealNo).Width(300).ClientTemplate("<a href='" + Url.Action("ManageDeal", "Deal") + "?DealId=#= DealId #' " + ">#=DealNo#</a>");
+                    columns.Bound(m => m.CompanyName).Width(300).ClientTemplate("<a href='" + Url.Action("ManageClient", "Client") + "?ClientId=#= ClientId #' " + ">#=CompanyName#</a>");
+                    columns.Bound(m => m.AccountNo);
+                    columns.Bound(m => m.strTradeDate).Title("Trade Date");
+                    columns.Bound(m => m.FullName).Title("Client Name");
+                    columns.Bound(m => m.AdditionalPLAmount).Title("Additional P&L Amount");
+                    columns.Bound(m => m.AdditionalPLNotes).Title("Additional P&L Notes");
+                })
+                 .ToolBar(toolbar =>
+                 {
+
+                     toolbar.Template("<div class='pull-right col-sm-7'><a class='k-button k-button-icontext k-grid-excel' href='#' tabindex='12' style='margin-bottom:2px;'><span class='k-icon k-i-excel'></span>Export to Excel</a></div>");
+
+
+                 })
+                .Pageable(x =>
+                {
+                    x.Refresh(false);
+                    x.PageSizes(new int[] { 10, 20, 50, 100, 1000 });
+                })
+                .Excel(excel => excel.FileName("ProfitLoss.xlsx").Filterable(true).AllPages(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                .Navigatable()
+                .Sortable(sortable => sortable.AllowUnsort(false))
+                .NoRecords()
+                .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .ServerOperation(true)
+                    .PageSize(ConfigItems.GridPageSize)
+                    .Model(model =>
+                    {
+                        model.Id(d => d.DealId);
+                    })
+
+                  .Read(read => read.Action("GetProfitLossReportList", "Report").Data("additionalData"))
+
+                ))
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script>
+    $(document).ready(function () {
+        var havePermission = '@WebHelper.CanView()';
+        if (havePermission.toLowerCase() == "false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+        kendoGridScroll();
+    });
+
+    function ReadGrid() {
+        $('#gridProfitLoss').data('kendoGrid').dataSource.read();
+    }
+     
+    function additionalData() {
+        var salePerson = $('#SearchSalesperson').data("kendoDropDownList");
+        var juniorSalePerson = $('#SearchJuniorSalesperson').data("kendoDropDownList");
+        var trader = $('#SearchTrader').data("kendoDropDownList");
+        return {
+            ClientName: $("#txtClientName").val(),
+            AccountNo: $("#txtAccountNo").val(),
+            CompanyName: $("#txtCompany").val(),
+            DealNo: $("#txtDealNo").val(),
+            FromDate: $("#FromDate").data("kendoDatePicker").value(),
+            ToDate: $("#ToDate").data("kendoDatePicker").value(),
+            SalesPersonId: salePerson != null ? salePerson.value().trim() : null,
+            JuniorSalesPersonId: juniorSalePerson != null ? juniorSalePerson.value().trim() : null,
+            TraderId: trader != null ? trader.value().trim() : null
+        }
+    }
+
+    $('#btnReset').click(function () {
+        $('.Search').val('');
+        $("#txtClientName").val('');
+        $("#txtCompany").val('');
+        $("#txtDealNo").val('');
+        $("#FromDate").data("kendoDatePicker").value('');
+        $("#ToDate").data("kendoDatePicker").value('');
+
+        var salePerson = $('#SearchSalesperson').data("kendoDropDownList");
+        var juniorSalePerson = $('#SearchJuniorSalesperson').data("kendoDropDownList");
+
+        var trader = $('#SearchTrader').data("kendoDropDownList");
+        if (salePerson != null) {
+            $("#SearchSalesperson").data("kendoDropDownList").value(0);
+        }
+        if (juniorSalePerson != null) {
+            $("#SearchJuniorSalesperson").data("kendoDropDownList").value(0);
+        }
+        if (trader != null) {
+            $("#SearchTrader").data("kendoDropDownList").value(0);
+        }
+
+        ReadGrid();
+    });
+
+    $("#btnSearch").click(function () {
+        ReadGrid();
+    });
+
+    $('.Search').keypress(function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            ReadGrid();
+        }
+    });
+
+</script>

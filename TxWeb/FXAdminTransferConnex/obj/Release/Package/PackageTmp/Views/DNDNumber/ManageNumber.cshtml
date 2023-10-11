@@ -1,0 +1,75 @@
+﻿@using Kendo.Mvc.UI;
+@using FXAdminTransferConnexApp;
+@model FXAdminTransferConnex.Entities.DNDNumbers
+
+@{
+    ViewBag.Title = "Manage DND Number";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("SaveDNDNumber", "DNDNumber", FormMethod.Post, new { @id = "DNDNumberForm" }))
+{
+    @Html.HiddenFor(m => m.DNDNumberID)
+    <div class="content">
+        <legend>DND Number</legend>
+        <fieldset>
+            <legend></legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Full Name:</label>
+                                    @Html.TextBoxFor(m => m.FullName, new { @placeholder = "Full Name", @class = "form-control", @tabindex = "1" })
+                                    @Html.ValidationMessageFor(m => m.FullName)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Mobile No.:</label>
+                                    @Html.TextBoxFor(m => m.MobileNo, new { @maxlength = "20", @placeholder = "Mobile No.", @class = "form-control", @tabindex = "2" })
+                                    @Html.ValidationMessageFor(m => m.MobileNo)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Comments:</label>
+                                    @Html.TextAreaFor(m => m.Comments, new { @placeholder = "Comments", @class = "form-control", @tabindex = "3" })
+                                    @Html.ValidationMessageFor(m => m.Comments)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <a href="@Url.Action("Index", "DNDNumber")" class="btn btn-orange mt-5 mr-10 pull-right" tabindex="5">Cancel</a>
+                            <button class="btn btn-orange mt-5 mr-10 pull-right" type="submit" tabindex="4">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+}
+
+
+<script>
+    $(document).ready(function () {
+        checkAddeditPermission();
+        var validator = $("#TraderForm").kendoValidator().data("kendoValidator");
+    });
+    function checkAddeditPermission() {
+        var havePermission = "false";
+        if (@Model.DNDNumberID > 0) {
+            havePermission = '@WebHelper.CanEdit()';
+        } else {
+            havePermission = '@WebHelper.CanAdd()';
+        }
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+    }
+</script>

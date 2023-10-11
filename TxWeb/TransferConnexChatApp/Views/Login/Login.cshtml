@@ -1,0 +1,280 @@
+﻿@model FXAdminTransferConnex.Entities.LoginViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <!-- Add manifest -->
+    <link rel="manifest" href="~/chatmanifest.json">
+    <meta name="theme-color" content="#ff1962">
+    <!-- Favicons -->
+    @*<link rel="icon" type="image/png" href="~/Content/img/icons/apple-touch-icon/favicon.png" sizes="32x32">
+        <link rel="apple-touch-icon" href="~/Content/img/icons/apple-touch-icon/favicon.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-iphone-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-ipad-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-iphone-retina-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-iphone-retina-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-ipad-retina-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-180x180.png">
+        <link rel="apple-touch-icon" sizes="192x192" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-192x192.png">*@
+
+    <link rel="icon" type="image/png" href="~/Content/img/icons/chat-icon/apple-touch-icon/favicon.png" sizes="32x32">
+
+    <link rel="apple-touch-icon" href="~/Content/img/icons/chat-icon/apple-touch-icon/favicon.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="~/Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-iphone-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="~/Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-ipad-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="~/Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-iphone-retina-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="~/Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-iphone-retina-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="~/Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-ipad-retina-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="~/Content/img/icons/chat-icon/apple-touch-icon/apple-touch-icon-192x192.png">
+
+    <link href="~/Content/css/core.css" rel="stylesheet" />
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker
+                .register('/serviceworker.js')
+                .then(function () { console.log('Service Worker Registered'); });
+        }
+
+        window.addEventListener('load', function () {
+            // At first, let's check if we have permission for notification
+            // If not, let's ask for it
+            if (window.Notification && Notification.permission !== "granted") {
+                Notification.requestPermission(function (status) {
+                    if (Notification.permission !== status) {
+                        Notification.permission = status;
+                    }
+                });
+            }
+        });
+    </script>
+    <style>
+        .field-validation-error {
+            color: #b90000;
+            font-size: 12px;
+            float: left;
+            width: 100%;
+            text-align: left;
+            padding: 3px 0;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            z-index: 9999;
+            background-color: #4CAF50;
+            border: none;
+            color: #fff;
+        }
+
+        .alert-danger {
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            z-index: 9999;
+            background-color: #b30000;
+            border: none;
+            color: #fff;
+        }
+        /*login css*/
+        .login-wrapper.login-screen {
+            width: 100% !important;
+            height: auto;
+            border: 1px solid #d1d1d1 !important;
+            border-radius: 16px;
+            margin: auto;
+            padding: 0;
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            background: #341535;
+        }
+
+        .main_container {
+            position: relative;
+        }
+
+        .login-wrapper.login-screen:after {
+            content: ' ';
+            position: absolute;
+            width: 0;
+            height: 0;
+            left: 0px;
+            right: auto;
+            top: auto;
+            bottom: -31px;
+            border: 32px solid;
+            border-color: transparent transparent transparent #341535;
+        }
+
+        .login-wrapper.login-screen .login {
+            padding: 20px;
+            background: #eaeaea;
+            z-index: 99999;
+            position: relative;
+            border-radius: 16px;
+            left: 25px;
+            top: -25px;
+            -webkit-box-shadow: 6px -8px 8px -3px rgb(0 0 0 / 23%);
+            -moz-box-shadow: 6px -8px 8px -3px rgb(0 0 0 / 23%);
+            box-shadow: 6px -8px 8px -3px rgb(0 0 0 / 23%);
+        }
+
+        .submit_button button:hover, .submit_button button:focus, .submit_button button:active {
+            background-color: #341535;
+            border-color: #341535;
+            color: #ffffff;
+        }
+
+        .submit_button .btn-submit {
+            background: #341535;
+            border: 1px solid #341535;
+            color: #fff;
+        }
+
+        .login-screen .login-block {
+            border-radius: 5px;
+            border-top: 5px solid #341535;
+        }
+
+        .user-input input:-webkit-autofill,
+        .user-input input:-webkit-autofill:hover,
+        .user-input input:-webkit-autofill:focus,
+        .user-input input:-webkit-autofill::first-line {
+            -webkit-box-shadow: 0 0 0px 1000px #ffffff inset;
+        }
+
+        .user-input input {
+            float: left;
+            width: 100%;
+            height: 42px;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 1px solid #341535;
+            font-size: 14px;
+            padding: 0px 20px 0px 50px;
+            outline: none;
+            margin: 0px auto;
+            background: #fff;
+        }
+        .user-input i {
+            position: absolute;
+            left: 15px;
+            top: 20px;
+            color: #341535;
+        }
+        .user-input input:active, .user-input input:focus {
+            border: 1px solid #341535;
+        }
+        .user-input input:focus + i {
+                color: #341535;
+        }
+        .login-block h1 {
+            color: #341535;
+        }
+        .user-input a:hover, .user-input a:active, .user-input a:focus {
+            color: #341535;
+        }
+        [type="checkbox"]:not(:checked) + label:before, [type="checkbox"]:checked + label:before {
+            border: 1px solid #341535 !important;
+        }
+        .orange [type="checkbox"]:not(:checked) + label::after,
+        .orange [type="checkbox"]:checked + label::after {
+            color: #341535!important;
+        }
+        .orange label:focus:before,
+        .orange label:hover:before {
+            border: 1px solid #341535 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main_container">
+        <div class="login-wrapper login-screen">
+            <div class="login">
+              
+                @using (Html.BeginForm("Login", "Login", new { ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form",id="loginForm" }))
+                {
+                    @Html.Partial("_Notifications")
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    <div class="mb-20" align="center">
+                        <img src="~/Images/transfer-connex-chat-logo.png" alt="Transfer Connex">
+                    </div>
+                    <div class="login-block">
+                        <h1>Login</h1>
+                    </div>
+
+                    <div class="user-input">
+                        @Html.TextBoxFor(m => m.Email, new { @placeholder = "Email", type = "email", @autofocus = "" })
+                        <i class="fa fa-user-o"></i>
+                        @Html.ValidationMessageFor(m => m.Email)
+                    </div>
+
+                    <div class="user-input">
+                        @Html.PasswordFor(m => m.Password, new { @placeholder = "Password", type = "password" })
+                        <i class="fa fa-lock"></i>
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+
+                    <div class="user-input">
+                        <div class="chekbox-main checkbox orange mt-5 mb-5">
+                            <input type="checkbox" id="checkbox3" name="RememberMe" />
+                            <label for="checkbox3">Remember Me</label>
+                        </div>
+                    </div>
+                    <div class="submit_button">
+                        <button class="btn-submit" type="submit">Submit</button>
+                    </div>
+                    <div class="user-input text-right">
+                        @Html.ActionLink("Forgot your password?", "ForgotPassword", "Login")
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+@*<script>
+    $(document).ready(function () {
+        $('#loginForm').on('submit', function (e) {
+            var $form = $(this);
+
+            if (!$form.data('submitted') && $form.valid()) {
+                // mark it so that the next submit can be ignored
+                $form.data('submitted', true);
+                return;
+            }
+
+            // form is invalid or previously submitted - skip submit
+            e.preventDefault();
+        })
+    });
+    
+</script>*@
+

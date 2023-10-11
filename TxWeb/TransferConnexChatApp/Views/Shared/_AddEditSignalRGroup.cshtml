@@ -1,0 +1,140 @@
+﻿@using Kendo.Mvc.UI;
+@using FXAdminTransferConnex.Entities
+@using TransferConnexChatApp;
+@model FXAdminTransferConnex.Entities.SignalRGroupModel
+@{
+    ViewBag.Title = "ManageSignalRGroup";
+    Layout = null;
+}
+
+<style>
+    [type="checkbox"]:not(:checked),
+    [type="checkbox"]:checked {
+        position: relative;
+        left: 0;
+    }
+
+    .checkboxlabel {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 0 0 10px;
+        display: block;
+    }
+
+        .checkboxlabel:hover {
+            background: #eee;
+            cursor: pointer;
+        }
+
+    .error {
+        color: red;
+    }
+</style>
+
+@Html.HiddenFor(m => m.SignalRGroupId)
+<div class="content">
+    <div class="row">
+        <form id="formCreateGroup">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label">Group Name:</label>
+                    @Html.TextBoxFor(m => m.GroupName, new { @placeholder = "Group Name", @class = "form-control" })
+                    @*@Html.ValidationMessageFor(m => m.GroupName)*@
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <label class="control-label"><strong>Users List</strong></label>
+            <div id="divSignalRUserlist" style="max-height: 200px; overflow: auto;padding:10px;border:1px solid #ccc;">
+                @{
+                    foreach (var item in Model.UserList)
+                    {
+                        if (ProjectSession.LoginChatUserDetails.SignalRUserId == item.SignalRUserId)
+                        {
+                            <div class="col-sm-3" style="display:none">
+                                <label class="control-label checkboxlabel">
+                                    @Html.CheckBox(item.UserName, true, new { @id = item.SignalRUserId })
+                                    @item.UserName
+                                </label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-sm-3">
+                                <label class="control-label checkboxlabel">
+                                    @Html.CheckBox(item.UserName, item.IsInGroup, new { @id = item.SignalRUserId })
+                                    @item.UserName
+                                </label>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "positionClass": "toast-bottom-right",
+        "onclick": null,
+        "showDuration": "1000",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
+    function SaveSignalRGroupDetail() {
+        $("#formCreateGroup").validate({
+            rules: {
+                GroupName: {
+                    required: true
+                }
+            },
+            messages: {
+                GroupName: {
+                    required: "Group name is require."
+                }
+            }
+        });
+
+        if ($("#formCreateGroup").valid()) {
+            var GroupMemberList = [];
+            $('#divSignalRUserlist input:checked').each(function () {
+                GroupMemberList.push($(this).attr('id'));
+            });
+            console.log(GroupMemberList);
+            if (GroupMemberList.length < 3) {
+                toastr.warning('Please select at least two group members.')
+            }
+            else {
+                $('.loader').show();
+                $.ajax({
+                    url: '@Url.Action("SaveSignalRGroupNGetContacts", "SignalRHelper")',
+                    async: false,
+                    type: 'POST',
+                    data: { SignalRGroupId: $("#SignalRGroupId").val(), GroupName: $("#GroupName").val(), GroupMembers: GroupMemberList },
+                    success: function (data) {
+                        $('.loader').hide();
+                        console.log(data);
+                        if (data.Success) {
+                            toastr.success('Group Detail Saved Successfully.');
+                            chat.server.letsChat("NewJoin", $('#GroupName').val());
+                            $('#AddEditGroupModal').modal('toggle');
+                        }
+                        else {
+                            toastr.error('Something went wrong please try again later.')
+                        }
+                    }
+                });
+            }
+        }
+    }
+</script>

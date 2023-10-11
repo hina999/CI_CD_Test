@@ -1,0 +1,3074 @@
+﻿<!DOCTYPE html>
+@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnexApp
+@using FXAdminTransferConnex.Common;
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer Connex</title>
+    <!-- Add manifest -->
+    <link rel="manifest" href="~/manifest.json">
+    <meta name="theme-color" content="#ff1962">
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="~/Content/img/icons/apple-touch-icon/favicon.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="~/Content/img/icons/apple-touch-icon/favicon.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-iphone-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-ipad-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-iphone-retina-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-iphone-retina-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-ipad-retina-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="~/Content/img/icons/apple-touch-icon/apple-touch-icon-192x192.png">
+
+    @Styles.Render("~/Content/ui")
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/toastr.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.4.1.min.js"></script>
+    <script src="~/signalr/Hubs"></script>
+    <link href="~/ReportViewer/styles/telerikReportViewer.css" rel="stylesheet" />
+    <link href="~/Content/css/toastr.min.css" rel="stylesheet" />
+    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Content/css/jquery-confirm.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-confirm.min.js"></script>
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>*@
+
+    <style>
+        .back-to-top {
+            z-index: 100;
+            cursor: pointer;
+            position: fixed;
+            bottom: 42px;
+            right: 20px;
+            display: none;
+        }
+
+        .visible-xs-inline-block {
+            display: none !important;
+        }
+
+        .disabledButtons {
+            pointer-events: none;
+            opacity: 0.4;
+        }
+    </style>
+    <style>
+        [data-toggle="collapse"] .fa:before {
+            content: "\f068";
+        }
+
+        [data-toggle="collapse"].collapsed .fa:before {
+            content: "\f067";
+        }
+    </style>
+    <style>
+        .chatWidget {
+            width: 199px;
+            height: 36px;
+            border-radius: 3px 3px 0 0;
+            background-color: #fe2469;
+            z-index: 100;
+            cursor: pointer;
+            position: fixed;
+            bottom: 0px;
+            right: 199px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .chatWidget i.fa.fa-comments {
+                font-size: 24px !important;
+            }
+
+            .chatWidget .chatWidget-box {
+                width: auto;
+                margin: auto;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #fff;
+            }
+
+        .Adapter_root.Adapter_right.Adapter_minimized {
+            bottom: -14px;
+        }
+
+        .chatListParent {
+            position: absolute;
+            background-color: aliceblue;
+            right: 20px;
+            bottom: 130px
+        }
+
+        .chatAvatar {
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            color: #fff;
+            text-align: center;
+            background: #2d80d0;
+            /*background: radial-gradient(circle farthest-corner at 10% 20%, rgb(45 128 208) 10.3%, rgba(56,190,201,1) 90%);*/
+        }
+
+        @@media screen and (max-width: 767px) {
+            /* .chatWidget {
+                width: 199px;
+                height: auto;
+                border-radius: 0;
+                background-color: cornflowerblue;
+                z-index: 100;
+                cursor: pointer;
+                position: fixed;
+                bottom: 0px;
+                right: 199px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }*/
+            .chatWidget > div {
+                width: 25px !important;
+                margin: 0px !important;
+            }
+
+            .chatWidget .fa.fa-comments {
+                font-size: 20px !important;
+            }
+
+            .TodayTaskReminderWidget > div {
+                width: 500px !important;
+            }
+        }
+
+        @@media screen and (max-width: 700px) {
+            .chatAvatar {
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+                border-radius: 50%;
+                font-size: 20px;
+                color: #fff;
+                text-align: center;
+                background: #0967b8;
+                /*background: radial-gradient(circle farthest-corner at 10% 20%, rgb(45 128 208) 10.3%, rgba(56,190,201,1) 90%);*/
+            }
+        }
+
+        #ChatListDiv {
+            background-color: #FFFFFF;
+        }
+
+        .ui-dialog-titlebar-plus {
+            position: absolute;
+            right: 2.1em;
+            top: 50%;
+            width: 20px;
+            margin: -10px 0 0 0;
+            padding: 1px;
+            height: 20px;
+        }
+
+        .ui-dialog-titlebar-delete {
+            position: absolute;
+            right: 3.9em;
+            top: 50%;
+            width: 20px;
+            margin: -10px 0 0 0;
+            padding: 1px;
+            height: 20px;
+        }
+
+        .ui-dialog-title {
+            color: #FFFFFF !important;
+        }
+
+        .chat-pb-5 {
+            margin-bottom: 5px !important;
+            padding-bottom: 5px;
+            padding-top: 5px;
+            cursor: pointer;
+            margin: 0px -10px;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .chat-badge {
+            float: right;
+            /*background-color: red;*/
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            background: linear-gradient(rgb(9, 103, 184) 0%, rgb(57, 87, 179) 100%);
+        }
+
+        .chatPanel {
+            margin: 0px 0px 0px -14px;
+            position: absolute;
+            bottom: 0px;
+        }
+
+        .smalltxt {
+            height: 30px;
+        }
+
+        .btn-sm, .btn-group-sm > .btn {
+            font-size: 12px !important;
+        }
+
+        .msg_b {
+            float: right;
+            width: auto;
+            max-width: 90%;
+            clear: both;
+            background: #81b7e3;
+            padding: 5px 10px;
+            min-height: 15px;
+            margin-top: 5px;
+            margin-right: 4px;
+            position: relative;
+            border-radius: 10px 0px 10px 10px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            color: #fff;
+            /*right: 24px;
+        margin: 10px 0px 10px 10px;*/
+        }
+
+        .msg_a {
+            float: left;
+            width: auto;
+            max-width: 90%;
+            clear: both;
+            position: relative;
+            background: #e1f1fd;
+            padding: 5px 10px;
+            min-height: 10px;
+            margin-top: 5px;
+            margin-left: 20px;
+            margin-bottom: 4px;
+            border-radius: 0px 10px 10px 10px;
+            overflow-wrap: break-word;
+            color: #1b1b1b;
+        }
+        /* .msg_b a{
+            color:#ffffff;
+            text-decoration:underline;
+        }*/
+        /*.msg_a:before {
+                content: "";
+                position: absolute;
+                width: 0px;
+                height: 0px;
+                border: 10px solid;
+                border-color: transparent #FFFFFF transparent transparent;
+                left: -19px;
+                top: 7px;
+            }
+
+        .msg_b:after {
+            content: "";
+            position: absolute;
+            width: 0px;
+            height: 0px;
+            border: 10px solid;
+            border-color: transparent transparent transparent #FFFFFF;
+            right: -20px;
+            top: 7px;
+        }*/
+        .msg-time {
+            float: left;
+            width: 100%;
+            font-size: 9px;
+            font-weight: 300;
+            line-height: 12px;
+            margin: -2px 0 7px 0;
+            text-align: right;
+            /*color: #898b92;*/
+            color: #1B1B1B;
+            padding: 5px 20px 5px 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .msg_a + .msg-time {
+            text-align: left;
+        }
+
+        .lbl_msg_sender_a {
+            text-align: left;
+            margin: 0px 0px 0px 0px;
+            padding: 0px 0px 0px 0px;
+        }
+
+        .lbl_msg_sender_b {
+            text-align: right;
+            margin: 0px 0px -4px 0px;
+            padding: 0px 0px 0px 0px;
+        }
+
+        .chatmsgs {
+            position: relative;
+            overflow: auto;
+            height: 65vh;
+            margin: -7px -14px;
+        }
+
+        .ui-dialog .ui-dialog-titlebar-close {
+            right: 1em;
+        }
+
+        .ui-dialog-titlebar-plus {
+            right: 3em;
+        }
+
+        @@media screen and (max-width: 700px) {
+            .chatmsgs {
+                position: relative;
+                overflow: auto;
+                height: 73vh;
+                margin: -7px -14px;
+            }
+        }
+
+        .chatmsgs::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chatmsgs::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+
+        .chatmsgs::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+        }
+
+        #ChatListDiv::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #ChatListDiv::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+
+        #ChatListDiv::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+        }
+
+        .emojiPanel {
+            max-height: 150px;
+            margin: 0px 0px 10px 0px;
+            overflow-y: auto;
+            font-size: 25px;
+            padding: 0px;
+            display: none;
+        }
+
+            .emojiPanel span:hover {
+                cursor: pointer;
+            }
+
+            .emojiPanel::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .emojiPanel::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                border-radius: 10px;
+            }
+
+            .emojiPanel::-webkit-scrollbar-thumb {
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+            }
+
+        .status-circle-online {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #4fc93a;
+            border: 2px solid white;
+            /*bottom: 0;
+            right: 0;
+            position: absolute;*/
+            float: right;
+            margin-top: -15px;
+            overflow: overlay;
+        }
+
+        .status-circle-offline {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            border: 3px solid #4fc93a;
+            /*bottom: 0;
+            right: 0;
+            position: absolute;*/
+            float: right;
+            margin-top: -15px;
+            overflow: overlay;
+            position: relative;
+        }
+
+        .status-circle-online-title {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: limegreen;
+            border: 2px solid white;
+            float: right;
+        }
+
+        .status-circle-offline-title {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: red;
+            border: 2px solid white;
+            float: right;
+        }
+
+        #chat {
+            /*background-image: url('../../Content/Images/ChatBG.jpg');*/
+            background-size: cover;
+            background-color: #ffffff;
+            padding: 1em;
+        }
+
+        .modal.fade #newChatModalPopup.modal-dialog {
+            transform: translate3d(0, 100%, 0);
+        }
+
+        .modal.in #newChatModalPopup.modal-dialog {
+            transform: translate3d(0, 0, 0);
+        }
+
+        .ui-dialog .ui-dialog-title {
+            font-size: 18px;
+            line-height: 40px;
+        }
+
+        #chat .chatPanel .form-control {
+            box-shadow: none;
+        }
+
+        #chat .chatPanel .input-group-btn:nth-child(2) button {
+            border-radius: 0px;
+        }
+
+        #chat .chatPanel .input-group-btn button {
+            height: 30px;
+        }
+
+        .ui-widget.ui-widget-content {
+            padding: 0px;
+        }
+
+        /* For userstatus changes */
+        .status-circle-away {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #f29d0a;
+            border: 2px solid white;
+            /*bottom: 0;
+            right: 0;
+            position: absolute;*/
+            float: right;
+            margin-top: -15px;
+            overflow: overlay;
+        }
+
+        .status-circle-dnd {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #d40000;
+            border: 2px solid white;
+            /*bottom: 0;
+            right: 0;
+            position: absolute;*/
+            float: right;
+            margin-top: -15px;
+            overflow: overlay;
+        }
+
+        .status-circle-invisible {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #87a8ff;
+            border: 2px solid white;
+            /*bottom: 0;
+            right: 0;
+            position: absolute;*/
+            float: right;
+            margin-top: -15px;
+            overflow: overlay;
+        }
+
+        .TodayTaskReminderWidget {
+            width: 199px;
+            height: 36px;
+            border-radius: 3px 3px 0 0;
+            background-color: #0833b7;
+            z-index: 100;
+            cursor: pointer;
+            position: fixed;
+            bottom: 0px;
+            right: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .TodayTaskReminderWidget-box {
+            width: auto;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        /*added for kendo window*/
+        .k-edit-form-container .editor-label, .k-edit-label {
+            margin-top: 10px !important;
+        }
+
+        .k-edit-field, .k-edit-form-container .editor-field {
+            margin-top: 10px !important;
+        }
+    </style>
+</head>
+
+<body class="sidebar-xs">
+    @*class="@(ProjectSession.IsMenuSidebarStrip ? "sidebar-xs" : "")"*@
+    <div class="navbar">
+        <div class="navbar-header">
+            <a class="navbar-brand navbar-brand-dashboard" href="@Url.Action("Home", "Dashboard")">
+                <img src="~/Images/transfer-connex-logo.png" alt="Transfer Connex">
+            </a>
+            <div class="autocomplete pt-20 search-header" style="width:450px;">
+                <input id="txtGlobaalSearch" class="form-control" type="text" name="GlobalSearch" placeholder="Search Client/Prospect/Deal">
+            </div>
+            <ul class="nav navbar-nav visible-xs-block">
+                <li>
+                    <a class="sidebar-mobile-main-toggle">
+                        <i class="fa fa-align-justify" aria-hidden="true" style="font-size:inherit"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="navbar-collapse pd-0" id="navbar-mobile">
+            <ul class="nav navbar-nav para-jus">
+                <li>
+                    <a class="sidebar-control sidebar-main-toggle hidden-xs">
+                        <i class="fa fa-align-justify" aria-hidden="true" style="font-size:inherit"></i>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown dropdown-notification">
+                    <a class="dropdown-toggle" data-toggle="modal" data-target="#BuyModal" title="Buy Rate Calculator">
+                        <i class="fa fa-calculator"></i>
+                        <span class="visible-xs-inline-block position-right">Buy Rate Calculator</span>
+                        <span id="labelBuyCalc" class="badge bg-warning-400" style="background:#0833b7">Buy</span>
+                    </a>
+                </li>
+                <li class="dropdown dropdown-notification ">
+                    <a class="dropdown-toggle" data-toggle="modal" data-target="#SellModal" title="Sell Rate Calculator">
+                        <i class="fa fa-calculator"></i>
+                        <span class="visible-xs-inline-block position-right">Sell Rate Calculator</span>
+                        <span id="labelSellCalc" class="badge bg-warning-400" style="background:#ff1962">Sell</span>
+                    </a>
+                </li>
+                <li class="dropdown dropdown-notification restrictCall">
+                    <a class="dropdown-toggle restrictCall" data-toggle="dropdown" title="Task List" onclick="GetFollowUpList(false)">
+                        <i class="fa fa-calendar restrictCall"></i>
+                        <span class="visible-xs-inline-block position-right restrictCall">Task List</span>
+                        <span id="labelTaskCount" class="badge bg-warning-400 restrictCall">0</span>
+                    </a>
+                </li>
+                <li class="dropdown dropdown-notification">
+                    <a class="dropdown-toggle" data-toggle="dropdown" title="Market Value" onclick="GetMarketOrderNotificationList(true)">
+                        <i class="fa fa-bell"></i>
+                        <span class="visible-xs-inline-block position-right">Market Value</span>
+                        <span id="labelNotifyMarketOrderCount" class="badge bg-warning-400">0</span>
+                    </a>
+                </li>
+                <li class="dropdown dropdown-notification">
+                    <a class="dropdown-toggle" data-toggle="dropdown" title="Awaiting Action" id="goToAwaitingAction">
+                        <i class="fa fa-tasks"></i>
+                        <span class="visible-xs-inline-block position-right">Awaiting Action</span>
+                        <span id="labelAwaitingActionCount" class="badge bg-warning-400">0</span>
+                    </a>
+                </li>
+
+                <li class="dropdown dropdown-notification">
+                    <a class="dropdown-toggle" data-toggle="dropdown" title="Market Order" id="goToMarketOrder">
+                        <i class="fa fa-money"></i>
+                        <span class="visible-xs-inline-block position-right">Market Order</span>
+                        <span id="labelMarketOrderCount" class="badge bg-warning-400">0</span>
+                    </a>
+                </li>
+
+
+
+                <li class="dropdown dropdown-user">
+                    <a class="dropdown-toggle" data-toggle="dropdown">
+                        @if (ProjectSession.LoginUserDetails != null && ProjectSession.LoginUserDetails.FirstName != null && ProjectSession.LoginUserDetails.LastName != null)
+                        {
+                            if (string.IsNullOrEmpty(ProjectSession.LoginUserDetails.ImageName))
+                            {
+                                <span class="userLogo"><label> @ProjectSession.LoginUserDetails.FirstName.Substring(0, 1)@ProjectSession.LoginUserDetails.LastName.Substring(0, 1)</label></span>
+                            }
+                            else
+                            {
+                                <img src="@ProjectSession.LoginUserDetails.ImageURL" alt="" style="max-width:36px;max-height:36px; min-width:36px; min-height:36px" />
+                            }
+                        }
+                        <i class="caret"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li><a href="@Url.Action("Logout", "Login")"><i class="fa fa-sign-out"></i>Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="page-container">
+        <div class="page-content">
+            <div class="sidebar sidebar-main">
+                <div class="sidebar-content">
+                    <div class="sidebar-category sidebar-category-visible">
+                        <div class="category-content pd-0">
+                            @Html.GenerateMenu()
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-wrapper">
+                <div class="body-content">
+                    @Html.Partial("_Notifications")
+                    @RenderBody()
+                    <hr />
+                </div>
+                <div class="footer text-muted">
+                    &copy; @DateTime.UtcNow.Year.
+                    TransferConnex by Satva Softech
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a id="back-to-top" href="#" class="btn btn-orange back-to-top" role="button" data-toggle="tooltip" data-placement="left">
+        <div class="btn btn-orange" id="divlblheader" style="top:0px;position:fixed;right:0px;z-index:1005;width: 100%;opacity: 0.8;"> <label id="lblheadertxt"></label> </div>
+        <span class="glyphicon glyphicon-chevron-up"></span>
+    </a>
+
+    <div class="loader">
+        <img src="~/Content/Images/loader.gif" alt="Loading..." />
+    </div>
+
+    @(Html.Kendo().Window()
+                    .Name("followupwindow")
+                    .Visible(false)
+                    .Draggable(true)
+                    .Width(800)
+                    .Modal(true).Content(
+                    @<text>
+                        <div class="panel panel-default" id="FollowUpReminderGrid">
+                            @(Html.Kendo().Grid<DashboardTaskReminderModel>()
+                                                                    .Name("gridTaskRemiderPopup")
+                                                                    .Columns(columns =>
+                                                                    {
+                                                                        columns.Bound(m => m.TaskId).Visible(true).ClientTemplate("<div style='height:20px;width:20px;background-color:#=ThemeColor#'></div>").Title("");
+                                                                        columns.Bound(m => m.TaskId).Visible(true).ClientTemplate(
+                                                                            "# if (ClientId > 0) { #" +
+                                                                            "<a class='active restrictCall' href='" + Url.Action("ManageClient", "Client") + "?ClientId=#=ClientId #'>" + "#=ClientCompanyName#" + "</a>" +
+                                                                            "# } else { #" +
+                                                                            "<a class='active restrictCall' href='" + Url.Action("ManageProspect", "Prospect") + "?ProspectId=#=ProspectId #'>" + "#=ProspectCompanyName#" + "</a>" +
+                                                                            "# } #"
+                                                                            ).Title("Company Name");
+                                                                        columns.Bound(m => m.TaskId).Visible(true).ClientTemplate(
+                                                                            "# if (ClientId > 0) { #" +
+                                                                            "<span>" + "#=ClientName#" + "</span>" +
+                                                                            "# } else { #" +
+                                                                            "<span>" + "#=ProspectName#" + "</span>" +
+                                                                            "# } #"
+                                                                            ).Title("Contact Name").Width(100);
+                                                                        //columns.Bound(m => m.Subject).Visible(true).Width(300).ClientTemplate("<a class='active' href='" + Url.Action("ManageClient", "Client") + "?ClientId=#=ClientId #'>" + "#=Subject#" + "</a>").Title("Client Task Subject");
+                                                                        //columns.Bound(m => m.Subject).Visible(true).Width(300).ClientTemplate("<a class='active' href='" + Url.Action("ManageProspect", "Prospect") + "?ProspectId=#=ProspectId #'>" + "#=Subject#" + "</a>").Title("Prospect Task Subject");
+                                                                        columns.Bound(m => m.TaskType).Visible(true);
+                                                                        columns.Bound(m => m.Notes).Visible(true);
+                                                                        columns.Bound(m => m.TaskReminderDatetimeString).Title("Task Reminder Time").Visible(true);
+                                                                        columns.Command(command =>
+                                                                        {
+                                                                            command.Edit().CancelText("Cancel").Text("Re-Schedule").UpdateText("Save");
+                                                                            command.Custom("Snooze").HtmlAttributes(new { @style = "margin:2px" }).Click("onSnooze").Text("Snooze");
+                                                                            command.Custom("Dismiss").HtmlAttributes(new { @style = "margin:2px" }).Click("onDismiss").Text("Dismiss");
+                                                                        }).HeaderHtmlAttributes(Common.CenterColumnStyle).Width(350)
+                                                                    .HtmlAttributes(Common.CenterColumnStyle)
+                                                                    .Title("Action")
+                                                                     ;
+                                                                    })
+                                                                    .Editable(e => e.Mode(GridEditMode.PopUp))
+                                                                    .Navigatable()
+                                                                    .NoRecords()
+                                                                    .Events(grid => grid.Edit("EditgridTaskRemiderPopup"))
+                                                                    .DataSource(dataSource => dataSource
+                                                                    .Ajax()
+                                                                    .ServerOperation(false)
+                                                                    .PageSize(10)
+                                                                    .Model(model =>
+                                                                    {
+                                                                        model.Id(d => d.TaskId);
+                                                                    })
+                                                                    .Update(update => update.Action("RescheduleTaskReminder", "Dashboard").Data("SetTaskDateStr"))
+                                                                    .Read(read => read.Action("GetTodayTaskRemiderPopUpList", "Dashboard").Data("DataTaskReminder"))
+                                                                    .Events(events => events.RequestEnd("onRequestEndTaskReminderPopUp"))
+                                                                    )
+                                                                    .Events(e => e.DataBound("OnBoundTaskReminderPopUp"))
+                            )
+                        </div>
+                    </text>)
+                                    .Width(1320)
+                                    .Height(400))
+    @(Html.Kendo().Window()
+                    .Name("newfollowupwindow")
+                    .Visible(false)
+                    .Draggable(true)
+                    .Width(800)
+                    .Modal(true).Content(
+                    @<text>
+                        <div class="panel panel-default table-responsive-box " id="newFollowUpReminderGrid">
+                            @(Html.Kendo().Grid<DashboardTaskReminderModel>()
+                                                                    .Name("gridTaskListPopup")
+                                                                    .Columns(columns =>
+                                                                    {
+                                                                        columns.Bound(m => m.TaskId).Visible(true).Width(200).ClientTemplate(
+                                                                        "# if (ClientId > 0) { #" +
+                                                                        "<a class='active restrictCall' href='" + Url.Action("ManageClient", "Client") + "?ClientId=#=ClientId #'>" + "#=ClientCompanyName#" + "</a>" +
+                                                                        "# } else { #" +
+                                                                        "<a class='active restrictCall' href='" + Url.Action("ManageProspect", "Prospect") + "?ProspectId=#=ProspectId #'>" + "#=ProspectCompanyName#" + "</a>" +
+                                                                        "# } #"
+                                                                        ).Title("Company Name");
+                                                                        columns.Bound(m => m.TaskId).Visible(true).Width(200).ClientTemplate(
+                                                                        "# if (ClientId > 0) { #" +
+                                                                        "<span>" + "#=ClientName#" + "</span>" +
+                                                                        "# } else { #" +
+                                                                        "<span>" + "#=ProspectName#" + "</span>" +
+                                                                        "# } #"
+                                                                        ).Title("Contact Name");
+                                                                        //columns.Bound(m => m.Subject).Visible(true).Width(300).ClientTemplate("<a class='active' href='" + Url.Action("ManageClient", "Client") + "?ClientId=#=ClientId #'>" + "#=Subject#" + "</a>").Title("Client Task Subject");
+                                                                        //columns.Bound(m => m.Subject).Visible(true).Width(300).ClientTemplate("<a class='active' href='" + Url.Action("ManageProspect", "Prospect") + "?ProspectId=#=ProspectId #'>" + "#=Subject#" + "</a>").Title("Prospect Task Subject");
+                                                                        columns.Bound(m => m.Subject).Visible(true).Width(250);
+                                                                        columns.Bound(m => m.TaskType).Visible(true).Width(150);
+                                                                        columns.Bound(m => m.Notes).Visible(true).Width(300);
+                                                                        columns.Bound(m => m.TaskReminderDatetimeString).Title("Task Reminder Time").Width(260).Visible(true);
+                                                                    })
+                                                                    .Editable(e => e.Mode(GridEditMode.PopUp))
+                                                                     .Pageable(x =>
+                                                                     {
+                                                                         x.Refresh(true);
+                                                                         x.PageSizes(new int[] { 10, 20, 50, 100 });
+                                                                     })
+                                                                    .Navigatable()
+                                                                    .NoRecords()
+                                                                    .DataSource(dataSource => dataSource
+                                                                    .Ajax()
+                                                                    .ServerOperation(false)
+                                                                    .PageSize(10)
+                                                                    .Model(model =>
+                                                                    {
+                                                                        model.Id(d => d.TaskId);
+                                                                    })
+                                                                    .Read(read => read.Action("GetTaskRemiderPopUpList", "Dashboard"))
+                                                                    .Events(events => events.RequestEnd("onRequestEndReminderPopUp"))
+                                                                    )
+                                                                    .Events(e => e.DataBound("OnBoundReminderPopUp"))
+                            )
+                        </div>
+                    </text>)
+                                    .Width(1100)
+                                    .Height(400))
+    @*Notification*@
+    @(Html.Kendo().Window()
+                    .Name("MarketOrderNotification")
+                    .Visible(false)
+                    .Draggable(true)
+                    .Width(800)
+                    .Modal(true).Content(
+                    @<text>
+                        <div class="panel panel-default table-responsive-box" id="newMarketOrderNotificationGrid">
+                            @(Html.Kendo().Grid<MarketValueNotificationModel>()
+                                                                    .Name("gridMarketOrderNotificationPopup")
+                                                                    .Columns(columns =>
+                                                                    {
+                                                                        columns.Bound(m => m.CompanyName).Visible(true).Width(400).ClientTemplate(
+                                                                                "<a class='active restrictCall' href='" + Url.Action("ManageClient", "Client") + "?ClientId=#=ClientId #'>" + "#=CompanyName#" + "</a>"
+                                                                            ).Title("Company Name");
+
+                                                                        columns.Bound(m => m.ClientName).Visible(true).Width(300);
+                                                                        columns.Bound(m => m.Message).Visible(true).Width(500);
+                                                                        columns.Bound(m => m.StrNotifyDate).Title("Notification Date").Width(150).Visible(true);
+                                                                        columns.Command(command =>
+                                                                        {
+                                                                            command.Custom("MarkAsRead").HtmlAttributes(new { @style = "margin:2px; background:#0833b7;color:white;" }).Click("onMarkedMarketOrderNotify").Text("Mark As Read");
+
+                                                                        }).HeaderHtmlAttributes(Common.CenterColumnStyle)
+                                                                        .HtmlAttributes(Common.CenterColumnStyle)
+                                                                        .Title("Action")
+                                                                        .Width(200);
+                                                                    })
+                                                                    .Editable(e => e.Mode(GridEditMode.PopUp))
+                                                                    .Navigatable()
+                                                                    .NoRecords()
+                                                                    .DataSource(dataSource => dataSource
+                                                                    .Ajax()
+                                                                    .ServerOperation(false)
+                                                                    .PageSize(10)
+                                                                    .Model(model =>
+                                                                    {
+                                                                        model.Id(d => d.NotificationId);
+                                                                    })
+                                                                    .Read(read => read.Action("GetMarketOrderNotificationList", "Dashboard"))
+                                                                    .Events(events => events.RequestEnd("onRequestEndMarketOrderNotificationPopUp"))
+                                                                    )
+                                                                    .Events(e => e.DataBound("OnBoundMarketOrderNotificationPopUp"))
+                            )
+                        </div>
+                    </text>)
+                                    .Width(1100)
+                                    .Height(400))
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/kendo")
+    @*<script src="~/ReportViewer/js/telerikReportViewer-11.0.17.406.js"></script>*@
+
+    @RenderSection("scripts", required: false)
+
+
+
+
+
+    <input type="hidden" id="SignalRGroupName" />
+
+    <input type="hidden" id="SignalR_To_ID" />
+
+    <input type="hidden" id="SignalR_From_ID" />
+
+    <input type="hidden" id="isPrivateChat" />
+
+    <input type="hidden" id="SignalR_TO_DB_ID" />
+
+    <input type="hidden" id="RingcentralCallStart" value="false" />
+
+    <input type="file" id="ChatAttachment" style="display:none;" multiple />
+
+    <div class="chatListParent">
+        <div id="ChatListDiv" style="display:none;">
+
+        </div>
+        <span class="chat-badge" id="parentChatBadge" style="display:none;position:fixed;right:20px;bottom:125px">0</span>
+    </div>
+
+    <div id="chat" style="display:none;">
+        <div class="chatmsgs" id="chatMessages">
+
+        </div>
+
+        <div class="panel-footer chatPanel">
+            <div class="col-xs-12 emojiPanel" id="diveEmojiPanel">
+                @Html.Partial("_PartialViewEmojis")
+            </div>
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <button class="btn btn-default btn-sm" style="padding:0px;" onclick="toggleEmojis()">
+                        <i class="fa fa-smile-o" aria-hidden="true" style="font-size:16px; padding:6px;"></i>
+                    </button>
+                </span>
+                <span class="input-group-btn">
+                    <button class="btn btn-default btn-sm" style="padding:0px;" onclick="toggleChatAttachment()">
+                        <i class="fa fa-paperclip" aria-hidden="true" style="font-size:16px; padding:6px;"></i>
+                        <span id="ChatAttachmentBadge" class="badge" style="position:absolute;top:-15px;left:15px;z-index:5;background-color:red;display:none">0</span>
+                    </button>
+                </span>
+                <input id="TxtMessage" type="text" data-emoji-input="unicode" data-emojiable="true" class="form-control input-sm smalltxt" placeholder="Type your message here...">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary btn-sm" id="btn-chat" onclick="sendMessage()">
+                        @*<i class="fa fa-paper-plane" aria-hidden="true" style="font-size:18px;padding:0;"></i>*@
+                        Send
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="chatWidget" onclick="openChatPopup()">
+        <div class="chatWidget-box">
+            <h4>Start Chat</h4>
+            <i class="fa fa-comments" style="font-size:20px;color:white"></i>
+        </div>
+    </div>
+    <div class="TodayTaskReminderWidget">
+        <div class="TodayTaskReminderWidget-box" title="Open Today's Task List" onclick="opentaskreminderpopup()">
+            <h4>Today's Task List</h4>&nbsp;
+            <i class="fa fa-window-maximize" style="font-size:16px;color:white"></i>
+        </div>
+        <div style="margin-bottom:20px;">
+            <a href="#" onclick="closeWidget()"><i class="fa fa-window-close" title="Close Today's Task List" style="font-size:16px;color:white;margin-left:1px;"></i></a>
+        </div>
+    </div>
+</body>
+
+
+
+</html>
+
+<!-- Buy Modal -->
+<div class="modal fade" id="BuyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog vertical-align-center">
+            <div class="modal-content" style="width:360px">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="ClearAll()">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">Buy Rate Calculator</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Partial("_BuyCalModal")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn_Buy_Email" data-toggle="modal" data-target="#EmailModal" onclick="CreateEmailBodyBuy()">Send Email</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="ClearAll()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sell Modal -->
+<div class="modal fade" id="SellModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog vertical-align-center">
+            <div class="modal-content" style="width:360px">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="ClearAll_Sell()">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">Sell Rate Calculator</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Partial("_SellCalModal")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn_Sell_Email" class="btn btn-primary" data-toggle="modal" data-target="#EmailModal" onclick="CreateEmailBodySell()">Send Email</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="ClearAll_Sell()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sell/Buy Email Modal -->
+<div class="modal fade" id="EmailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog vertical-align-center">
+            <div class="modal-content" style="width:80%">
+                <div class="modal-header">
+                    <button type="button" class="close" onclick="ClearAll_Email()">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">Compose Email</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Partial("CalcEmailEditor")
+                </div>
+                @*<div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="ClearAll_Email()">Close</button>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Edit Group Modal -->
+<div class="modal fade" id="AddEditGroupModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog vertical-align-center">
+            <div class="modal-content" style="width:60%">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">Group Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="idGroupModelBody">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="SaveSignalRGroupDetail()">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- chat Modal -->
+<div class="modal fade" id="NewChatModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog align-bottom-right" id="newChatModalPopup">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">Messenger</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="idNewChatBody" class="table-responsive">
+
+                    </div>
+                </div>
+                @*<div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="SaveSignalRGroupDetail()">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //function OnChangeDateTimePicker(e) {
+    //    var date = js_dd_mm_yyyy_hh_mm(e.sender._value);
+    //    $("#TaskReminderDatetimeString").val(date);
+    //}
+    var pageLoad = false;
+    function SetTaskDateStr() {
+        var date = $("#TaskReminderDatetimeString").data("kendoDateTimePicker").value();
+        return {
+            TaskDateTime: js_dd_mm_yyyy_hh_mm(date)
+        }
+    }
+
+    function Openfollowupwindow(isOpen) {
+        var window = $("#followupwindow").data("kendoWindow");
+        $('#btnSnoozeAll').remove();
+
+        if (isOpen) {
+            window.title("Today's Task List");
+            window.center();
+            window.open();
+            setTimeout(function () {
+                $('#followupwindow_wnd_title').parent().append('<button id="btnSnoozeAll" style="float: right; margin-right: 50px; margin-top: 4px;" class="btn btn-default btn-sm k-window-actions" onclick="onSnoozeAll()">SNOOZE ALL</button><div id="minimize_div"  class="k-window-actions"><a role="button" href="#" onclick="onminimize()"><span title="Minimize" class="k-icon k-i-minimize" role="presentation" style="margin-right:24px;margin-top:-3px;">Minimize</span></a></div>');
+            }, 500);
+            //window.setOptions({
+            //    actions: ["Minimize", "Close"]
+            //});
+        }
+        else {
+            $('#btnSnoozeAll').remove();
+            $('#minimize_div').remove();
+            window.close();
+
+        }
+    }
+
+    function onminimize() {
+        var window = $("#followupwindow").data("kendoWindow");
+        window.close();
+    }
+    function onRequestEndTaskReminderPopUp(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridTaskRemiderPopup').data('kendoGrid').dataSource.read();
+        }
+    }
+
+    function OnBoundTaskReminderPopUp() {
+        var grid = $("#gridTaskRemiderPopup").data('kendoGrid');
+        var gridData = grid.dataSource.data();
+        if (gridData.length >= 1) {
+            $(".TodayTaskReminderWidget").show();
+        }
+        else {
+            $(".TodayTaskReminderWidget").hide();
+        }
+
+    }
+
+    function Opennewfollowupwindow(isOpen) {
+        var window = $("#newfollowupwindow").data("kendoWindow");
+
+        if (isOpen) {
+            window.title("Task List");
+            window.center();
+            window.open();
+            window.minimize();
+            $("#newfollowupwindow").show();
+        }
+        else {
+            $("#newfollowupwindow").hide();
+            window.close();
+        }
+    }
+    function OpennewMarketNotificationwindow() {
+
+        var window = $("#MarketOrderNotification").data("kendoWindow");
+        window.title("Market Value Notification");
+        window.center();
+        window.open();
+    }
+    function onRequestEndReminderPopUp(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridTaskListPopup').data('kendoGrid').dataSource.read();
+        }
+        DisplayResponseMessage(para);
+    }
+    function onRequestEndMarketOrderNotificationPopUp(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridMarketOrderNotificationPopup').data('kendoGrid').dataSource.read();
+        }
+    }
+    function OnBoundReminderPopUp() {
+        var grid = $("#gridTaskListPopup").data('kendoGrid');
+        var gridData = grid.dataSource.data();
+        $("#labelTaskCount").html(gridData.length);
+
+        if (gridData <= 10) {
+            grid.pager.element.hide();
+        }
+      }
+    function OnBoundMarketOrderNotificationPopUp() {
+        var grid = $("#gridMarketOrderNotificationPopup").data('kendoGrid');
+        var gridData = grid.dataSource.data();
+        $("#labelNotifyMarketOrderCount").html(gridData.length);
+        mainChatBadgeValue();
+    }
+    function onMarkedMarketOrderNotify(e) {
+        if (e != 0) {
+            e.preventDefault();
+            var tr = $(e.target).closest("tr");
+            var data = this.dataItem(tr);
+
+            if (data != null) {
+                var NotificationId = data.NotificationId;
+                $.ajax({
+                    data: { NotificationId: NotificationId},
+                    type: "POST",
+                    url: '@Url.Action("MarketOrderNotificationUpdate", "Dashboard")'
+                }).done(function (data) {
+                    $('.loader').hide();
+                    if (data) {
+                        var grid = $("#gridMarketOrderNotificationPopup").data('kendoGrid');
+                        var gridData = grid.dataSource.data();
+
+                        grid.dataSource.read();
+                        if (gridData.length == 0) {
+                            var window = $("#MarketOrderNotification").data("kendoWindow");
+                            window.close();
+                        }
+                    }
+                });
+            }
+        }
+    }
+    function onSnooze(e) {
+        if (e != 0) {
+            e.preventDefault();
+            var tr = $(e.target).closest("tr");
+            var data = this.dataItem(tr);
+
+            if (data != null) {
+                taskId = data.TaskId;
+                $.ajax({
+                    data: { TaskId: taskId, SysDate: js_yyyy_mm_dd_hh_mm_ss() },
+                    type: "GET",
+                    url: '@Url.Action("TaskSnooze", "Dashboard")'
+                }).done(function (data) {
+                    $('.loader').hide();
+                    if (data == 1) {
+                        ShowSuccessMessage('Reminder will be populate after 15 minutes.');
+
+                        var grid = $("#gridTaskRemiderPopup").data('kendoGrid');
+                        var gridData = grid.dataSource.data();
+
+                        grid.dataSource.read();
+
+                        if (gridData.length == 0) {
+                            var window = $("#followupwindow").data("kendoWindow");
+                            window.close();
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    function onSnoozeAll() {
+       $.ajax({
+           data: { SysDate: js_yyyy_mm_dd_hh_mm_ss() },
+           type: "GET",
+           url: '@Url.Action("TaskSnoozeAll", "Dashboard")'
+       }).done(function (data) {
+           $('.loader').hide();
+           if (data) {
+               ShowSuccessMessage('Reminder will be populate after 15 minutes.');
+
+               var grid = $("#gridTaskRemiderPopup").data('kendoGrid');
+               var gridData = grid.dataSource.data();
+
+               grid.dataSource.read();
+
+               if (gridData.length == 0) {
+                   var window = $("#followupwindow").data("kendoWindow");
+                   window.close();
+               }
+           }
+       });
+    }
+
+    function onDismiss(e) {
+        if (e != 0) {
+            e.preventDefault();
+            var tr = $(e.target).closest("tr");
+            var data = this.dataItem(tr);
+
+            if (data != null) {
+                taskId = data.TaskId;
+                $.ajax({
+                    data: { TaskId: taskId },
+                    url: '@Url.Action("TaskDismiss", "Dashboard")'
+                }).done(function (data) {
+                    $('.loader').hide();
+                    if (data == 1) {
+                        GetFollowUpList(true);
+                        ShowSuccessMessage('Reminder Dismissed');
+                        var grid = $("#gridTaskRemiderPopup").data('kendoGrid');
+                        var gridData = grid.dataSource.data();
+
+                        grid.dataSource.read();
+
+                        if (gridData.length == 0) {
+                            var window = $("#followupwindow").data("kendoWindow");
+                            window.close();
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+
+
+    function GetFollowUpReminder() {
+        var gridObject = $("#gridTaskRemiderPopup").data('kendoGrid');
+        if (gridObject != undefined && gridObject != null) {
+            gridObject.dataSource.read();
+        }
+    }
+
+    function GetFollowUpList(load) {
+        pageLoad = load;
+        //var gridObject = $("#gridTaskListPopup").data('kendoGrid');
+        //if (gridObject != undefined && gridObject != null) {
+        //    gridObject.dataSource.read();
+        //}
+        var grid = $("#gridTaskListPopup").data('kendoGrid');
+        var gridData = grid.dataSource.data();
+        //$("#labelTaskCount").html(gridData.length);
+        if (gridData.length >= 1 && !pageLoad) {
+            Opennewfollowupwindow(true);
+        }
+       else {
+            Opennewfollowupwindow(false);
+        }
+    }
+    function GetMarketOrderNotificationList(isOpen) {
+
+        var gridObject = $("#gridMarketOrderNotificationPopup").data('kendoGrid');
+
+        if (gridObject != undefined && gridObject != null) {
+            gridObject.dataSource.read();
+            if (isOpen) {
+                OpennewMarketNotificationwindow();
+            }
+
+        }
+    }
+    function EditgridTaskRemiderPopup(e) {
+        var window = e.container.data("kendoWindow");
+        window.title("Reschedule Task Reminder");
+    };
+
+    function DataTaskReminder() {
+        return {
+            SysDate: js_yyyy_mm_dd_hh_mm_ss
+        }
+    }
+
+    function js_yyyy_mm_dd_hh_mm_ss() {
+        now = new Date();
+        year = "" + now.getFullYear();
+        month = "" + (now.getMonth() + 1); if (month.length == 1) { month = "0" + month; }
+        day = "" + now.getDate(); if (day.length == 1) { day = "0" + day; }
+        hour = "" + now.getHours(); if (hour.length == 1) { hour = "0" + hour; }
+        minute = "" + now.getMinutes(); if (minute.length == 1) { minute = "0" + minute; }
+        second = "" + now.getSeconds(); if (second.length == 1) { second = "0" + second; }
+        return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+    }
+
+    function js_dd_mm_yyyy_hh_mm(date) {
+        now = new Date(date);
+        year = "" + now.getFullYear();
+        month = "" + (now.getMonth() + 1); if (month.length == 1) { month = "0" + month; }
+        day = "" + now.getDate(); if (day.length == 1) { day = "0" + day; }
+        hour = "" + now.getHours(); if (hour.length == 1) { hour = "0" + hour; }
+        minute = "" + now.getMinutes(); if (minute.length == 1) { minute = "0" + minute; }
+        second = "" + now.getSeconds(); if (second.length == 1) { second = "0" + second; }
+        return day + "/" + month + "/" + year + " " + hour + ":" + minute;
+    }
+    function closeWidget() {
+        $(".TodayTaskReminderWidget").hide();
+    }
+
+
+</script>
+
+<script type="text/javascript">
+
+    //window.onload = function () {
+    ////    GetFollowUpReminder();
+    //};
+
+    $(document).ready(function () {
+
+
+        pageLoad = true;
+        kendo.culture('en-GB');
+        $.validator.addMethod('date', function (value, element) {
+            return this.optional(element) || kendo.parseDate(value);
+        });
+
+
+
+        // scroll body to 0px on click
+        $('#back-to-top').click(function () {
+            $('#back-to-top').tooltip('hide');
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+
+        $('#back-to-top').tooltip('show');
+
+
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 50) {
+
+                if ($("#lblheadertxt").html() == '') {
+                    $("#divlblheader").hide();
+                }
+                else {
+                    $("#divlblheader").show();
+                }
+                $('#back-to-top').fadeIn();
+
+                //$('#back-to-toptext').fadeIn();
+            } else {
+                $('#back-to-top').fadeOut();
+                //$('#back-to-toptext').fadeOut();
+            }
+        });
+
+        if ($("#goToAwaitingAction").val() != undefined) {
+
+        }
+        setInterval(function () {
+            //GetFollowUpReminder();
+            GetMarketOrderNotificationList(false);
+        }, 1000 * 1 * (60))
+
+    });
+
+    var IsPageRendered = false;
+    var IsAjax = 1;
+    $(window).load(function () {
+        IsPageRendered = true;
+        if (IsPageRendered)
+        {
+            $('.loader').hide();
+        }
+    });
+
+    $(window).bind('beforeunload', function () {
+        $('.loader').show();
+    });
+
+    function GetAwaitingActionCount()
+    {
+        $.ajax({
+            url: '@Url.Action("GetAwaitingActionCount", "Dashboard")',
+        }).done(function (data) {
+            if (data > -1) {
+                $("#labelAwaitingActionCount").html(data);
+                $('.loader').hide();
+            }
+            else {
+                /*window.location.reload();*/
+            }
+
+        });
+    }
+
+    function GetMarketOrderCount() {
+        $.ajax({
+            url: '@Url.Action("GetMarketOrderCount", "Dashboard")',
+        }).done(function(data) {
+            if (data > -1) {
+                $("#labelMarketOrderCount").html(data);
+                $('.loader').hide();
+            } else {
+               /* window.location.reload();*/
+            }
+        });
+    }
+
+    if ($("#goToAwaitingAction").val() != undefined) {
+        window.onload = function() {
+            GetAwaitingActionCount();
+            GetMarketOrderCount();
+        };
+    }
+
+    $('#goToAwaitingAction').click(function () {
+        if ($("#RingcentralCallStart").val() === "true") {
+            var r = confirm(
+                "Call will be disconnect automatically when redirect to any other page Are you sure you want to redirect to any other page?");
+            if (r == true) {
+                var urllink = '@Url.Action("Index", "Client")';
+                window.location.href = urllink + "?IsAwaitingAction=1";
+            }
+        } else {
+            var urllink = '@Url.Action("Index", "Client")';
+            window.location.href = urllink + "?IsAwaitingAction=1";
+        }
+    });
+
+    $('#goToMarketOrder').click(function() {
+
+        if ($("#RingcentralCallStart").val() === "true") {
+            var r = confirm(
+                "Call will be disconnect automatically when redirect to any other page Are you sure you want to redirect to any other page?");
+            if (r == true) {
+                var urllink = '@Url.Action("Index", "Client")';
+                window.location.href = urllink + "?IsMarketOrder=1";
+            }
+        } else {
+            var urllink = '@Url.Action("Index", "Client")';
+            window.location.href = urllink + "?IsMarketOrder=1";
+        }
+    });
+
+</script>
+
+<script type="text/javascript">
+    var chat;
+    var emojiCode = [];
+    $(document).ready(function () {
+        $(".loader").hide(); //added
+        $('.loader').bind('ajaxStart', function () {
+            $(this).show();
+        }).bind('ajaxStop', function () {
+            $(this).hide();
+        });
+        loadRingCentral();
+        toastr.options =
+        {
+            "closeButton": true,
+            "debug": true,
+            "positionClass": "toast-bottom-full-width",
+            "onclick": null,
+            "fadeIn": 3000,
+            "fadeOut": 1000,
+            "extendedTimeOut": 0,
+            "timeOut": 0,
+            "tapToDismiss":false
+        }
+
+        ConnectWithSignalR();
+
+        $("#ChatAttachment").change(function (event) {
+            if (event.target.files.length > 0) {
+                //for (var i = 0; i < event.target.files.length; i++) {
+                //    var reader = new FileReader();
+                //    var file;
+                //    reader.onload = function (e) {
+                //        file = e.target;
+                //        document.getElementById("wizardPicturePreview").setAttribute("src", file.result);
+                //    }
+                //    reader.readAsDataURL(event.target.files[i]);
+                //}
+                $("#ChatAttachmentBadge").show();
+                $("#ChatAttachmentBadge").html(event.target.files.length);
+                $('#TxtMessage').val('').focus();
+            }
+            else {
+                $("#ChatAttachmentBadge").hide();
+                $("#ChatAttachmentBadge").html(0);
+            }
+        });
+
+        if (window.Notification && Notification.permission !== "granted") {
+            Notification.requestPermission(function (status) {
+                if (Notification.permission !== status) {
+                    Notification.permission = status;
+                }
+            });
+        }
+
+        //setInterval(function () {
+        //    $("#ChatListDiv").html($("#ChatListDiv .chat-pb-5").sort(function (ele) {
+        //        console.log(ele);
+        //        //return Math.random() - 0.5;
+        //        //return Math.floor(Math.random() * 16);
+        //    }));
+        //}, 60000);
+    });
+
+    function dialNumber(tag) {
+        document.querySelector("#rc-widget-adapter-frame").contentWindow.postMessage({
+            type: 'rc-adapter-new-call',
+            phoneNumber: tag.innerHTML,
+            toCall: true,
+        }, '*');
+    }
+
+    function loadRingCentral() {
+        var rcs = document.createElement("script");
+        rcs.src = "https://ringcentral.github.io/ringcentral-web-widget/adapter.js";
+        var rcs0 = document.getElementsByTagName("script")[0];
+        rcs0.parentNode.insertBefore(rcs, rcs0);
+        window.addEventListener('message',
+            function (e) {
+
+                var data = e.data;
+                if (data && data.type == "rc-call-ring-notify") {
+                    // get call when user gets a ringing call
+                    GetClientIdByMobile(data.call.from);
+
+                    //$('body').append('<div id="over" style="position: absolute;top:0;left:0;width: 100%;height:100vh;z-index:99999;opacity:0.4;background-color: black;"></div>');
+                }
+
+                if (data && data.type == "rc-call-init-notify") {
+                    // get call when user creates a call from dial
+                    validateOutgoingCall(data.call.to);
+                }
+
+                if (data && data.type == "rc-call-start-notify") {
+                    // get call when a incoming call is accepted or a outbound call is connected
+                    $("#ClientSaveBtns").addClass("disabledButtons");
+                    $("#ClientSaveBtns1").addClass("disabledButtons");
+                    $("#ProspectSaveBtns").addClass("disabledButtons");
+
+                    $("#ClientWarnLabel").show();
+                    $("#ClientWarnLabel1").show();
+                    $("#ProspectWarnLabel").show();
+
+                    $("#RingcentralCallStart").val("true");
+                }
+
+                if (data && data.type == "rc-call-end-notify") {
+                    // get call on call end event
+                    $("#ClientSaveBtns").removeClass("disabledButtons");
+                    $("#ClientSaveBtns1").removeClass("disabledButtons");
+                    $("#ProspectSaveBtns").removeClass("disabledButtons");
+
+                    $("#ClientWarnLabel").hide();
+                    $("#ClientWarnLabel1").hide();
+                    $("#ProspectWarnLabel").hide();
+
+                    $("#btn_Buy_Email").text("Send Email");
+                    $("#btn_Sell_Email").text("Send Email");
+                    localStorage.removeItem("RingCentralClientId");
+                    localStorage.removeItem("RingCentralClient");
+                    localStorage.removeItem("RingCentralClientType");
+
+                    $("#RingcentralCallStart").val("false");
+
+                    //$("#over").remove();
+                }
+            }
+        );
+    }
+
+    function validateOutgoingCall(mobile) {
+        $.ajax({
+            data: { MobileNo: mobile },
+            type: "GET",
+            url: '@Url.Action("ValidateClientByRingCentralMobileAndSalesPerson", "Client")'
+        }).done(function (data) {
+            $('.loader').hide();
+            if (parseInt(data) == 0) {
+                document.querySelector("#rc-widget-adapter-frame").contentWindow.postMessage({
+                    type: 'rc-adapter-control-call',
+                    callAction: 'hangup',
+                }, '*');
+                //do not allow to call
+                toastr.warning("You are not allow to call this number.");
+
+            }
+        });
+    }
+
+    function GetClientIdByMobile(mobile) {
+        $.ajax({
+            data: { MobileNo: mobile },
+            type: "GET",
+            url: '@Url.Action("GetClientDetailByMobile", "Client")'
+        }).done(function (data) {
+            $('.loader').hide();
+
+            if (data && data.ClientId > 0) {
+                let clientNameHeader = "<div class='col-md-4 text-right pr-0'>Client Name :</div>"
+                if (data.ClientType.toString().toLowerCase() === "prospect") {
+                    clientNameHeader = "<div class='col-md-4 text-right pr-0'>Prospect Name :</div>"
+                }
+
+                var clientDetail = "<div class='row' style='border-bottom: 1px solid; font-size: 25px; text-align: center;'><span>Incoming Call. . .</span></div>" +
+                    "<div class='row pt-10'>" +
+                    "<div class='col-md-12'>" +
+                    "<div class='col-md-6'>" +
+                    clientNameHeader +
+                    "<div class='col-md-8'>" + data.ClientName + "</div>" +
+                    "</div>" +
+                    "<div class='col-md-6'>" +
+                    "<div class='col-md-4 text-right pr-0'>Company Name :</div>" +
+                    "<div class='col-md-8'>" + data.CompanyName + "</div>" +
+                    "</div>" +
+
+                    "</div>" +
+                    "</div>" +
+
+                    "<div class='row'>" +
+                    "<div class='col-md-12'>" +
+                    "<div class='col-md-6'>" +
+                    "<div class='col-md-4 text-right pr-0'>Trader :</div>" +
+                    "<div class='col-md-8'>" + data.TraderName + "</div>" +
+                    "</div>" +
+                    "<div class='col-md-6'>" +
+                    "<div class='col-md-4 text-right pr-0'>Sales Person :</div>" +
+                    "<div class='col-md-8'>" + data.SalesPersonName + "</div>" +
+                    "</div>" +
+
+                    "</div>" +
+                    "</div>" +
+                    "<div class='row'>" +
+                    "<div class='col-md-12'>" +
+                    "<div class='col-md-6'>" +
+                    "<div class='col-md-4 text-right pr-0'>Default Margin :</div>" +
+                    "<div class='col-md-8'>" + data.DefaultMargin + "</div>" +
+                    "</div>" +
+                    "</div>" +
+                    "</div>" +
+                    "<div class='row'>" +
+                    "<div class='col-md-12'>" +
+                    "<div class='col-md-12 text-center'>" +
+                    "<a href='javascript:void(0)' class='restrictCall' onclick='rediredtToClientDetailPage(" + data.ClientId + "," + data.ClientType + ")' style='background: #0833b7; color: white;' title='Click here to show more client details'>[ Click here for more client details ]</a>" +
+                    "</div>" +
+                    "</div>" +
+                    "</div>"
+                toastr.info(clientDetail, '', { timeOut: 20000 });
+                localStorage.setItem("RingCentralClientId", data.ClientId);
+                localStorage.setItem("RingCentralClient", data.CompanyName);
+                localStorage.setItem("RingCentralClientType", data.ClientType);
+
+                $("#btn_Buy_Email").text("Email this Rate To " + data.ClientName);
+                $("#btn_Sell_Email").text("Email this Rate To " + data.ClientName);
+            }
+        });
+    }
+    function rediredtToClientDetailPage(clientId, ClientType) {
+        if (ClientType.toString().toLowerCase() === "prospect") {
+            var urllink = '@Url.Action("ManageProspect", "Prospect")';
+            window.open(urllink + '?ProspectId=' + clientId);
+        }
+        else {
+            var urllink = '@Url.Action("ManageClient", "Client")';
+            window.open(urllink + '?ClientId=' + clientId);
+        }
+    }
+
+    function ConnectWithSignalR() {
+        chat = $.connection.chatHub;
+
+        chat.client.PublicMessage = function (Cl_Name, Cl_Message) {
+            console.log(Cl_Name, Cl_Message);
+            if (Cl_Name === "NewJoin" || Cl_Name === "Disconnect") {
+                loadChatContact();
+            }
+            //if (Cl_Name === "Disconnect") {
+            //    ChangeSignalUserOnlineStatus(Cl_Message);
+            //}
+            //$('#Chats').append('<li><strong>' + htmlEncode(Cl_Name) + '</strong>: ' + htmlEncode(Cl_Message) + '</li>');
+        };
+
+        chat.client.PrivateMessage = function (Cl_From_Id, Cl_Name, Cl_Message) {
+            let UserName = '@ProjectSession.LoginUserDetails.FirstName' + ' ' + '@ProjectSession.LoginUserDetails.LastName';
+            console.log(Cl_From_Id, Cl_Name, Cl_Message);
+            if (Cl_Name === UserName) {
+                $('#chatMessages').append('<div class="msg_b" style="font-size:16px;">' + htmlEncode(Cl_Message) + '</div>');
+            }
+            else {
+                if (Cl_From_Id === $('#SignalR_To_ID').val()) {
+                    $('#chatMessages').append(
+                        '<div class="msg_a" style="font-size:16px;">' + htmlEncode(Cl_Message) + '</div>'
+                        + '<label class="msg-time">' + formatAMPM(new Date()) + '</label>'
+                    );
+                }
+                else {
+                    let ChatListDiv = document.getElementById('ChatListDiv');
+                    let htmlElement = document.getElementById(Cl_From_Id);
+                    htmlElement.remove();
+                    if (Cl_Message.length > 0) {
+                        let badgeVal = htmlElement.querySelector('.chat-badge').innerHTML;
+                        badgeVal = parseInt(badgeVal) + 1;
+                        htmlElement.querySelector('.chat-badge').style.display = "block";
+                        htmlElement.querySelector('.chat-badge').innerHTML = badgeVal;
+                    }
+                    ChatListDiv.insertBefore(htmlElement, ChatListDiv.firstChild);
+
+                    mainChatBadgeValue();
+                    sendNotificationToWindow(Cl_Name, htmlEncode(Cl_Message));
+                }
+            }
+            scrollChatDiv();
+            //$('#Chats').append('<li><strong>' + htmlEncode(Cl_Name) + '</strong>: ' + htmlEncode(Cl_Message) + '</li>');
+        };
+
+        chat.client.GroupMessage = function (msgFrom, msg, GroupName) {
+            console.log(msgFrom, msg, GroupName);
+            var UserName = '@ProjectSession.LoginUserDetails.FirstName' + ' ' + '@ProjectSession.LoginUserDetails.LastName';
+            if (GroupName === $('#SignalRGroupName').val()) {
+                if (msgFrom === UserName) {
+                    $('#chatMessages').append(
+                        '<label class="msg-time lbl_msg_sender_b">' + msgFrom + '</label>'
+                        + '<div class="msg_b" style="font-size:16px;">' + htmlEncode(msg) + '</div>'
+                        + '<label class="msg-time">' + formatAMPM(new Date()) + '</label>'
+                    );
+                }
+                else {
+                    $('#chatMessages').append(
+                        '<label class="msg-time lbl_msg_sender_a">' + msgFrom + '</label>'
+                        + '<div class="msg_a" style="font-size:16px;">' + htmlEncode(msg) + '</div>'
+                        + '<label class="msg-time">' + formatAMPM(new Date()) + '</label>'
+                    );
+                }
+                scrollChatDiv();
+            }
+            else {
+                let ChatListDiv = document.getElementById('ChatListDiv');
+                let htmlElement = document.getElementById(GroupName);
+
+                var badgeVal = htmlElement.querySelector('.chat-badge').innerHTML;
+                badgeVal = parseInt(badgeVal) + 1;
+                htmlElement.querySelector('.chat-badge').style.display = "block";
+                htmlElement.querySelector('.chat-badge').innerHTML = badgeVal;
+
+                ChatListDiv.insertBefore(htmlElement, ChatListDiv.firstChild);
+
+                mainChatBadgeValue();
+                sendNotificationToWindow(msgFrom, htmlEncode(msg));
+            }
+
+
+            //$('#Chats').append('<li><strong>' + htmlEncode(msgFrom) + '</strong>: ' + htmlEncode(msg) + '</li>');
+        };
+
+        $.connection.hub.disconnected = function (data) {
+            console.log("Server disconnected", data);
+        };
+
+        // // connecting: 0, connected: 1, reconnecting: 2, disconnected: 4
+        $.connection.hub.stateChanged = function (change) {
+            if (change.newState === $.signalR.connectionState.reconnecting) {
+                console.log("liveFeed is reconnecting!");
+            }
+            else if (change.newState === $.signalR.connectionState.connected) {
+                console.log("liveFeed is connected!");
+            }
+            while (change.newState === $.signalR.connectionState.disconnected) {
+                console.log("in while loop reconnecting server");
+                $.connection.hub.start().done(function (data) {
+                    $("#SignalR_From_ID").val(data.id);
+                    SaveSignalRUserNGetContacts();
+                }).fail(function (er) {
+                    console.log("Hub error", er);
+                });
+            }
+        };
+
+        $.connection.hub.start().done(function (data) {
+            $("#SignalR_From_ID").val(data.id);
+            SaveSignalRUserNGetContacts();
+            //$('#BtnSend').click(function () {
+            //    chat.server.letsChat($('#UserName').val(), $('#TxtMessage').val());
+            //    $('#TxtMessage').val('').focus();
+            //});
+
+            //$('#BtnSendPrivate').click(function () {
+            //    privateChat();
+            //});
+
+            //$('#BtnSendInGroup').click(function () {
+            //    groupChat();
+            //});
+
+            //$('#btn-chat').click(function () {
+            //    sendMessage();
+            //});
+        }).fail(function (er) {
+            console.log("Hub error", er);
+        });
+    }
+
+    function triggerNewJoinAlert() {
+        chat.server.newJoinAlert($('#SignalR_From_ID').val());
+    }
+
+    function privateChat(Message) {
+        var UserName = '@ProjectSession.LoginUserDetails.FirstName' + ' ' + '@ProjectSession.LoginUserDetails.LastName';
+
+        if (Message) {
+            var tags = Message.split(',');
+            for (var i = 0; i < tags.length; i++) {
+                $('#chatMessages').append(
+                    '<div class="msg_b" style="font-size:16px;">' + tags[i] + '</div>'
+                    + '<label class="msg-time">' + formatAMPM(new Date()) + '</label>'
+                );
+
+                chat.server.privateChat($('#SignalR_To_ID').val(), $('#SignalR_From_ID').val(), UserName, tags[i]);
+            }
+        }
+
+        let msg = $("#TxtMessage").val().trim();
+        if (msg.length > 0) {
+            $('#chatMessages').append(
+                '<div class="msg_b" style="font-size:16px;">' + $('#TxtMessage').val() + '</div>'
+                + '<label class="msg-time">' + formatAMPM(new Date()) + '</label>'
+            );
+
+            chat.server.privateChat($('#SignalR_To_ID').val(), $('#SignalR_From_ID').val(), UserName, $('#TxtMessage').val());
+        }
+
+        scrollChatDiv();
+        $('#TxtMessage').val('').focus();
+    }
+
+    function groupChat(Message) {
+        //$('#chatMessages').append('<div class="msg_b" style="font-size:16px;">' + $('#TxtMessage').val() + '</div>');
+        var UserName = '@ProjectSession.LoginUserDetails.FirstName' + ' ' + '@ProjectSession.LoginUserDetails.LastName';
+
+        if (Message) {
+            var tags = Message.split(',');
+            for (var i = 0; i < tags.length; i++) {
+                chat.server.broadCastInGroup(UserName, tags[i], $("#SignalRGroupName").val());
+            }
+        }
+
+        let msg = $("#TxtMessage").val().trim();
+        if (msg.length > 0) {
+            chat.server.broadCastInGroup(UserName, $("#TxtMessage").val(), $("#SignalRGroupName").val());
+        }
+
+        $('#TxtMessage').val('').focus();
+    }
+
+    function joinGroup(GroupName) {
+        var UserName = '@ProjectSession.LoginUserDetails.FirstName' + ' ' + '@ProjectSession.LoginUserDetails.LastName';
+        chat.server.groupconnect(UserName, GroupName);
+    }
+
+    function sendMessage() {
+        //let pattern = new RegExp('(?:\uD83D(?:\uDD73\uFE0F?|\uDC41(?:(?:\uFE0F(?:\u200D\uD83D\uDDE8\uFE0F?)?|\u200D\uD83D\uDDE8\uFE0F?))?|[\uDDE8\uDDEF]\uFE0F?|\uDC4B(?:\uD83C[\uDFFB-\uDFFF])?|\uDD90(?:(?:\uD83C[\uDFFB-\uDFFF]|\uFE0F))?|[\uDD96\uDC4C\uDC48\uDC49\uDC46\uDD95\uDC47\uDC4D\uDC4E\uDC4A\uDC4F\uDE4C\uDC50\uDE4F\uDC85\uDCAA\uDC42\uDC43\uDC76\uDC66\uDC67](?:\uD83C[\uDFFB-\uDFFF])?|\uDC71(?:(?:\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2640\u2642]\uFE0F?))?)|\u200D(?:[\u2640\u2642]\uFE0F?)))?|\uDC68(?:(?:\uD83C(?:\uDFFB(?:\u200D(?:\uD83E(?:\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFC-\uDFFF]|[\uDDB0\uDDB1\uDDB3\uDDB2\uDDAF\uDDBC\uDDBD])|\u2695\uFE0F?|\uD83C[\uDF93\uDFEB\uDF3E\uDF73\uDFED\uDFA4\uDFA8]|\u2696\uFE0F?|\uD83D[\uDD27\uDCBC\uDD2C\uDCBB\uDE80\uDE92]|\u2708\uFE0F?))?|\uDFFC(?:\u200D(?:\uD83E(?:\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB\uDFFD-\uDFFF]|[\uDDB0\uDDB1\uDDB3\uDDB2\uDDAF\uDDBC\uDDBD])|\u2695\uFE0F?|\uD83C[\uDF93\uDFEB\uDF3E\uDF73\uDFED\uDFA4\uDFA8]|\u2696\uFE0F?|\uD83D[\uDD27\uDCBC\uDD2C\uDCBB\uDE80\uDE92]|\u2708\uFE0F?))?|\uDFFD(?:\u200D(?:\uD83E(?:\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF]|[\uDDB0\uDDB1\uDDB3\uDDB2\uDDAF\uDDBC\uDDBD])|\u2695\uFE0F?|\uD83C[\uDF93\uDFEB\uDF3E\uDF73\uDFED\uDFA4\uDFA8]|\u2696\uFE0F?|\uD83D[\uDD27\uDCBC\uDD2C\uDCBB\uDE80\uDE92]|\u2708\uFE0F?))?|\uDFFE(?:\u200D(?:\uD83E(?:\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB-\uDFFD\uDFFF]|[\uDDB0\uDDB1\uDDB3\uDDB2\uDDAF\uDDBC\uDDBD])|\u2695\uFE0F?|\uD83C[\uDF93\uDFEB\uDF3E\uDF73\uDFED\uDFA4\uDFA8]|\u2696\uFE0F?|\uD83D[\uDD27\uDCBC\uDD2C\uDCBB\uDE80\uDE92]|\u2708\uFE0F?))?|\uDFFF(?:\u200D(?:\uD83E(?:\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB-\uDFFE]|[\uDDB0\uDDB1\uDDB3\uDDB2\uDDAF\uDDBC\uDDBD])|\u2695\uFE0F?|\uD83C[\uDF93\uDFEB\uDF3E\uDF73\uDFED\uDFA4\uDFA8]|\u2696\uFE0F?|\uD83D[\uDD27\uDCBC\uDD2C\uDCBB\uDE80\uDE92]|\u2708\uFE0F?))?)|\u200D(?:\uD83E[\uDDB0\uDDB1\uDDB3\uDDB2\uDDAF\uDDBC\uDDBD]|\u2695\uFE0F?|\uD83C[\uDF93\uDFEB\uDF3E\uDF73\uDFED\uDFA4\uDFA8]|\u2696\uFE0F?|\uD83D(?:\uDC69\u200D\uD83D(?:\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?)|\uDC68\u200D\uD83D(?:\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?)|\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?|[\uDD27\uDCBC\uDD2C\uDCBB\uDE80\uDE92])|\u2708\uFE0F?|\u2764(?:\uFE0F\u200D\uD83D(?:\uDC8B\u200D\uD83D\uDC68|\uDC68)|\u200D\uD83D(?:\uDC8B\u200D\uD83D\uDC68|\uDC68)))))?|\uDC69(?:(?:\uD83C(?:\uDFFB(?:\u200D(?:\uD83E(?:\uDD1D\u200D\uD83D(?:\uDC69\uD83C[\uDFFC-\uDFFF]|\uDC68\uD83C[\uDFFC-\uDFFF])|[\uDDB0\uDDB1\uDDB3\uDDB2\uDDAF\uDDBC\uDDBD])|\u2695\uFE0F?|\uD83C[\uDF93\uDFEB\uDF3E\uDF73\uDFED\uDFA4\uDFA8]|\u2696\uFE0F?|\uD83D[\uDD27\uDCBC\uDD2C\uDCBB\uDE80\uDE92]|\u2708\uFE0F?))?|\uDFFC(?:\u200D(?:\uD83E(?:\uDD1D\u200D\uD83D(?:\uDC69\uD83C[\uDFFB\uDFFD-\uDFFF]|\uDC68\uD83C[\uDFFB\uDFFD-\uDFFF])|[\uDDB0\uDDB1\uDDB3\uDDB2\uDDAF\uDDBC\uDDBD])|\u2695\uFE0F?|\uD83C[\uDF93\uDFEB\uDF3E\uDF73\uDFED\uDFA4\uDFA8]|\u2696\uFE0F?|\uD83D[\uDD27\uDCBC\uDD2C\uDCBB\uDE80\uDE92]|\u2708\uFE0F?))?|\uDFFD(?:\u200D(?:\uD83E(?:\uDD1D\u200D\uD83D(?:\uDC69\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF]|\uDC68\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF])|[\uDDB0\uDDB1\uDDB3\uDDB2\uDDAF\uDDBC\uDDBD])|\u2695\uFE0F?|\uD83C[\uDF93\uDFEB\uDF3E\uDF73\uDFED\uDFA4\uDFA8]|\u2696\uFE0F?|\uD83D[\uDD27\uDCBC\uDD2C\uDCBB\uDE80\uDE92]|\u2708\uFE0F?))?|\uDFFE(?:\u200D(?:\uD83E(?:\uDD1D\u200D\uD83D(?:\uDC69\uD83C[\uDFFB-\uDFFD\uDFFF]|\uDC68\uD83C[\uDFFB-\uDFFD\uDFFF])|[\uDDB0\uDDB1\uDDB3\uDDB2\uDDAF\uDDBC\uDDBD])|\u2695\uFE0F?|\uD83C[\uDF93\uDFEB\uDF3E\uDF73\uDFED\uDFA4\uDFA8]|\u2696\uFE0F?|\uD83D[\uDD27\uDCBC\uDD2C\uDCBB\uDE80\uDE92]|\u2708\uFE0F?))?|\uDFFF(?:\u200D(?:\uD83E(?:\uDD1D\u200D\uD83D(?:\uDC69\uD83C[\uDFFB-\uDFFE]|\uDC68\uD83C[\uDFFB-\uDFFE])|[\uDDB0\uDDB1\uDDB3\uDDB2\uDDAF\uDDBC\uDDBD])|\u2695\uFE0F?|\uD83C[\uDF93\uDFEB\uDF3E\uDF73\uDFED\uDFA4\uDFA8]|\u2696\uFE0F?|\uD83D[\uDD27\uDCBC\uDD2C\uDCBB\uDE80\uDE92]|\u2708\uFE0F?))?)|\u200D(?:\uD83E[\uDDB0\uDDB1\uDDB3\uDDB2\uDDAF\uDDBC\uDDBD]|\u2695\uFE0F?|\uD83C[\uDF93\uDFEB\uDF3E\uDF73\uDFED\uDFA4\uDFA8]|\u2696\uFE0F?|\uD83D(?:\uDC69\u200D\uD83D(?:\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?)|\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?|[\uDD27\uDCBC\uDD2C\uDCBB\uDE80\uDE92])|\u2708\uFE0F?|\u2764(?:\uFE0F\u200D\uD83D(?:\uDC8B\u200D\uD83D[\uDC68\uDC69]|[\uDC68\uDC69])|\u200D\uD83D(?:\uDC8B\u200D\uD83D[\uDC68\uDC69]|[\uDC68\uDC69])))))?|[\uDC74\uDC75](?:\uD83C[\uDFFB-\uDFFF])?|[\uDE4D\uDE4E\uDE45\uDE46\uDC81\uDE4B\uDE47\uDC6E](?:(?:\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|\uDD75(?:(?:\uFE0F(?:\u200D(?:[\u2642\u2640]\uFE0F?))?|\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|[\uDC82\uDC77](?:(?:\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|\uDC78(?:\uD83C[\uDFFB-\uDFFF])?|\uDC73(?:(?:\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|[\uDC72\uDC70\uDC7C](?:\uD83C[\uDFFB-\uDFFF])?|[\uDC86\uDC87\uDEB6](?:(?:\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|[\uDC83\uDD7A](?:\uD83C[\uDFFB-\uDFFF])?|\uDD74(?:(?:\uD83C[\uDFFB-\uDFFF]|\uFE0F))?|\uDC6F(?:\u200D(?:[\u2642\u2640]\uFE0F?))?|[\uDEA3\uDEB4\uDEB5](?:(?:\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|[\uDEC0\uDECC\uDC6D\uDC6B\uDC6C](?:\uD83C[\uDFFB-\uDFFF])?|\uDDE3\uFE0F?|\uDC15(?:\u200D\uD83E\uDDBA)?|[\uDC3F\uDD4A\uDD77\uDD78\uDDFA\uDEE3\uDEE4\uDEE2\uDEF3\uDEE5\uDEE9\uDEF0\uDECE\uDD70\uDD79\uDDBC\uDD76\uDECD\uDDA5\uDDA8\uDDB1\uDDB2\uDCFD\uDD6F\uDDDE\uDDF3\uDD8B\uDD8A\uDD8C\uDD8D\uDDC2\uDDD2\uDDD3\uDD87\uDDC3\uDDC4\uDDD1\uDDDD\uDEE0\uDDE1\uDEE1\uDDDC\uDECF\uDECB\uDD49]\uFE0F?|[\uDE00\uDE03\uDE04\uDE01\uDE06\uDE05\uDE02\uDE42\uDE43\uDE09\uDE0A\uDE07\uDE0D\uDE18\uDE17\uDE1A\uDE19\uDE0B\uDE1B-\uDE1D\uDE10\uDE11\uDE36\uDE0F\uDE12\uDE44\uDE2C\uDE0C\uDE14\uDE2A\uDE34\uDE37\uDE35\uDE0E\uDE15\uDE1F\uDE41\uDE2E\uDE2F\uDE32\uDE33\uDE26-\uDE28\uDE30\uDE25\uDE22\uDE2D\uDE31\uDE16\uDE23\uDE1E\uDE13\uDE29\uDE2B\uDE24\uDE21\uDE20\uDE08\uDC7F\uDC80\uDCA9\uDC79-\uDC7B\uDC7D\uDC7E\uDE3A\uDE38\uDE39\uDE3B-\uDE3D\uDE40\uDE3F\uDE3E\uDE48-\uDE4A\uDC8B\uDC8C\uDC98\uDC9D\uDC96\uDC97\uDC93\uDC9E\uDC95\uDC9F\uDC94\uDC9B\uDC9A\uDC99\uDC9C\uDDA4\uDCAF\uDCA2\uDCA5\uDCAB\uDCA6\uDCA8\uDCA3\uDCAC\uDCAD\uDCA4\uDC40\uDC45\uDC44\uDC8F\uDC91\uDC6A\uDC64\uDC65\uDC63\uDC35\uDC12\uDC36\uDC29\uDC3A\uDC31\uDC08\uDC2F\uDC05\uDC06\uDC34\uDC0E\uDC2E\uDC02-\uDC04\uDC37\uDC16\uDC17\uDC3D\uDC0F\uDC11\uDC10\uDC2A\uDC2B\uDC18\uDC2D\uDC01\uDC00\uDC39\uDC30\uDC07\uDC3B\uDC28\uDC3C\uDC3E\uDC14\uDC13\uDC23-\uDC27\uDC38\uDC0A\uDC22\uDC0D\uDC32\uDC09\uDC33\uDC0B\uDC2C\uDC1F-\uDC21\uDC19\uDC1A\uDC0C\uDC1B-\uDC1E\uDC90\uDCAE\uDD2A\uDDFE\uDDFB\uDC92\uDDFC\uDDFD\uDD4C\uDED5\uDD4D\uDD4B\uDC88\uDE82-\uDE8A\uDE9D\uDE9E\uDE8B-\uDE8E\uDE90-\uDE9C\uDEF5\uDEFA\uDEB2\uDEF4\uDEF9\uDE8F\uDEA8\uDEA5\uDEA6\uDED1\uDEA7\uDEF6\uDEA4\uDEA2\uDEEB\uDEEC\uDCBA\uDE81\uDE9F-\uDEA1\uDE80\uDEF8\uDD5B\uDD67\uDD50\uDD5C\uDD51\uDD5D\uDD52\uDD5E\uDD53\uDD5F\uDD54\uDD60\uDD55\uDD61\uDD56\uDD62\uDD57\uDD63\uDD58\uDD64\uDD59\uDD65\uDD5A\uDD66\uDD25\uDCA7\uDEF7\uDD2E\uDC53-\uDC62\uDC51\uDC52\uDCFF\uDC84\uDC8D\uDC8E\uDD07-\uDD0A\uDCE2\uDCE3\uDCEF\uDD14\uDD15\uDCFB\uDCF1\uDCF2\uDCDE-\uDCE0\uDD0B\uDD0C\uDCBB\uDCBD-\uDCC0\uDCFA\uDCF7-\uDCF9\uDCFC\uDD0D\uDD0E\uDCA1\uDD26\uDCD4-\uDCDA\uDCD3\uDCD2\uDCC3\uDCDC\uDCC4\uDCF0\uDCD1\uDD16\uDCB0\uDCB4-\uDCB8\uDCB3\uDCB9\uDCB1\uDCB2\uDCE7-\uDCE9\uDCE4-\uDCE6\uDCEB\uDCEA\uDCEC-\uDCEE\uDCDD\uDCBC\uDCC1\uDCC2\uDCC5-\uDCD0\uDD12\uDD13\uDD0F-\uDD11\uDD28\uDD2B\uDD27\uDD29\uDD17\uDD2C\uDD2D\uDCE1\uDC89\uDC8A\uDEAA\uDEBD\uDEBF\uDEC1\uDED2\uDEAC\uDDFF\uDEAE\uDEB0\uDEB9-\uDEBC\uDEBE\uDEC2-\uDEC5\uDEB8\uDEAB\uDEB3\uDEAD\uDEAF\uDEB1\uDEB7\uDCF5\uDD1E\uDD03\uDD04\uDD19-\uDD1D\uDED0\uDD4E\uDD2F\uDD00-\uDD02\uDD3C\uDD3D\uDD05\uDD06\uDCF6\uDCF3\uDCF4\uDD31\uDCDB\uDD30\uDD1F-\uDD24\uDD34\uDFE0-\uDFE2\uDD35\uDFE3-\uDFE5\uDFE7-\uDFE9\uDFE6\uDFEA\uDFEB\uDD36-\uDD3B\uDCA0\uDD18\uDD33\uDD32\uDEA9])|\uD83E(?:[\uDD1A\uDD0F\uDD1E\uDD1F\uDD18\uDD19\uDD1B\uDD1C\uDD32\uDD33\uDDB5\uDDB6\uDDBB\uDDD2](?:\uD83C[\uDFFB-\uDFFF])?|\uDDD1(?:(?:\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:\uD83E(?:\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF]|[\uDDB0\uDDB1\uDDB3\uDDB2\uDDAF\uDDBC\uDDBD])|\u2695\uFE0F?|\uD83C[\uDF93\uDFEB\uDF3E\uDF73\uDFED\uDFA4\uDFA8]|\u2696\uFE0F?|\uD83D[\uDD27\uDCBC\uDD2C\uDCBB\uDE80\uDE92]|\u2708\uFE0F?))?)|\u200D(?:\uD83E(?:\uDD1D\u200D\uD83E\uDDD1|[\uDDB0\uDDB1\uDDB3\uDDB2\uDDAF\uDDBC\uDDBD])|\u2695\uFE0F?|\uD83C[\uDF93\uDFEB\uDF3E\uDF73\uDFED\uDFA4\uDFA8]|\u2696\uFE0F?|\uD83D[\uDD27\uDCBC\uDD2C\uDCBB\uDE80\uDE92]|\u2708\uFE0F?)))?|[\uDDD4\uDDD3](?:\uD83C[\uDFFB-\uDFFF])?|[\uDDCF\uDD26\uDD37](?:(?:\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|[\uDD34\uDDD5\uDD35\uDD30\uDD31\uDD36](?:\uD83C[\uDFFB-\uDFFF])?|[\uDDB8\uDDB9\uDDD9-\uDDDD](?:(?:\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|[\uDDDE\uDDDF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?|[\uDDCD\uDDCE\uDDD6\uDDD7\uDD38](?:(?:\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|\uDD3C(?:\u200D(?:[\u2642\u2640]\uFE0F?))?|[\uDD3D\uDD3E\uDD39\uDDD8](?:(?:\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|[\uDD23\uDD70\uDD29\uDD2A\uDD11\uDD17\uDD2D\uDD2B\uDD14\uDD10\uDD28\uDD25\uDD24\uDD12\uDD15\uDD22\uDD2E\uDD27\uDD75\uDD76\uDD74\uDD2F\uDD20\uDD73\uDD13\uDDD0\uDD7A\uDD71\uDD2C\uDD21\uDD16\uDDE1\uDD0E\uDD0D\uDD1D\uDDBE\uDDBF\uDDE0\uDDB7\uDDB4\uDD3A\uDDB0\uDDB1\uDDB3\uDDB2\uDD8D\uDDA7\uDDAE\uDD8A\uDD9D\uDD81\uDD84\uDD93\uDD8C\uDD99\uDD92\uDD8F\uDD9B\uDD94\uDD87\uDDA5\uDDA6\uDDA8\uDD98\uDDA1\uDD83\uDD85\uDD86\uDDA2\uDD89\uDDA9\uDD9A\uDD9C\uDD8E\uDD95\uDD96\uDD88\uDD8B\uDD97\uDD82\uDD9F\uDDA0\uDD40\uDD6D\uDD5D\uDD65\uDD51\uDD54\uDD55\uDD52\uDD6C\uDD66\uDDC4\uDDC5\uDD5C\uDD50\uDD56\uDD68\uDD6F\uDD5E\uDDC7\uDDC0\uDD69\uDD53\uDD6A\uDD59\uDDC6\uDD5A\uDD58\uDD63\uDD57\uDDC8\uDDC2\uDD6B\uDD6E\uDD5F-\uDD61\uDD80\uDD9E\uDD90\uDD91\uDDAA\uDDC1\uDD67\uDD5B\uDD42\uDD43\uDD64\uDDC3\uDDC9\uDDCA\uDD62\uDD44\uDDED\uDDF1\uDDBD\uDDBC\uDE82\uDDF3\uDE90\uDDE8\uDDE7\uDD47-\uDD49\uDD4E\uDD4F\uDD4D\uDD4A\uDD4B\uDD45\uDD3F\uDD4C\uDE80\uDE81\uDDFF\uDDE9\uDDF8\uDDF5\uDDF6\uDD7D\uDD7C\uDDBA\uDDE3-\uDDE6\uDD7B\uDE71-\uDE73\uDD7E\uDD7F\uDE70\uDDE2\uDE95\uDD41\uDDEE\uDE94\uDDFE\uDE93\uDDAF\uDDF0\uDDF2\uDDEA-\uDDEC\uDE78-\uDE7A\uDE91\uDE92\uDDF4\uDDF7\uDDF9-\uDDFD\uDDEF])|[\u263A\u2639\u2620\u2763\u2764]\uFE0F?|\u270B(?:\uD83C[\uDFFB-\uDFFF])?|[\u270C\u261D](?:(?:\uD83C[\uDFFB-\uDFFF]|\uFE0F))?|\u270A(?:\uD83C[\uDFFB-\uDFFF])?|\u270D(?:(?:\uD83C[\uDFFB-\uDFFF]|\uFE0F))?|\uD83C(?:\uDF85(?:\uD83C[\uDFFB-\uDFFF])?|\uDFC3(?:(?:\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|[\uDFC7\uDFC2](?:\uD83C[\uDFFB-\uDFFF])?|\uDFCC(?:(?:\uFE0F(?:\u200D(?:[\u2642\u2640]\uFE0F?))?|\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|[\uDFC4\uDFCA](?:(?:\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|\uDFCB(?:(?:\uFE0F(?:\u200D(?:[\u2642\u2640]\uFE0F?))?|\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|[\uDFF5\uDF36\uDF7D\uDFD4-\uDFD6\uDFDC-\uDFDF\uDFDB\uDFD7\uDFD8\uDFDA\uDFD9\uDFCE\uDFCD\uDF21\uDF24-\uDF2C\uDF97\uDF9F\uDF96\uDF99-\uDF9B\uDF9E\uDFF7\uDD70\uDD71\uDD7E\uDD7F\uDE02\uDE37]\uFE0F?|\uDFF4(?:(?:\u200D\u2620\uFE0F?|\uDB40\uDC67\uDB40\uDC62\uDB40(?:\uDC65\uDB40\uDC6E\uDB40\uDC67\uDB40\uDC7F|\uDC73\uDB40\uDC63\uDB40\uDC74\uDB40\uDC7F|\uDC77\uDB40\uDC6C\uDB40\uDC73\uDB40\uDC7F)))?|\uDFF3(?:(?:\uFE0F(?:\u200D\uD83C\uDF08)?|\u200D\uD83C\uDF08))?|\uDDE6\uD83C[\uDDE8-\uDDEC\uDDEE\uDDF1\uDDF2\uDDF4\uDDF6-\uDDFA\uDDFC\uDDFD\uDDFF]|\uDDE7\uD83C[\uDDE6\uDDE7\uDDE9-\uDDEF\uDDF1-\uDDF4\uDDF6-\uDDF9\uDDFB\uDDFC\uDDFE\uDDFF]|\uDDE8\uD83C[\uDDE6\uDDE8\uDDE9\uDDEB-\uDDEE\uDDF0-\uDDF5\uDDF7\uDDFA-\uDDFF]|\uDDE9\uD83C[\uDDEA\uDDEC\uDDEF\uDDF0\uDDF2\uDDF4\uDDFF]|\uDDEA\uD83C[\uDDE6\uDDE8\uDDEA\uDDEC\uDDED\uDDF7-\uDDFA]|\uDDEB\uD83C[\uDDEE-\uDDF0\uDDF2\uDDF4\uDDF7]|\uDDEC\uD83C[\uDDE6\uDDE7\uDDE9-\uDDEE\uDDF1-\uDDF3\uDDF5-\uDDFA\uDDFC\uDDFE]|\uDDED\uD83C[\uDDF0\uDDF2\uDDF3\uDDF7\uDDF9\uDDFA]|\uDDEE\uD83C[\uDDE8-\uDDEA\uDDF1-\uDDF4\uDDF6-\uDDF9]|\uDDEF\uD83C[\uDDEA\uDDF2\uDDF4\uDDF5]|\uDDF0\uD83C[\uDDEA\uDDEC-\uDDEE\uDDF2\uDDF3\uDDF5\uDDF7\uDDFC\uDDFE\uDDFF]|\uDDF1\uD83C[\uDDE6-\uDDE8\uDDEE\uDDF0\uDDF7-\uDDFB\uDDFE]|\uDDF2\uD83C[\uDDE6\uDDE8-\uDDED\uDDF0-\uDDFF]|\uDDF3\uD83C[\uDDE6\uDDE8\uDDEA-\uDDEC\uDDEE\uDDF1\uDDF4\uDDF5\uDDF7\uDDFA\uDDFF]|\uDDF4\uD83C\uDDF2|\uDDF5\uD83C[\uDDE6\uDDEA-\uDDED\uDDF0-\uDDF3\uDDF7-\uDDF9\uDDFC\uDDFE]|\uDDF6\uD83C\uDDE6|\uDDF7\uD83C[\uDDEA\uDDF4\uDDF8\uDDFA\uDDFC]|\uDDF8\uD83C[\uDDE6-\uDDEA\uDDEC-\uDDF4\uDDF7-\uDDF9\uDDFB\uDDFD-\uDDFF]|\uDDF9\uD83C[\uDDE6\uDDE8\uDDE9\uDDEB-\uDDED\uDDEF-\uDDF4\uDDF7\uDDF9\uDDFB\uDDFC\uDDFF]|\uDDFA\uD83C[\uDDE6\uDDEC\uDDF2\uDDF3\uDDF8\uDDFE\uDDFF]|\uDDFB\uD83C[\uDDE6\uDDE8\uDDEA\uDDEC\uDDEE\uDDF3\uDDFA]|\uDDFC\uD83C[\uDDEB\uDDF8]|\uDDFD\uD83C\uDDF0|\uDDFE\uD83C[\uDDEA\uDDF9]|\uDDFF\uD83C[\uDDE6\uDDF2\uDDFC]|[\uDFFB-\uDFFF\uDF38-\uDF3C\uDF37\uDF31-\uDF35\uDF3E-\uDF43\uDF47-\uDF53\uDF45\uDF46\uDF3D\uDF44\uDF30\uDF5E\uDF56\uDF57\uDF54\uDF5F\uDF55\uDF2D-\uDF2F\uDF73\uDF72\uDF7F\uDF71\uDF58-\uDF5D\uDF60\uDF62-\uDF65\uDF61\uDF66-\uDF6A\uDF82\uDF70\uDF6B-\uDF6F\uDF7C\uDF75\uDF76\uDF7E\uDF77-\uDF7B\uDF74\uDFFA\uDF0D-\uDF10\uDF0B\uDFE0-\uDFE6\uDFE8-\uDFED\uDFEF\uDFF0\uDF01\uDF03-\uDF07\uDF09\uDFA0-\uDFA2\uDFAA\uDF11-\uDF20\uDF0C\uDF00\uDF08\uDF02\uDF0A\uDF83\uDF84\uDF86-\uDF8B\uDF8D-\uDF91\uDF80\uDF81\uDFAB\uDFC6\uDFC5\uDFC0\uDFD0\uDFC8\uDFC9\uDFBE\uDFB3\uDFCF\uDFD1-\uDFD3\uDFF8\uDFA3\uDFBD\uDFBF\uDFAF\uDFB1\uDFAE\uDFB0\uDFB2\uDCCF\uDC04\uDFB4\uDFAD\uDFA8\uDF92\uDFA9\uDF93\uDFBC\uDFB5\uDFB6\uDFA4\uDFA7\uDFB7-\uDFBB\uDFA5\uDFAC\uDFEE\uDFF9\uDFE7\uDFA6\uDD8E\uDD91-\uDD9A\uDE01\uDE36\uDE2F\uDE50\uDE39\uDE1A\uDE32\uDE51\uDE38\uDE34\uDE33\uDE3A\uDE35\uDFC1\uDF8C])|\u26F7\uFE0F?|\u26F9(?:(?:\uFE0F(?:\u200D(?:[\u2642\u2640]\uFE0F?))?|\uD83C(?:[\uDFFB-\uDFFF](?:\u200D(?:[\u2642\u2640]\uFE0F?))?)|\u200D(?:[\u2642\u2640]\uFE0F?)))?|[\u2618\u26F0\u26E9\u2668\u26F4\u2708\u23F1\u23F2\u2600\u2601\u26C8\u2602\u26F1\u2744\u2603\u2604\u26F8\u2660\u2665\u2666\u2663\u265F\u26D1\u260E\u2328\u2709\u270F\u2712\u2702\u26CF\u2692\u2694\u2699\u2696\u26D3\u2697\u26B0\u26B1\u26A0\u2622\u2623\u2B06\u2197\u27A1\u2198\u2B07\u2199\u2B05\u2196\u2195\u2194\u21A9\u21AA\u2934\u2935\u269B\u2721\u2638\u262F\u271D\u2626\u262A\u262E\u25B6\u23ED\u23EF\u25C0\u23EE\u23F8-\u23FA\u23CF\u2640\u2642\u2695\u267E\u267B\u269C\u2611\u2714\u2716\u303D\u2733\u2734\u2747\u203C\u2049\u3030\u00A9\u00AE\u2122]\uFE0F?|[\u0023\u002A\u0030-\u0039](?:\uFE0F\u20E3|\u20E3)|[\u2139\u24C2\u3297\u3299\u25FC\u25FB\u25AA\u25AB]\uFE0F?|[\u2615\u26EA\u26F2\u26FA\u26FD\u2693\u26F5\u231B\u23F3\u231A\u23F0\u2B50\u26C5\u2614\u26A1\u26C4\u2728\u26BD\u26BE\u26F3\u267F\u26D4\u2648-\u2653\u26CE\u23E9-\u23EC\u2B55\u2705\u274C\u274E\u2795-\u2797\u27B0\u27BF\u2753-\u2755\u2757\u26AB\u26AA\u2B1B\u2B1C\u25FE\u25FD])');
+        let msg = $("#TxtMessage").val().trim();
+
+        var files = $('#ChatAttachment').prop('files');
+        if (files.length > 0) {
+            if ($("#isPrivateChat").val().toString().toLowerCase() === "true") {
+                SavePrivateChatToDB($("#TxtMessage").val());
+            }
+            else {
+                SaveGroupChatToDB($("#TxtMessage").val());
+            }
+        }
+        else {
+            if (msg.length > 0) {
+                if ($("#diveEmojiPanel").is(":visible")) {
+                    toggleEmojis();
+                }
+
+                //if (pattern.test(msg)) {
+                //    console.log(emojiCode)
+                //    for (var i = 0; i < emojiCode.length; i++) {
+                //        msg = msg.replace(pattern, emojiCode[i]);
+                //    }
+                //}
+
+                //$("#TxtMessage").val(msg);
+
+                if ($("#isPrivateChat").val().toString().toLowerCase() === "true") {
+                    SavePrivateChatToDB($("#TxtMessage").val());
+                }
+                else {
+                    SaveGroupChatToDB($("#TxtMessage").val());
+                }
+            }
+            else {
+                $('#TxtMessage').val('').focus();
+                return false;
+            }
+        }
+    }
+
+    function htmlEncode(value) {
+        //var encodedValue = $('<div />').text(value).html();
+        //return encodedValue;
+
+        return value;
+    }
+
+    function openChatPopup() {
+        var chatBaseUrl = '@System.Configuration.ConfigurationManager.AppSettings["ChatBaseUrl"]';
+        var userId = '@Security.Encrypt(ProjectSession.LoginUserDetails.UserId.ToString())';
+
+        /*window.location.href = "/SignalRHelper/LoadcontactsListToslack";*/
+        //window.location.href = chatBaseUrl + 'Login/Login?returnUrl=null&userId=' + userId;
+        window.open(chatBaseUrl + 'Login/Login?returnUrl=null&userId=' + userId, '_blank');
+
+    //    if ($(window).width() <= 700) {
+    //        $(".Adapter_minimized.Adapter_header").hide();
+    //        $("#ChatListDiv").dialog({
+    //            dialogClass: "ChatListChatList",
+    //            title: "Messenger",
+    //            fluid: true,
+    //            resizable: false,
+    //            width: "100vw",
+    //            height: $(window).height(),
+    //            zIndex: 99,
+    //            modal: true,
+    //            open: function (event, ui) {
+    //                $('.ui-widget-overlay').bind('click', function () {
+    //                    CloseJqueryDialog();
+    //                });
+
+    //                $(event.target).dialog('widget')
+    //                    .css({ position: 'fixed' })
+    //                    .position({ my: 'right bottom', at: 'right bottom', of: window });
+    //            },
+    //        }).prev(".ui-dialog-titlebar")
+				//.css("background", "#3466ae");
+    //    }
+    //    else {
+    //        $("#ChatListDiv").dialog({
+    //            dialogClass: "ChatListChatList",
+    //            title: "Messenger",
+    //            fluid: true,
+    //            resizable: false,
+    //            width: 370,
+    //            height: $(window).height() * 0.8,
+    //            zIndex: 99,
+    //            modal: true,
+    //            open: function (event, ui) {
+    //                $('.ui-widget-overlay').bind('click', function () {
+    //                    CloseJqueryDialog();
+    //                });
+
+    //                $(event.target).dialog('widget')
+    //                    .css({ position: 'fixed' })
+    //                    .position({ my: 'right bottom', at: 'right bottom-55', of: window });
+    //            },
+    //        }).prev(".ui-dialog-titlebar")
+    //            .css("background", "linear-gradient(#0967b8 0%, #3957b3 100%)");
+    //    }
+
+    //    addCloseButtonInChat();
+    //    placeCreateGroupbtn();
+
+
+        //$('#NewChatModal').modal('toggle');
+    }
+
+    function CloseJqueryDialog() {
+        $("#ChatListDiv").dialog('close');
+        try {
+            if ($('#chat').dialog('isOpen')) {
+                $('#chat').dialog('close');
+            }
+        } catch (e) {
+
+        }
+    }
+
+    function startChat(data, UserName, isPrivate, DBID, isGroupOwner, isOnline) {
+        try {
+
+            if ($('#chat').dialog('isOpen')) {
+                //close dialog code
+
+                $('#chat').dialog('close');
+                console.log("closed");
+            }
+        } catch (e) {
+
+        }
+        //SignalR_TO_DB_ID
+        //SignalR_TO_GROUP_DB_ID
+        const myNode = document.getElementById("chatMessages");
+        myNode.textContent = '';
+
+        var Title = '';
+
+        $("#SignalR_TO_DB_ID").val(DBID);
+        $("#isPrivateChat").val(isPrivate);
+        if (isPrivate.toString().toLowerCase() == 'true') {
+            $("#SignalRGroupName").val('');
+            $("#SignalR_To_ID").val(data);
+            Title = "Conversation with " + UserName.toString();
+            LoadPrivateChatFromDB();
+        }
+        else {
+            $("#SignalRGroupName").val(UserName);
+            $("#SignalR_To_ID").val('');
+            Title = "Conversation in " + UserName.toString() + " Group";
+            LoadGroupChatFromDB();
+        }
+
+        document.getElementById(data).querySelector('.chat-badge').innerHTML = 0;
+        document.getElementById(data).querySelector('.chat-badge').style.display = "none";
+        mainChatBadgeValue();
+        //$("#" + data)[0].querySelector('.chat-badge').style.display = "none";
+
+        if ($(window).width() <= 700) {
+            $("#chat").dialog({
+                dialogClass: "ChatDialogChatDialog",
+                title: Title,
+                fluid: true,
+                resizable: false,
+                width: "100vw",
+                height: $(window).height(),
+                zIndex: 100,
+                open: function (event, ui) {
+                    $(event.target).dialog('widget')
+                        .css({ position: 'fixed' })
+                        .position({ my: 'right bottom', at: 'right bottom', of: window });
+                }
+            }).prev(".ui-dialog-titlebar").css("background", "linear-gradient(#0967b8 0%, rgb(57, 87, 179) 100%)");
+        }
+        else {
+            $("#chat").dialog({
+                dialogClass: "ChatDialogChatDialog",
+                title: Title,
+                fluid: true,
+                resizable: false,
+                width: 370,
+                height: $(window).height() * 0.8,
+                zIndex: 10000,
+                open: function (event, ui) {
+                    $(event.target).dialog('widget')
+                        .css({ position: 'fixed' })
+                        .position({ my: 'right', at: 'left', of: $('.ChatListChatList')[0] });
+                }
+            }).prev(".ui-dialog-titlebar").css("background", "linear-gradient(#0967b8 0%, rgb(57, 87, 179) 100%)");
+        }
+
+
+        //$(event.target).dialog('widget')
+        //    .css({ position: 'fixed' })
+        //    .position({ my: 'right bottom', at: 'right bottom', of: window });
+
+        //$(event.target).dialog('widget')
+        //    .css({ position: 'fixed' })
+        //    .position({ my: 'right', at: 'left', of: $('.ChatListChatList')[0] });
+
+        addCloseButtonInChat(isOnline);
+        removeEditGroupbtn();
+        if (isPrivate.toString().toLowerCase() == 'false' && isGroupOwner.toString().toLowerCase() == 'true') {
+            placeEditGroupbtn(DBID);
+        }
+        $('#TxtMessage').val('').focus();
+    }
+
+    $("#chat").on("dialogclose", function (event, ui) {
+        $("#SignalRGroupName").val('');
+        $("#SignalR_To_ID").val('');
+        $("#isPrivateChat").val('');
+        $("#SignalR_TO_DB_ID").val('');
+    });
+
+    $("#ChatListDiv").on("dialogclose", function (event, ui) {
+        $(".Adapter_minimized.Adapter_header").show();
+    });
+
+    $('#TxtMessage').keypress(function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            sendMessage();
+            return false;
+        }
+    });
+
+    function ChangeSignalUserOnlineStatus() {
+        $('.loader').show();
+        $.ajax({
+            url: '@Url.Action("ChangeUserOnlineStatus", "SignalRHelper")',
+            async: false,
+            type: 'POST',
+            success: function (data) {
+                $('.loader').hide();
+                if (data.Success) {
+                    loadChatContact();
+                }
+                else {
+                    //ShowErrorMessage("Something went wrong please try again later.");
+                }
+            }
+        });
+    }
+
+    function SaveGroupChatToDB(Message) {
+        $('.loader').show();
+        var files = $('#ChatAttachment').prop('files');
+        let attachmentfile = new FormData();
+        for (let index = 0; index < files.length; index++) {
+            attachmentfile.append('file' + index, files[index]);
+        }
+        attachmentfile.append('SignalRGroupId', $("#SignalR_TO_DB_ID").val());
+        attachmentfile.append('Msg', Message);
+
+        $.ajax({
+            url: '@Url.Action("SaveGroupConversations", "SignalRHelper")',
+            async: false,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: attachmentfile,
+            success: function (data) {
+                $('.loader').hide();
+                if (data.Success) {
+                    emojiCode = [];
+                    $('#ChatAttachment').val('');
+                    $("#ChatAttachmentBadge").hide();
+                    $("#ChatAttachmentBadge").html(0);
+                    groupChat(data.Data);
+                    $('#TxtMessage').val('');
+                }
+                else {
+                    ShowErrorMessage("Something went wrong please try again later.");
+                }
+            }
+        });
+    }
+
+    function LoadGroupChatFromDB() {
+        $('.loader').show();
+        $.ajax({
+            url: '@Url.Action("GetGroupConversations", "SignalRHelper")',
+            async: false,
+            type: 'POST',
+            data: { SignalRGroupId: $("#SignalR_TO_DB_ID").val()},
+            success: function (data) {
+                $('.loader').hide();
+                if (data.Success && data.Data != null) {
+                    if (data.Data.length > 0) {
+                        for (var i = 0; i < data.Data.length; i++) {
+                            if (data.Data[i].MsgFrom === data.MySignalRUserId) {
+                                //message from this side
+                                $('#chatMessages').append(
+                                    '<label class="msg-time lbl_msg_sender_b">' + data.Data[i].UserName + '</label>'
+                                    + '<div class="msg_b" style="font-size:16px;">' + data.Data[i].Msg + '</div>'
+                                    + '<label class="msg-time">' + data.Data[i].StrMsgDateTime + '</label>'
+                                );
+                            }
+                            else {
+                                //message from other side
+                                $('#chatMessages').append(
+                                    '<label class="msg-time lbl_msg_sender_a">' + data.Data[i].UserName + '</label>'
+                                    + '<div class="msg_a" style="font-size:16px;">' + data.Data[i].Msg + '</div>'
+                                    + '<label class="msg-time">' + data.Data[i].StrMsgDateTime + '</label>'
+                                );
+                            }
+                        }
+                        scrollChatDiv();
+                    }
+                }
+            }
+        });
+    }
+
+    function SavePrivateChatToDB(Message) {
+        $('.loader').show();
+        var files = $('#ChatAttachment').prop('files');
+        let attachmentfile = new FormData();
+        for (let index = 0; index < files.length; index++) {
+            attachmentfile.append('file' + index, files[index]);
+        }
+        attachmentfile.append('MsgTo', $("#SignalR_TO_DB_ID").val());
+        attachmentfile.append('Msg', Message);
+        attachmentfile.append('chatId', 0);
+
+        $.ajax({
+            url: '@Url.Action("SavePrivateConversations", "SignalRHelper")',
+            async: false,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: attachmentfile,
+            success: function (data) {
+                $('.loader').hide();
+                if (data.Success) {
+                    emojiCode = [];
+                    $('#ChatAttachment').val('');
+                    $("#ChatAttachmentBadge").hide();
+                    $("#ChatAttachmentBadge").html(0);
+                    privateChat(data.Data);
+                    $("#TxtMessage").val('');
+                }
+                else {
+                    ShowErrorMessage("Something went wrong please try again later.");
+                }
+            }
+        });
+    }
+
+    function LoadPrivateChatFromDB() {
+        $('.loader').show();
+        $.ajax({
+            url: '@Url.Action("GetPrivateConversations", "SignalRHelper")',
+            async: false,
+            type: 'POST',
+            data: { MsgTo: $("#SignalR_TO_DB_ID").val()},
+            success: function (data) {
+                $('.loader').hide();
+                if (data.Success && data.Data != null) {
+                    if (data.Data.length > 0) {
+                        for (var i = 0; i < data.Data.length; i++) {
+                            if (data.Data[i].MsgFrom === parseInt($("#SignalR_TO_DB_ID").val())) {
+                                //message from other side
+                                $('#chatMessages').append(
+                                    '<div class="msg_a" style="font-size:16px;">' + data.Data[i].Msg + '</div>'
+                                    + '<label class="msg-time">' + data.Data[i].StrMsgDateTime + '</label>'
+                                );
+                            }
+                            else {
+                                //message from this side
+                                $('#chatMessages').append(
+                                    '<div class="msg_b" style="font-size:16px;">' + data.Data[i].Msg + '</div>'
+                                    + '<label class="msg-time">' + data.Data[i].StrMsgDateTime + '</label>'
+                                );
+                            }
+                        }
+                        scrollChatDiv();
+                    }
+                }
+            }
+        });
+    }
+
+    function SaveSignalRUserNGetContacts() {
+        $('.loader').show();
+        $.ajax({
+            url: '@Url.Action("SaveUserNGetContacts", "SignalRHelper")',
+            async: false,
+            type: 'POST',
+            data: { SignalRId: $("#SignalR_From_ID").val() },
+            success: function (data) {
+                $('.loader').hide();
+                if (data.Success) {
+                    triggerNewJoinAlert();
+                    loadChatContact();
+                }
+            }
+        });
+    }
+
+    function loadChatContact() {
+        $('.loader').show();
+        $.ajax({
+            url: encodeURI('@Url.Action("GetContactNGroupsList", "SignalRHelper")'),
+            type: "POST",
+            async: false,
+            success: function (data) {
+                $('.loader').hide();
+                if (data.Success && data.Data.length > 0) {
+                    const myNode = document.getElementById("ChatListDiv");
+                    myNode.textContent = '';
+                    for (var i = 0; i < data.Data.length; i++) {
+
+                        let id = data.Data[i].SignalRId;
+                        let userName = data.Data[i].UserName;
+                        let isPrivate = data.Data[i].IsPrivate;
+                        let isOnline = data.Data[i].IsOnline;
+                        let onlineDateTime = data.Data[i].OnlineDateTime;
+                        let isGroupOwner = data.Data[i].IsGroupOwner;
+                        let initials = data.Data[i].UserInitials;
+                        let unReadCount = data.Data[i].UnReadCount;
+                        let imageName = data.Data[i].ImageName;
+                        let imageURL = data.Data[i].ImageURL;
+                        let DBID = 0;
+
+                        let onlineofflinestatus = '<div class="status-circle-offline"></div>';
+
+                        //if (data.Data[i].IsOnline) {
+                        //    onlineofflinestatus = '<div class="status-circle-online"></div>';
+                        //}
+                        // Changes for user status
+                        if (data.Data[i].UserStatus > 1) {
+                            if (data.Data[i].UserStatus == 2) {
+                                onlineofflinestatus = '<div class="status-circle-away"></div>';
+                            }
+                            else if (data.Data[i].UserStatus == 3) {
+                                onlineofflinestatus = '<div class="status-circle-dnd"></div>';
+                            }
+                            else if (data.Data[i].UserStatus == 4) {
+                                onlineofflinestatus = '<div class="status-circle-invisible"></div>';
+                            }
+                        }
+                        else {
+                            if (data.Data[i].IsOnline == 1) {
+                                onlineofflinestatus = '<div class="status-circle-online"></div>';
+                            }
+                        } // changes end
+
+                        let displayUserName = '';
+
+                        if (data.Data[i].IsPrivate) {
+                            DBID = data.Data[i].SignalRUserId;
+                            if (imageName) {
+                                initials = '<div><img src = "' + imageURL + '" class="chatAvatar" /></div>'
+                            }
+                            else {
+                                initials = '<div>' + initials + '</div>';
+                            }
+							displayUserName = '<p style="margin:0;font-size:16px; font-weight:bold;">' + userName + '</p><p style="margin:0;font-size: 10px;color: darkgray;">' + onlineDateTime + '</p>';
+                        }
+                        else {
+                            onlineofflinestatus = '';
+                            DBID = data.Data[i].SignalRGroupId;
+                            joinGroup(userName);
+                            initials = '<i class="fa fa-users" aria-hidden="true" style="float: none;font-size: 20px;"></i>';
+                            displayUserName = '<span style="font-size:16px; font-weight:bold;">' + userName + '</span>';
+                        }
+
+                        let chatbadge = '<span class="chat-badge" style="display:none">0</span>';
+
+                        if (unReadCount > 0) {
+                            chatbadge = '<span class="chat-badge">' + unReadCount + '</span>';
+                        }
+
+                        $('#ChatListDiv').append(
+                            `<div class="row chat-pb-5" onclick="startChat(this.id,'` + userName.toString() + `',` + isPrivate + `,'` + DBID + `',` + isGroupOwner + `,` + isOnline + `)" id="` + id + `">`
+                            + '<div class="col-xs-2">'
+                            + '<div class="chatAvatar">' + initials
+                            + onlineofflinestatus
+                            + '</div>'
+                            + '</div>'
+                            + '<div class="col-xs-8">'
+                            + displayUserName
+                            + '</div>'
+                            + '<div class="col-xs-2">'
+                            + chatbadge
+                            + '</div>'
+                            + '</div>'
+                            + '<hr style="margin: 5px auto;" />');
+                    }
+                    mainChatBadgeValue();
+                    CloseChatDialog();
+                }
+            }
+        });
+    }
+
+    function mainChatBadgeValue() {
+        var ele = $(".row.chat-pb-5");
+        var parentBadgeVal = 0;
+        for (var i = 0; i < ele.length; i++) {
+            var childbadgeval = ele[i].querySelector('.chat-badge').innerHTML;
+
+            //if (parseInt(childbadgeval) > 0) {
+            //    parentBadgeVal = parentBadgeVal + 1;
+            //}
+
+            if (parseInt(childbadgeval) > 0) {
+                parentBadgeVal = parentBadgeVal + parseInt(childbadgeval);
+            }
+        }
+
+        if (parentBadgeVal > 0) {
+            $('#parentChatBadge').html(parentBadgeVal)
+            $('#parentChatBadge').show();
+        }
+        else {
+            $('#parentChatBadge').html(parentBadgeVal)
+            $('#parentChatBadge').hide();
+        }
+        var MarketOrderCount = $("#labelNotifyMarketOrderCount").text();
+        MarketOrderCount = MarketOrderCount? parseInt(MarketOrderCount):0;
+        try {
+            navigator.setAppBadge(parentBadgeVal + MarketOrderCount);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function sendNotificationToWindow(title, msgbody) {
+        //alert(title + ' ' + msgbody);
+        if (window.Notification && Notification.permission.toLowerCase() === "granted") {
+            var iconURL = location.origin + '/Content/img/icons/apple-touch-icon/favicon.png';
+            var notification = new Notification(title, {
+                body: msgbody,
+                icon: iconURL
+            });
+        }
+    }
+
+    function addCloseButtonInChat(isOnline) {
+        var ele = $(".ui-dialog-titlebar-close");
+        for (var i = 0; i < ele.length; i++) {
+            ele[i].classList.remove("ui-button");
+            ele[i].classList.remove("ui-corner-all");
+            ele[i].classList.remove("ui-widget");
+            ele[i].classList.remove("ui-button-icon-only");
+
+            ele[i].classList.add("ui-button");
+            ele[i].classList.add("ui-corner-all");
+            ele[i].classList.add("ui-widget");
+            ele[i].classList.add("ui-button-icon-only");
+
+            ele[i].textContent = '';
+
+            ele[i].innerHTML = '<span title="close"  class="ui-button-icon ui-icon ui-icon-closethick"></span>'
+                + '<span class="ui-button-icon-space"> </span>'
+                + 'Close';
+        }
+
+        //$(".ChatDialogChatDialog .ui-dialog-titlebar").append("<span class='status-circle-offline'></span>");
+        //if (isOnline) {
+        //    $("#ui-id-2").append("&#160;<div class='status-circle-online-title'></div>");
+        //}
+        //else {
+        //    $("#ui-id-2").append("&#160;<div class='status-circle-offline-title'></div>");
+        //}
+    }
+
+    function placeCreateGroupbtn() {
+        $(".ChatListChatList .ui-dialog-titlebar").append(
+            '<a href="/SignalRHelper/LoadcontactsListToslack" target="_blank" title="Expand Chat" style="position:absolute; right:70px; top:13px;color:#ffffff; font-size:24px;">'
+            + '<i class="fa fa-comments" aria-hidden="true" style="font-size:24px;"></i>'
+            + '</a>'
+            + '<button title="Create new group" class="ui-dialog-titlebar-plus ui-button ui-corner-all ui-widget ui-button-icon-only" onclick="AddEditGroup(0)">'
+            + '<span class="ui-button-icon ui-icon ui-icon-plusthick"></span>'
+            + '<span class="ui-button-icon-space"> </span>'
+            + 'Add Group'
+            + '</button >'
+        );
+    }
+
+    function placeEditGroupbtn(GroupId) {
+        $(".ChatDialogChatDialog .ui-dialog-titlebar").append(
+            '<button class="ui-dialog-titlebar-delete ui-button ui-corner-all ui-widget ui-button-icon-only" id="deleteGroup" onclick="DeleteGroup(' + GroupId + ')">'
+            + '<span class="ui-button-icon ui-icon ui-icon-trash"></span>'
+            + '<span class="ui-button-icon-space"> </span>'
+            + 'Delete Group'
+            + '</button > ' +
+            '<button class="ui-dialog-titlebar-plus ui-button ui-corner-all ui-widget ui-button-icon-only" id="btnEditGroup" onclick="AddEditGroup(' + GroupId + ')">'
+            + '<span class="ui-button-icon ui-icon ui-icon-pencil"></span>'
+            + '<span class="ui-button-icon-space"> </span>'
+            + 'Add Group'
+            + '</button > '
+        );
+    }
+
+    function removeEditGroupbtn() {
+        $(".ChatDialogChatDialog .ui-dialog-titlebar #btnEditGroup").remove();
+        $(".ChatDialogChatDialog .ui-dialog-titlebar #deleteGroup").remove();
+    }
+
+    function AddEditGroup(groupId) {
+        CloseJqueryDialog();
+        $('.loader').show();
+        $.ajax({
+            url: '@Url.Action("GetSignalRGroupName", "SignalRHelper")',
+            async: false,
+            type: 'POST',
+            data: { SignalRGroupId: groupId },
+            success: function (data) {
+                $('.loader').hide();
+                $('#idGroupModelBody').html(data);
+                $('#AddEditGroupModal').modal('toggle');
+            }
+        });
+    }
+
+    function DeleteGroup(groupId) {
+        CloseJqueryDialog();
+        bootbox.confirm("Are you sure you want to delete this group? ", function (result) {
+            if (result) {
+                $.ajax({
+                    url: '@Url.Action("DeleteSignalRGroup", "SignalRHelper")',
+                    async: false,
+                    type: 'POST',
+                    data: { SignalRGroupId: groupId },
+                    success: function (data) {
+                        if (data.Success) {
+                            ShowSuccessMessage("Group Deleted Successfully.");
+                            chat.server.letsChat("NewJoin", "GroupDeleted");
+                        }
+                        else {
+                            ShowErrorMessage("Something went wrong please try again later.");
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function formatAMPM(date) {
+        var Date = date.getDate().toString().padStart(2, '0');
+        var Month = (date.getMonth() + 1).toString().padStart(2, '0');
+        var Year = date.getFullYear().toString().padStart(4, '0');
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        var strDate = Date + '/' + Month + '/' + Year;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        return strDate + ' ' + strTime;
+    }
+
+    function CloseChatDialog() {
+        if ($("#isPrivateChat").val().toString().toLowerCase() === "true") {
+            var SignalR_To_ID = $('#SignalR_To_ID').val();
+            var chatWindowDom = document.getElementById(SignalR_To_ID);
+            if (chatWindowDom == null || chatWindowDom == undefined || chatWindowDom == '') {
+                try {
+                    if ($('#chat').dialog('isOpen')) {
+                        $('#chat').dialog('close');
+                    }
+                } catch (e) {
+
+                }
+            }
+        }
+        else {
+            if ($("#isPrivateChat").val().toString().toLowerCase() === "false") {
+                var SignalRGroupName = $('#SignalRGroupName').val();
+                var chatDom = document.getElementById(SignalRGroupName);
+                if (chatDom == null || chatDom == undefined || chatDom == '') {
+                    try {
+                        if ($('#chat').dialog('isOpen')) {
+                            $('#chat').dialog('close');
+                        }
+                    } catch (e) {
+
+                    }
+                }
+            }
+        }
+    }
+
+    function scrollChatDiv() {
+        setTimeout(function () {
+            var scrollHeight = document.getElementById('chatMessages').scrollHeight;
+            document.getElementById('chatMessages').scrollTop = scrollHeight;
+        }, 500);
+    }
+
+    function toggleEmojis() {
+        $('#diveEmojiPanel').toggle('slow');
+    }
+
+    function toggleChatAttachment() {
+        $('#ChatAttachment').click();
+    }
+
+    function SelectEmoji(emojiSpan, CodeOfEmoji) {
+        emojiCode.push('&#' + CodeOfEmoji);
+        var message = $("#TxtMessage").val();
+        //message = message + ' &#' + CodeOfEmoji + ' ';
+        message = message + emojiSpan.innerHTML;
+        $("#TxtMessage").val(message)
+    }
+
+    $(document).click(function (event) {
+        if ($("#RingcentralCallStart").val() === "true" && event && event.target.className.includes("restrictCall")) {
+            /*var r = confirm("Call will be disconnected automatically when redirect to any other page Are you sure you want to redirect to any other page?");*/
+            $.confirm({
+                title: false,
+                content: 'Call will be disconnected automatically when redirect to any other page',
+                closeIcon: false,
+                buttons: {
+                    cancel: function () {
+                        event.preventDefault();
+                    }
+                    
+                }
+            });
+
+            //var r = confirm("Call will be disconnected automatically when redirect to any other page");
+            //if (r == false) {
+            //    event.preventDefault();
+            //}
+        }
+    });
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+            .register('/serviceworker.js')
+            .then(function () { console.log('Service Worker Registered'); });
+    }
+</script>
+<script type="text/javascript">
+    //window.addEventListener('beforeunload', function (e) {
+    //    e.preventDefault();
+    //    e.returnValue = '';
+    //});
+    var beforeUnloadTimeoutabc = 0;
+    window.addEventListener("beforeunload", function (e) {
+        beforeUnloadTimeoutabc = setTimeout(function () {
+            ChangeSignalUserOnlineStatus();
+        }, 0);
+        // *********** perform database operation here
+        // before closing the browser ************** //
+
+        // added the delay otherwise database operation will not work
+        for (var i = 0; i < 500000000; i++) { }
+        return undefined;
+    });
+    $(window).bind('unload', function () {
+        if (typeof beforeUnloadTimeoutabc !== 'undefined' && beforeUnloadTimeoutabc != 0) {
+            clearTimeout(beforeUnloadTimeoutabc);
+        }
+    });
+    function opentaskreminderpopup() {
+        var grid = $("#gridTaskRemiderPopup").data('kendoGrid');
+        var gridData = grid.dataSource.data();
+        if (gridData.length >= 1) {
+            Openfollowupwindow(true);
+        }
+        else {
+            Openfollowupwindow(false);
+        }
+    }
+</script>
+
+<script>
+    var SearchBox = document.getElementById('txtGlobaalSearch');
+    var timeout = setTimeout(function () { }, 0)
+    var currentFocus = -1;
+
+    SearchBox.addEventListener('keyup', function (e) {
+        clearTimeout(timeout);
+        var x = document.getElementById("txtGlobaalSearch" + "autocomplete-list");
+        if (x) x = x.getElementsByTagName("div");
+        if (e.keyCode == 40) {
+            /*If the arrow DOWN key is pressed,
+            increase the currentFocus variable:*/
+            currentFocus++;
+            /*and and make the current item more visible:*/
+            addActive(x);
+        } else if (e.keyCode == 38) { //up
+            /*If the arrow UP key is pressed,
+            decrease the currentFocus variable:*/
+            currentFocus--;
+            /*and and make the current item more visible:*/
+            addActive(x);
+        } else if (e.keyCode == 13) {
+            /*If the ENTER key is pressed, prevent the form from being submitted,*/
+            e.preventDefault();
+            if (currentFocus > -1) {
+                /*and simulate a click on the "active" item:*/
+                if (x) x[currentFocus].click();
+            }
+        }
+        if ($('#txtGlobaalSearch').val().length < 3) {
+            closeAllLists();
+        }
+        else {
+            timeout = setTimeout(function () {
+                GlobalSearch(e.target);
+            }, 500);
+        }
+
+    });
+
+    
+    function GlobalSearch(el) {
+        closeAllLists();
+        let val = $(el).val();
+        var DOMparentNode = el.parentNode;
+        $.ajax({
+            url: '@Url.Action("GetSearchData", "Dashboard")',
+            dataType: "json",
+            async: true,
+            data: { searchString: val},
+            success: function (data) {
+                arr = data.map(function (item) {
+                    return item['CompanyName'] + " - <i>" + item['ResutType'] + "</i><span style='display:none;'>" + item['ID'] + "</span>";
+                });
+
+                /*close any already open lists of autocompleted values*/
+                if (!val) {
+                    return false;
+                }
+
+                /*create a DIV element that will contain the items (values):*/
+                a = document.createElement("DIV");
+                a.setAttribute("id", 'txtGlobaalSearch' + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+
+                /*append the DIV element as a child of the autocomplete container:*/
+                DOMparentNode.appendChild(a);
+
+                /*for each item in the array...*/
+                for (i = 0; i < arr.length; i++) {
+                    /*check if the item starts with the same letters as the text field value:*/
+                    //if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                    /*create a DIV element for each matching element:*/
+
+                    b = document.createElement("DIV");
+                    /*make the matching letters bold:*/
+                    //b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                    //b.innerHTML += arr[i].substr(val.length);
+                    //console.log(arr[i]);
+                    b.innerHTML = arr[i];
+
+                    /*insert a input field that will hold the current array item's value:*/
+                    //b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                    /*execute a function when someone clicks on the item value (DIV element):*/
+                    b.addEventListener("click", function (e) {
+                        /*insert the value for the autocomplete text field:*/
+                        //inp.value = this.getElementsByTagName("input")[0].value;
+                        /*close the list of autocompleted values,
+                        (or any other open lists of autocompleted values:*/
+                        //console.log();
+                        switch (this.getElementsByTagName("i")[0].innerText) {
+                            case 'CLIENT':
+                                window.location.href = '@Url.Action("ManageClient", "Client")' + "?ClientId=" + this.getElementsByTagName("span")[0].innerText;
+                                break;
+                            case 'PROSPECT':
+                                window.location.href = '@Url.Action("ManageProspect", "Prospect")' + "?ProspectId=" + this.getElementsByTagName("span")[0].innerText;
+                                break;
+                            case 'DEAL':
+                                window.location.href = '@Url.Action("ManageDeal", "Deal")' + "?DealId=" + this.getElementsByTagName("span")[0].innerText;
+                                break;
+                            default:
+                        }
+                        closeAllLists();
+                    });
+                    a.appendChild(b);
+                }
+            }
+        });
+    }
+
+    function closeAllLists(elmnt) {
+        const inp = $('#txtGlobaalSearch');
+        //debugger
+        /*close all autocomplete lists in the document,
+        except the one passed as an argument:*/
+        var x = document.getElementsByClassName("autocomplete-items");
+        for (var i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inp) {
+                x[i].parentNode.removeChild(x[i]);
+            }
+        }
+    }
+    function addActive(x) {
+        if (!x) return false;
+        /*start by removing the "active" class on all items:*/
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (x.length - 1);
+        /*add class "autocomplete-active":*/
+        x[currentFocus].classList.add("autocomplete-active");
+    }
+    function removeActive(x) {
+        /*a function to remove the "active" class from all autocomplete items:*/
+        for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+        }
+    }
+
+    @*function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+        the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function (e) {
+            var a, b, i, DOMparentNode = this.parentNode, val = this.value;
+            if (val.length < 4 || val == "") {
+                //closeAllLists();
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("GetSearchData", "Dashboard")',
+                    dataType: "json",
+                    async: true,
+                    data: { searchString: val },
+                    success: function (data) {
+                        arr = data.map(function (item) {
+                            return item['CompanyName'] + " - <i>" + item['ResutType'] + "</i><span style='display:none;'>" + item['ID'] + "</span>";
+                        });
+
+                        /*close any already open lists of autocompleted values*/
+                        closeAllLists();
+                        if (!val) {
+                            return false;
+                        }
+                        currentFocus = -1;
+                        /*create a DIV element that will contain the items (values):*/
+                        a = document.createElement("DIV");
+                        a.setAttribute("id", this.id + "autocomplete-list");
+                        a.setAttribute("class", "autocomplete-items");
+
+                        /*append the DIV element as a child of the autocomplete container:*/
+                        DOMparentNode.appendChild(a);
+
+                        /*for each item in the array...*/
+                        for (i = 0; i < arr.length; i++) {
+                            /*check if the item starts with the same letters as the text field value:*/
+                            //if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                            /*create a DIV element for each matching element:*/
+
+                            b = document.createElement("DIV");
+                            /*make the matching letters bold:*/
+                            //b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                            //b.innerHTML += arr[i].substr(val.length);
+                            //console.log(arr[i]);
+                            b.innerHTML = arr[i];
+
+                            /*insert a input field that will hold the current array item's value:*/
+                            //b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                            /*execute a function when someone clicks on the item value (DIV element):*/
+                            b.addEventListener("click", function (e) {
+                                /*insert the value for the autocomplete text field:*/
+                                //inp.value = this.getElementsByTagName("input")[0].value;
+                                /*close the list of autocompleted values,
+                                (or any other open lists of autocompleted values:*/
+                                //console.log();
+                                switch (this.getElementsByTagName("i")[0].innerText) {
+                                    case 'CLIENT':
+                                        window.location.href = '@Url.Action("ManageClient", "Client")' + "?ClientId=" + this.getElementsByTagName("span")[0].innerText;
+                                        break;
+                                    case 'PROSPECT':
+                                        window.location.href = '@Url.Action("ManageProspect", "Prospect")' + "?ProspectId=" + this.getElementsByTagName("span")[0].innerText;
+                                        break;
+                                    case 'DEAL':
+                                        window.location.href = '@Url.Action("ManageDeal", "Deal")' + "?DealId=" + this.getElementsByTagName("span")[0].innerText;
+                                        break;
+                                    default:
+                                }
+                                closeAllLists();
+                            });
+                            a.appendChild(b);
+                        }
+                    }
+                });
+            }
+
+
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function (e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) {
+                /*If the arrow DOWN key is pressed,
+                increase the currentFocus variable:*/
+                currentFocus++;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 38) { //up
+                /*If the arrow UP key is pressed,
+                decrease the currentFocus variable:*/
+                currentFocus--;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 13) {
+                /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    /*and simulate a click on the "active" item:*/
+                    if (x) x[currentFocus].click();
+                }
+            }
+
+        });
+        function addActive(x) {
+            /*a function to classify an item as "active":*/
+            if (!x) return false;
+            /*start by removing the "active" class on all items:*/
+            removeActive(x);
+            if (currentFocus >= x.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = (x.length - 1);
+            /*add class "autocomplete-active":*/
+            x[currentFocus].classList.add("autocomplete-active");
+        }
+        function removeActive(x) {
+            /*a function to remove the "active" class from all autocomplete items:*/
+            for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("autocomplete-active");
+            }
+        }
+        function closeAllLists(elmnt) {
+            debugger
+            /*close all autocomplete lists in the document,
+            except the one passed as an argument:*/
+            var x = document.getElementsByClassName("autocomplete-items");
+            for (var i = 0; i < x.length; i++) {
+                if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+            }
+        }
+        /*execute a function when someone clicks in the document:*/
+        document.addEventListener("click", function (e) {
+            closeAllLists(e.target);
+        });
+    }*@
+
+    /*An array containing all the country names in the world:*/
+    var countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua & Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia & Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central Arfrican Republic", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica", "Cote D Ivoire", "Croatia", "Cuba", "Curacao", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "French West Indies", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauro", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", "Saint Pierre & Miquelon", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "St Kitts & Nevis", "St Lucia", "St Vincent", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor L'Este", "Togo", "Tonga", "Trinidad & Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks & Caicos", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States of America", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"];
+
+    /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+    //autocomplete(document.getElementById("txtGlobaalSearch"), countries);
+</script>
+
+<style type="text/css">
+    .hide{
+        display:none;
+    }
+    .toast-bottom-full-width {
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 60% !important;
+    }
+
+    .vertical-alignment-helper {
+        display: table;
+        height: 100%;
+        width: 100%;
+    }
+
+    .vertical-align-center {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    .align-bottom-right {
+        width: 370px;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        margin: 0;
+    }
+
+    @@media screen and (max-width: 700px) {
+        .align-bottom-right {
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            margin: 0;
+        }
+
+        #newChatModalPopup .modal-body {
+            max-height: 91vh;
+            overflow: auto;
+        }
+    }
+
+    .modal-content {
+        width: inherit;
+        height: inherit;
+        margin: 0 auto;
+    }
+
+    .autocomplete {
+        /*the container must be positioned relative:*/
+        position: relative;
+        display: inline-block;
+    }
+
+    .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        /*position the autocomplete items to be the same width as the container:*/
+        top: 100%;
+        left: 0;
+        right: 0;
+        /*height: 300px;*/
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border-bottom: 1px solid #d4d4d4;
+        }
+
+            .autocomplete-items div:hover {
+                /*when hovering an item:*/
+                background-color: #e9e9e9;
+            }
+
+    .autocomplete-active {
+        /*when navigating through the items using the arrow keys:*/
+        background-color: DodgerBlue !important;
+        color: #ffffff;
+    }
+
+    .navigation > li ul {
+        background-color: #bcbcbc;
+    }
+
+        .navigation > li ul li a {
+            color: #000000;
+        }
+
+    .navigation li a:hover, .navigation li a:focus {
+        background-color: #fe2469;
+        color: #ffffff;
+    }
+</style>

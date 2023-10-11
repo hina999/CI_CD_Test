@@ -1,0 +1,94 @@
+﻿
+@using Kendo.Mvc.UI;
+@model FXAdminTransferConnex.Entities.SettingModel
+
+@{
+    ViewBag.Title = "Setting";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("ChangePassword", "Setting", FormMethod.Post, new { @id = "FormSetting" }))
+{
+    @Html.HiddenFor(m => m.UserId)
+    <div class="content">
+        <legend>Change Password</legend>
+        <fieldset>
+            <legend></legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Old Password:</label>
+                                    @Html.PasswordFor(m => m.OldPassword, new { @placeholder = "Old Password", @class = "form-control" })
+                                    <div class="row" style="padding-left:14px">
+                                        @Html.ValidationMessageFor(m => m.OldPassword)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">New Password:</label>
+                                    @Html.PasswordFor(m => m.NewPassword, new { @placeholder = "New Password", @class = "form-control" })
+                                    <div class="row" style="padding-left:14px">
+                                        @Html.ValidationMessageFor(m => m.NewPassword)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Confirm New Password:</label>
+                                    @Html.PasswordFor(m => m.ConfirmPassword, new { @placeholder = "Confirm New Password", @class = "form-control" })
+                                    <div class="row" style="padding-left:14px">
+                                        @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <button class="btn btn-orange mt-5 pull-right" type="submit">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+}
+
+
+<script>
+    $(document).ready(function () {
+        var validator = $("#FormSetting").kendoValidator().data("kendoValidator");
+    });
+
+    $(function () {
+        var container = $("#FormSetting");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                PasswordRule: function (input) {
+                    if (input.is("[name=ConfirmPassword]")) {
+                        if ((input.val() == undefined || input.val() == '') || (parseInt($('#NewPassword').val()) != input.val())) {
+                            return false;
+                        }
+                        else {
+                            return true;
+                        }
+                    }
+                    return true;
+                }
+            },
+            messages: {
+                PasswordRule: "The Password not match."
+            }
+        });
+    });
+</script>
+
+
+

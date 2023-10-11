@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewBag.Title = "RingCentralCustomDownloadLog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form>
+    <div class="content">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default text-center">
+                            <div class="panel-heading">
+                                <p class="panel-title">Import Call Log</p>
+
+                            </div>
+                            <div class="panel-body">
+                                @*<div class="row">
+                                        <div class="col-md-3">
+                                            <label>From Date:</label>
+                                            <input type="datetime" name="FromDate" id="FromDate" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>To Date:</label>
+                                            <input type="datetime" name="ToDate" id="ToDate" />
+                                        </div>
+                                    </div>*@
+
+
+
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="control-label">From Date :</label>
+                                            @(Html.Kendo().DatePicker().Name("FromDate").Format("dd-MM-yyyy").Value("").HtmlAttributes(new { style = "width: 95.5%;", onkeydown = "javascript:return false;"}))
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="control-label">To Date :</label>
+                                            @(Html.Kendo().DatePicker().Name("ToDate").Format("dd-MM-yyyy").Value("").HtmlAttributes(new { style = "width: 95.5%;", onkeydown = "javascript:return false;"}))
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 text-right">
+                                        <div class="form-group">
+                                            <button class="btn btn-primary" onclick="ImportRingCentralCallLog();">Import Log</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                @*<button class="btn btn-primary" onclick="ImportRingCentralCallLog();">Import Log</button>*@
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</form>
+<script>
+    function ImportRingCentralCallLog() {
+        var fromDate = new Date($("#FromDate").data("kendoDatePicker").value());
+        var from_str = fromDate.toISOString();
+        var toDate = new Date($("#ToDate").data("kendoDatePicker").value());
+        var to_str = toDate.toISOString();
+        //var fromDate = $("#FromDate").val();
+        //var toDate = $("#ToDate").val();
+
+            $.ajax({
+                        url: '@Url.Action("ImportCallLogAsync", "RingCentralHelper")',
+                        async: true,
+                        type: 'POST',
+                        data: { FromDate: from_str, ToDate: to_str },
+                        timeout: 99999999999999,
+                        success: function () {
+                            toastr.success("Call log imported successfully!!");
+                        }
+             });
+
+        }
+</script>

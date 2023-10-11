@@ -1,0 +1,99 @@
+﻿@model FXAdminTransferConnex.Entities.ClientMasterModel
+@{
+    ViewBag.Title = "UploadClients";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("SaveUploadClient", "Client", FormMethod.Post, new { @id = "UploadForm", enctype = "multipart/form-data" }))
+{
+    <div class="content">
+        <legend>Import Clients</legend>
+        <fieldset>
+            <legend></legend>
+            <div class="panel panel-default">
+                <div class="panel-heading cursor-pointer" data-toggle="collapse" data-target="#divReconciliation">
+                    <h4 class="panel-title">
+                        <span class="fa fa-minus mr-10"></span>
+                        Import Clients
+                    </h4>
+                </div>
+                <div id="divReconciliation" class="panel-body in">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Source:</label>
+                                    @(Html.Kendo().DropDownListFor(x=>x.Source)
+                                      .Name("Source")
+                                      .OptionLabel("-- Select Source --")
+                                      .DataTextField("Text")
+                                      .DataValueField("Value")
+                                      .BindTo(new List<SelectListItem>()
+                                      {
+                                           new SelectListItem()
+                                           {
+                                               Text = "GC Partner",
+                                               Value = "GCPartner"
+                                           },
+                                           new SelectListItem()
+                                           {
+                                               Text = "ScioPay",
+                                               Value ="ScioPay"
+                                           }
+                                           // new SelectListItem()
+                                           //{
+                                           //    Text = "Eburry",
+                                           //    Value = "Eburry"
+                                           //}
+                                      })
+                                      .HtmlAttributes(new { style = "width: 100%" })
+                                    )
+                                </div>
+                            </div>
+                            <div class="col-md-6 pull-left">
+                                <div class="form-group">
+                                    <label class="control-label">Download Template:</label>
+                                    <div>
+                                        <a class="btn btn-orange mt-5 mr-5" title="ScioPay" href="~/Sample File/ScioPay_Client_Template.xlsx">ScioPay</a>
+                                        <a class="btn btn-orange mt-5 mr-5" title="ScioPay" href="~/Sample File/GCPartner_Client_Template.xlsx">GC Partner</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Upload Sheet:</label>
+                                    @Html.Kendo().Upload().Name("UploadFormFile").Multiple(false).ShowFileList(true)
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <a href="@Url.Action("Index", "Client")" class="btn btn-orange mt-5 mr-10 pull-right">Cancel</a>
+                                <button class="btn btn-orange mt-5 mr-5 pull-right" title="Save" type="submit">Save</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div id="ReconciliationForm"></div>*@
+        </fieldset>
+    </div>
+}
+<script>
+    $(function () {
+        var container = $("#UploadForm");
+        kendo.init(container);
+        container.kendoValidator({});
+        $("#UploadFormFile").closest(".k-upload-button").find("span").text("Select Excel File...");
+    });
+
+</script>
+
+

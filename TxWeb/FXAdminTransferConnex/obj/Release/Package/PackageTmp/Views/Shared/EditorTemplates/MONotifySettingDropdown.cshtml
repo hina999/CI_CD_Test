@@ -1,0 +1,18 @@
+﻿
+@using Kendo.Mvc.UI
+@model object
+
+
+@(Html.Kendo().DropDownListFor(m => m)
+.Name("FilterId")
+.OptionLabel("Select")
+.Events(e => e.Change("onchangeNotifictionFilter"))
+.DataTextField("Filter")
+.DataValueField("NotifictionFilterId").HtmlAttributes(new { @style = "width:100% !important;" })
+.DataSource(source =>
+{
+    source.Read(read =>
+    {
+        read.Action("GetMarketOrderNotificationFilter", "Client");
+    });
+}))

@@ -1,0 +1,719 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+
+@model FXAdminTransferConnex.Entities.DealModel
+
+@{
+    ViewBag.Title = "UploadDeals";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .updatedbgcolor {
+        /* background-color: #c3bebe !important;*/
+        background-color: #dfdddd !important;
+    }
+
+    .outerbox {
+        display: flex;
+        margin: 15px;
+    }
+
+    .updatedbox {
+        background-color: #dfdddd;
+        width: 20px;
+        height: 20px;
+    }
+
+    .updatedtext {
+        margin-left: 15px;
+    }
+
+    .tmp_loader {
+        float: left;
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 99999;
+        background: rgba(0, 0, 0, 0);
+        user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+    }
+
+        .tmp_loader img {
+            float: left;
+            width: 100px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -50px 0 0 -50px;
+        }
+</style>
+<div class="tmp_loader">
+    <img src="~/Content/Images/loader.gif" alt="Loading..." />
+</div>
+
+@using (Html.BeginForm("SaveUploadDealAsync", "Deal", FormMethod.Post, new { @id = "UploadForm", enctype = "multipart/form-data" }))
+{
+    <div class="content">
+        <legend>Upload Deals</legend>
+        <fieldset>
+            <legend></legend>
+            <div class="panel panel-default">
+                <div class="panel-heading cursor-pointer" data-toggle="collapse" data-target="#divReconciliation">
+                    <h4 class="panel-title">
+                        <span class="fa fa-minus mr-10"></span>
+                        Upload Deals
+                    </h4>
+                </div>
+                <div id="divReconciliation" class="panel-body in">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Source:</label>
+                                    @(Html.Kendo().DropDownListFor(x=>x.DealSource)
+                    .Name("DealSource")
+                    .OptionLabel("-- Select Source --")
+                    .DataTextField("Text")
+                    .DataValueField("Value")
+                    .BindTo(new List<SelectListItem>()
+                    {
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "GC Partner",
+                                                                Value = "GCPartner"
+                                                            },
+                                                            new SelectListItem()
+                                                            {
+                                                                Text = "ScioPay",
+                                                                Value ="ScioPay"
+                                                            },
+                                                             new SelectListItem()
+                                                            {
+                                                                Text = "Eburry",
+                                                                Value = "Eburry"
+                                                            }
+                    })
+                    .HtmlAttributes(new { style = "width: 100%" })
+                                    )
+                                </div>
+                            </div>
+                            <div class="col-md-6 pull-right">
+                                <div class="form-group">
+                                    <label class="control-label">Download Template:</label>
+                                    <div>
+                                        <a class="btn btn-orange mt-5 mr-5" title="GC Partner" href="~/Sample File/GCPartnerTemplate.xlsx">GCPartner</a>
+                                        <a class="btn btn-orange mt-5 mr-5" title="ScioPay" href="~/Sample File/ScioPay_Deal_Template.xlsx">ScioPay</a>
+                                        <a class="btn btn-orange mt-5 mr-5 " title="Eburry" href="~/Sample File/EburyTemplate.xlsx">Eburry</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Upload Sheet:</label>
+                                    @Html.Kendo().Upload().Name("UploadFormFile").Multiple(false).ShowFileList(true)
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+
+                                <button class="btn btn-orange mt-5 mr-5 pull-right" title="Save" type="submit">Save</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div id="ReconciliationForm"></div>*@
+        </fieldset>
+
+        @*temp deal grid*@
+
+        <fieldset>
+            <legend></legend>
+            <div class="panel panel-default dealindex-box">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Deal Number:</label>
+                                    <input id="txtDealNo" type="text" placeholder="Deal Number" class="k-textbox Search" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Company Name:</label>
+                                    <input id="txtCompanyName" type="text" placeholder="Company Name" class="k-textbox Search" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">AccountId:</label>
+                                    <input id="txtAccountId" type="text" placeholder="Account Id" class="k-textbox Search" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Select Source:</label>
+                                    @(Html.Kendo().DropDownList()
+                                .Name("Source")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .OptionLabel("Select Source")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .BindTo(new List<SelectListItem>
+                                    ()
+                                    {
+                                    //new SelectListItem() {
+                                    //Text = "Currency Cloud", Value = "CurrencyCloud"
+                                    //},
+                                    new SelectListItem() {
+                                      Text = "ScioPay", Value = "ScioPay"
+                                    },
+                                    new SelectListItem() {
+                                      Text = "GC Partner", Value = "GCPartner"
+                                    },
+                                    new SelectListItem()
+                                    {
+                                        Text = "Eburry", Value = "Eburry"
+                                    }
+                                    })
+                                    )
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Select Match Type:</label>
+                                    @(Html.Kendo().DropDownList()
+                                .Name("IsMatch")
+                                .HtmlAttributes(new { style = "width:100%;" })
+                                .OptionLabel("Select Source")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .BindTo(new List<SelectListItem>
+                                    ()
+                                    {
+                                    new SelectListItem() {
+                                      Text = "Completely Match", Value = "Completely Match"
+                                    },
+                                    new SelectListItem() {
+                                      Text = "Partially Match", Value = "Partially Match"
+                                    },
+                                    new SelectListItem()
+                                    {
+                                        Text = "Does not Match", Value = "Does not Match"
+                                    }
+                                    })
+                                    )
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 pull-right">
+                                <div class="form-group pull-right">
+                                    <label></label>
+                                    <div>
+                                        <button id="btnSearch" type="button" class="k-button btn-orange">Search</button>
+                                        <button id="btnReset" type="button" class="k-button btn-orange">Reset</button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="outerbox">
+                        <div class="updatedbox" style="background-color: darkgray;"></div>
+                        <div class="updatedtext">Updated</div>
+                    </div>
+
+
+                    @(Html.Kendo().Grid<DealModel>()
+                                          .Name("gridClientDeal")
+                                          .Columns(columns =>
+                                          {
+                                            columns.Bound(m => m)
+                                           .ClientTemplate("#if(IsMatch != 'Does not Match'){#<input type='checkbox' id='chk_#=DealId#' onchange='matchChange(#=DealId#)' style='position:relative;left:7px;margin-top:10px'></input>#}#")
+                                           .HeaderTemplate("<input type='checkbox' id='completly_match_chk' style='position:relative;left:7px;margin-top:10px'><span style='margin-left:10px'>Completely Match</span><br/></input> <input type='checkbox' id='partially_match_chk' style='position:relative;left:7px;'><span style='margin-left:10px'>Partially Match</span></input> <br/><button type='button' style='margin-top:10px;' class='btn btn-primary' onclick='ImportAll()' id='importAll' >Import All</button>")
+                                           .Width(170)
+                                           .Sortable(false)
+                                           .HtmlAttributes(Common.CenterColumnStyle)
+                                           .HeaderHtmlAttributes(Common.CenterColumnStyle);
+                                          @*columns.Template(@<text></text>)
+
+                                           .ClientTemplate("<input type='checkbox'  #= IsMatch = 'Completely Match' ? checked='checked':'' # class='chkbx' />");*@
+
+                    columns.Bound(m => m.DealNo);
+                    columns.Bound(m => m.DealSource).Title("Source");
+                    //columns.Bound(m => m.ContactName);
+                    columns.Bound(m => m.AccountId);
+                    columns.Bound(m => m.CompanyName);
+                    columns.Bound(m => m.ExsistingCompanyName).Title("Client Company Name");
+                    columns.Bound(m => m.TradeDateString);
+                    columns.Bound(m => m.ValueDateString);
+                                          @*columns.Template(@<text></text>)
+                                                    .ClientTemplate("<span>#=Field1 #</span><span>#=Field2 #</span>").Title("IsMatch");*@
+                                          @*columns.Template(@<text></text>)
+                                                          .ClientTemplate("#if(ModifiedDate != null){#"
+                                                                         + "<span>#=IsMatch # (Updated)</span>"
+                                                                         + "#} else {#"
+                                                                         + "<span>#=IsMatch #</span>"
+                                                                         + "#} #").Title("Is Match").Width(120);*@
+                    columns.Bound(m => m.IsMatch);
+                    //columns.Bound(m => m.ModifiedDate).Format("{0:dd/MM/yyyy}");
+                    columns.Template(@<text></text>)
+                                                          .ClientTemplate("#if(IsNewlyModified == true){#"
+                                                                         + "<span>#= kendo.toString(kendo.parseDate(ModifiedDate), 'dd/MM/yyyy') #</span>"
+                                                                         + "#}"
+                                                                         + "#").Title("New Modified Date");
+
+
+                    columns.Template(@<text></text>)
+                                                                          .ClientTemplate("#if(IsMatch == 'Completely Match') {#"
+                                                                             + "<a class='btn btn-primary' href=\"/Deal/ImportTempDeal?ImportDealId=#=DealId#\">Import</a>"
+                                                                             + "#} else if(IsMatch == 'Partially Match') {#"
+                                                                             + "<a class='btn btn-primary' href=\"/Deal/ImportTempDeal?ImportDealId=#=DealId#\">Confirm & Import</a>"
+                                                                             + "#} else {#"
+                                                                             + "<a class='btn btn-primary' href=\"/Client/ManageClient?CompanyName=#=CompanyName#&Source=#=DealSource#\">Add new client</a>"
+                                                                             + "#} #");
+                                              /* .HeaderTemplate("<button type='button' class='btn btn-primary' id='importAll'  >Import All</button>");*/ /*onclick = 'ImportAll()'*/
+
+
+
+                                          })
+
+
+                                          .Editable(e => e.Mode(GridEditMode.PopUp))
+                                          .Pageable(x =>
+                                          {
+                                              x.Refresh(false);
+                                              x.PageSizes(new int[] { 10, 20, 50, 100, 1000 });
+                                          })
+                                          //.Events(events => events.ExcelExport("excelExport").AllPages(true))
+                                          //.Excel(excel => excel.FileName("Deallist.xlsx").Filterable(true).AllPages(true))
+                                          .Selectable(selectable => selectable
+                                          .Mode(GridSelectionMode.Single))
+                                          .Navigatable()
+                                          .Sortable(sortable => sortable.AllowUnsort(false))
+                                          .NoRecords("No data available")
+                                          .DataSource(dataSource => dataSource
+                                              .Ajax()
+                                              .ServerOperation(true)
+                                              .PageSize(ConfigItems.GridPageSize)
+                                              .Model(model =>
+                                              {
+                                                  model.Id(d => d.DealId);
+                                              })
+                                            //.Destroy(delete => delete.Action("GetTempDealList", "Deal"))
+                                            .Read(read => read.Action("GetTempDealList", "Deal").Data("additionalData"))
+                                          //.Events(events => events.RequestEnd("onRequestEnd"))
+                                          ))
+                </div>
+            </div>
+
+        </fieldset>
+
+    </div>
+}
+<script>
+    var completeData = @Html.Raw(Json.Encode(ViewBag.CompleteData));
+    
+    $(document).ready(function () {
+        
+        $('.tmp_loader').hide();
+        var grid = $("#gridClientDeal").data("kendoGrid");
+        grid.bind("dataBound", function () {
+           var completely_match_all = $('#completly_match_chk').is(":checked");
+               var dataSource = grid.dataSource.data();
+               if (completely_match_all == true) {
+                  for (var i = 0; i < dataSource.length; i++) {
+                      if (dataSource[i].IsMatch == 'Completely Match') {
+                          $("#chk_" + dataSource[i].DealId).prop("checked", true);
+                      }
+                  }
+               }
+               else {
+                 for (var i = 0; i < dataSource.length; i++) {
+                     if (dataSource[i].IsMatch == 'Completely Match') {
+                         $("#chk_" + dataSource[i].DealId).prop("checked", false);
+                     }
+                 }
+               }
+            var partially_match_all = $('#partially_match_chk').is(":checked");
+            if (partially_match_all == true) {
+                for (var i = 0; i < dataSource.length; i++) {
+                    if (dataSource[i].IsMatch == 'Partially Match') {
+                        $("#chk_" + dataSource[i].DealId).prop("checked", true);
+                    }
+                }
+            }
+            else {
+                for (var i = 0; i < dataSource.length; i++) {
+                    if (dataSource[i].IsMatch == 'Partially Match') {
+                        $("#chk_" + dataSource[i].DealId).prop("checked", false);
+                    }
+                }
+            }
+
+            grid.tbody.find('>tr').each(function () {
+                // get the row item
+                var dataItem = grid.dataItem(this);
+                // check for the condition
+                if (dataItem.IsNewlyModified == true) {
+                    // add the formatting if condition is met
+                    $(this).addClass('updatedbgcolor');
+                }
+            })
+
+        });
+
+    });
+
+    $("#btnSearch").click(function () {
+            $('#gridClientDeal').data('kendoGrid').dataSource.read({ DealNo: $('#txtDealNo').val().trim(), CompanyName: $('#txtCompanyName').val().trim(), AccountId: $("#txtAccountId").val().trim(), Source: $("#Source").data("kendoDropDownList").value(), IsMatch: $("#IsMatch").data("kendoDropDownList").value() });
+    });
+    $(window).on('keypress', function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#btnSearch").click();
+        }
+    });
+    $('#btnReset').click(function () {
+        $('.Search').val('');
+        $("#Source").data("kendoDropDownList").value(-1);
+        $("#IsMatch").data("kendoDropDownList").value(-1);
+        $('#gridClientDeal').data('kendoGrid').dataSource.read({ DealNo: $('#txtDealNo').val().trim(), CompanyName: $('#txtCompanyName').val().trim(), AccountId: $("#txtAccountId").val().trim(), Source: $("#Source").data("kendoDropDownList").value(), IsMatch: $("#IsMatch").data("kendoDropDownList").value() });
+    });
+
+    $(function () {
+        var container = $("#UploadForm");
+        kendo.init(container);
+        container.kendoValidator({});
+        $("#UploadFormFile").closest(".k-upload-button").find("span").text("Select Excel File...");
+    });
+
+    function AddClient() {
+         //var ImportDealId = DealId;
+        var urllink = '@Url.Action("ManageClient", "Client")';
+        window.location.href = urllink;
+    }
+    $('#completly_match_chk').change(function () {
+        var completely_match_all = $('#completly_match_chk').is(":checked");
+        var dataSource = $("#gridClientDeal").data("kendoGrid").dataSource.data();
+        if (completely_match_all == true) {
+            for (var i = 0; i < dataSource.length; i++) {
+                if (dataSource[i].IsMatch == 'Completely Match') {
+                    $("#chk_" + dataSource[i].DealId).prop("checked", true);
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < dataSource.length; i++) {
+                if (dataSource[i].IsMatch == 'Completely Match') {
+                    $("#chk_" + dataSource[i].DealId).prop("checked", false);
+                }
+            }
+        }
+
+    });
+    $('#partially_match_chk').change(function () {
+        var partially_match_all = $('#partially_match_chk').is(":checked");
+        var dataSource = $("#gridClientDeal").data("kendoGrid").dataSource.data();
+        if (partially_match_all == true) {
+            for (var i = 0; i < dataSource.length; i++) {
+                if (dataSource[i].IsMatch == 'Partially Match') {
+                    $("#chk_" + dataSource[i].DealId).prop("checked", true);
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < dataSource.length; i++) {
+                if (dataSource[i].IsMatch == 'Partially Match') {
+                    $("#chk_" + dataSource[i].DealId).prop("checked", false);
+                }
+            }
+        }
+    });
+    function additionalData() {
+        return {
+            DealNo: $('#txtDealNo').val().trim(),
+            CompanyName: $('#txtCompanyName').val().trim(),
+            AccountId: $('#txtAccountId').val().trim(),
+            Source: $("#Source").data("kendoDropDownList").value(),
+            IsMatch: $("#IsMatch").data("kendoDropDownList").value()
+        }
+    }
+
+    function getTotalCompleteDeal() {
+        var dataSource = $("#gridClientDeal").data("kendoGrid").dataSource.data();
+        var total_deal = 0;
+
+        for (var i = 0; i < dataSource.length; i++) {
+
+            if (dataSource[i].IsMatch == 'Completely Match') {
+                total_deal++;
+            }
+
+        }
+        return total_deal;
+    }
+    function getTotalPartialDeal() {
+        var dataSource = $("#gridClientDeal").data("kendoGrid").dataSource.data();
+        var total_deal = 0;
+
+        for (var i = 0; i < dataSource.length; i++) {
+
+            if (dataSource[i].IsMatch == 'Partially Match') {
+                total_deal++;
+            }
+
+        }
+        return total_deal;
+    }
+
+    function matchChange(checkId) {
+        var total_complete_deal = getTotalCompleteDeal();
+        var total_partial_deal = getTotalPartialDeal();
+        var is_checked1 = $('#chk_' + checkId).is(":checked");
+        var chk_complete_deal = 0;
+        var chk_partial_deal = 0;
+
+            var dataSource = $("#gridClientDeal").data("kendoGrid").dataSource.data();
+
+            for (var i = 0; i < dataSource.length; i++) {
+                var is_checked = $('#chk_' + dataSource[i].DealId).is(":checked");
+                if (dataSource[i].IsMatch == 'Completely Match' && is_checked == true) {
+                    chk_complete_deal++;
+                }
+                else if (dataSource[i].IsMatch == 'Partially Match' && is_checked == true) {
+                    chk_partial_deal++;
+                }
+            }
+
+            if (chk_partial_deal == total_partial_deal && chk_partial_deal != 0) {
+                $("#partially_match_chk").prop("checked", true);
+            }
+            else {
+                $("#partially_match_chk").prop("checked", false);
+            }
+
+        if (chk_complete_deal == total_complete_deal && chk_complete_deal != 0) {
+                $("#completly_match_chk").prop("checked", true);
+            } else {
+                $("#completly_match_chk").prop("checked", false);
+            }
+
+    }
+    function ImportAll() {
+        var completely_match_all = $('#completly_match_chk').is(":checked");
+        var partially_match_all = $('#partially_match_chk').is(":checked");
+        var dataSource = $("#gridClientDeal").data("kendoGrid").dataSource.data();
+
+        if (partially_match_all == true) {
+            var import_deal;
+
+            if (completeData != null) {
+                 import_deal = completeData.some(
+                    function (dataItem) {
+                        if (dataItem.IsMatch == 'Partially Match') {
+                            return true
+                        }
+                        else {
+                            return false
+                        }
+
+                    });
+            }
+            else {
+                 import_deal = dataSource.some(
+                    function (dataItem) {
+                        if (dataItem.IsMatch == 'Partially Match') {
+                            return true
+                        }
+                        else {
+                            return false
+                        }
+
+                    });
+            }
+
+            if (import_deal == false) {
+                ShowErrorMessage("No deals for import");
+                return false;
+            }
+        }
+
+        if (completely_match_all == true) {
+
+            var import_deal;
+            if (completeData != null) {
+                import_deal = completeData.some(
+                    function (dataItem) {
+                        if (dataItem.IsMatch == 'Completely Match') {
+                            return true
+                        }
+                        else {
+                            return false
+                        }
+
+                    });
+            }
+            else {
+                 import_deal = dataSource.some(
+                    function (dataItem) {
+                         if (dataItem.IsMatch == 'Completely Match') {
+                            return true
+                        }
+                        else {
+                            return false
+                        }
+
+                 });
+            }
+
+
+
+
+            if (import_deal == false) {
+                ShowErrorMessage("No deals for import");
+                return false;
+            }
+        }
+
+        if (dataSource.length > 0) {
+            var import_deal ;
+            if (completeData != null) {
+            import_deal = completeData.some(
+                    function (dataItem) {
+                    if (dataItem.IsMatch == 'Completely Match' || dataItem.IsMatch == 'Partially Match') {
+                            return true
+                        }
+                        else {
+                            return false
+                        }
+
+                    });
+            }
+            else {
+            import_deal = dataSource.some(
+                    function (dataItem) {
+                        if (dataItem.IsMatch == 'Completely Match' || dataItem.IsMatch == 'Partially Match') {
+                            return true
+                        }
+                        else {
+                            return false
+                        }
+
+                    });
+            }
+
+            if (import_deal == false) {
+                ShowErrorMessage("No deals for import");
+                return false;
+            }
+            else {
+                var msg;
+                if (completely_match_all == false && partially_match_all == false) {
+                    bootbox.confirm("Are you sure you want to import selected deals?",
+                        function (result) {
+                            if (result) {
+                                //var  array = {};
+                                var dealNo_arr = [];
+                                var data = $("#gridClientDeal").data("kendoGrid").dataSource.data();
+                                for (var i = 0; i < data.length; i++) {
+                                    var is_cheked = $("#chk_" + data[i].DealId).is(":checked");
+                                    if (is_cheked == true) {
+                                        dealNo_arr.push(data[i].DealNo);
+                                    }
+
+
+                                }
+                                console.log(dealNo_arr);
+                                $.ajax({
+                                    url: encodeURI('@Url.Action("ImportSelectedDeals","Deal")'),
+                                    async: false,
+                                    type: 'POST',
+                                    data: { Deal: dealNo_arr },
+                                    success: function (data) {
+                                        if (data) {
+                                            DisplayResponseMessageForAjax(data);
+                                            $('#gridClientDeal').data('kendoGrid').dataSource.read();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    );
+                }
+                else {
+                    if (completely_match_all == true && partially_match_all == true) {
+                        msg = 'Are you sure you want to import all deals?'
+                    }
+                    else if (completely_match_all == true) {
+                        msg = 'Are you sure you want to import all completly match deals?'
+                    }
+                    else if (partially_match_all == true) {
+                        msg = 'Are you sure you want to import all partially match deals?'
+                    }
+                    bootbox.confirm(msg,
+                        function (result) {
+                            if (result) {
+                                $('.tmp_loader').show();
+                                setTimeout(function () {
+                                    $.ajax({
+                                    url: encodeURI('@Url.Action("ImportAllDeals","Deal")'),
+                                    async: false,
+                                    data: { allCompletlyMatchDeal: completely_match_all, allPartiallyMatchDeal: partially_match_all },
+
+                                    error: function (jqXHR, exception) {
+                                            $('.tmp_loader').hide();
+                                    },
+                                        success: function (data) {
+                                        $('.tmp_loader').hide();
+                                        $('#partially_match_chk').prop("checked", false);
+                                        $('#completly_match_chk').prop("checked", false);
+                                        if (data) {
+                                            DisplayResponseMessageForAjax(data);
+                                            /*completeData = GetCompleteData();*/
+                                            window.location.reload();
+                                            @*completeData = @Html.Raw(Json.Encode(ViewBag.CompleteData));
+                                            $('#gridClientDeal').data("kendoGrid").dataSource.page(1);
+                                            $('#gridClientDeal').data('kendoGrid').dataSource.read();*@
+                                        }
+
+                                    }
+                                });
+                                }, 100);
+
+                            }
+
+                        });
+                }
+
+            }
+        }
+    }
+
+    
+
+</script>

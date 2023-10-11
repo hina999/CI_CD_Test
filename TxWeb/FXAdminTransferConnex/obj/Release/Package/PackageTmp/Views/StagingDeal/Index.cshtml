@@ -1,0 +1,311 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+<style>
+    .ClsNoClient {
+        background-color: #b7393338 !important;
+    }
+</style>
+<div class="content">
+    <legend>Staging Deal List</legend>
+    <div class="panel panel-default">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Deal Number:</label>
+                                <input id="txtDealNo" type="text" placeholder="Deal Number" class="k-textbox Search" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Company Name:</label>
+                                <input id="txtCompanyName" type="text" placeholder="Company Name" class="k-textbox Search" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">From Date:</label>
+                                @Html.Kendo().DatePicker().Name("FromDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:100%" })
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">To Date:</label>
+                                @Html.Kendo().DatePicker().Name("ToDate").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:100%" })
+                            </div>
+                        </div>
+                        <div class="col-sm-3 pull-right">
+                            <div class="form-group pull-right">
+                                <button id="btnSearch" type="button" class="k-button btn-orange">Search</button>
+                                <button id="btnReset" type="button" class="k-button btn-orange">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* GRID HERE *@
+
+    <fieldset>
+        <legend></legend>
+        <div>
+            @(Html.Kendo().Window()
+                .Name("ImportDealWindow")
+                .Title("Import Staging Deals")
+                .Visible(false)
+                .Draggable(true)
+                .Modal(true)
+                .Width(1000)
+            )
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                @(Html.Kendo().Grid<StagingDealModel>()
+                  .Name("gridStagingDeal")
+                  .Columns(columns =>
+                  {
+                      columns.Bound(m => m.StagingDealId)
+                        .ClientTemplate("<a class='k-button k-button-icontext k-grid-Discard' onclick='DiscardDeal(#=StagingDealId#)'  style='float:left' title='Discard Staging Deal' ><span class='fa fa-ban'></span></a><a class='k-button k-button-icontext k-grid-ViewClientDetails'  onclick='ManageStagingDeal(#=StagingDealId#,#=ClientId#)'  style='float:left' title='View Staging Deal' ><span class='fa fa-eye'></span></a># if(ClientId > 0 ) { #  <a class='k-button k-button-icontext k-grid-Proceed'  onclick='ProceedDeal(#=StagingDealId#)' style='float:left' title='Process Staging Deal' ><span class='fa fa-check'></span></a>  #if (IsDuplicate == 1){ # <a class='k-button k-button-icontext k-grid-Duplicate' onclick='ViewDuplicateDeal(\"#=DealNo#\",#=StagingDealId#)'  style='float:left' title='Duplicate' ><span class='fa fa-files-o'></span></a> # }}#").Title("Action")
+                        .Width(190).Locked(true)
+                        .HtmlAttributes(Common.CenterColumnStyle)
+                        .HeaderHtmlAttributes(Common.CenterColumnStyle);
+
+                      columns.Bound(m => m.DealNo);
+                      columns.Bound(m => m.ContactName);
+                      columns.Bound(m => m.CompanyName);
+                      columns.Bound(m => m.TradeDateString);
+                      columns.Bound(m => m.ValueDateString);
+                      columns.Bound(m => m.ClientSoldAmt).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+                      columns.Bound(m => m.ClientSoldCCY);
+                      columns.Bound(m => m.ClientSoldGBP).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}").Title("Client Sold Amt"); ;
+                      columns.Bound(m => m.ClientBoughtAmt).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+                      columns.Bound(m => m.ClientBoughtCCY);
+                      columns.Bound(m => m.WLTotalCommGBP).Format("{0:" + FXAdminTransferConnex.Common.ConfigItems.AmountDisplayFormat + "}");
+                      //if (WebHelper.CanEdit() || WebHelper.CanDelete())
+                      //{
+                      //    columns.Command(command =>
+                      //    {
+                      //        if (WebHelper.CanEdit())
+                      //        {
+                      //            command.Custom("Edit").Text("<span class='k-icon k-edit'></span>").Click("onInsert").HtmlAttributes(new { @style = "margin:2px" });
+                      //        }
+                      //        if (WebHelper.CanDelete())
+                      //        {
+                      //            command.Destroy().Text(" ").HtmlAttributes(new { @style = "margin:2px" });
+                      //        }
+                      //    })
+                      //        .HeaderHtmlAttributes(Common.CenterColumnStyle)
+                      //        .HtmlAttributes(Common.CenterColumnStyle)
+                      //        .Title("Action")
+                      //        .Width(150);
+                      //}
+                  })
+
+
+                  .ToolBar(toolbar =>
+                  {
+                      if (WebHelper.CanAdd())
+                      {
+                          toolbar.Template(@<text>
+                            <button id='btnImport' class='k-button k-button-icontext' onclick='openImportStagingDealPopUp()' style='margin-bottom:2px;'><span class='fa fa-cloud-download'></span> Import Staging Deals </button>
+                            @if (ProjectSession.LoginUserDetails.UserTypeId == SystemEnum.UserType.SuperAdmin.GetHashCode())
+                            {
+                                <a class='k-button k-button-icontext k-grid-excel' href='#' style='margin-bottom:2px;'><span class='k-icon k-i-excel'></span>Export to Excel</a>
+                            }
+                            </text>);
+                      }
+
+                  })
+                  .Editable(e => e.Mode(GridEditMode.PopUp))
+                  .Pageable(x =>
+                  {
+                      x.Refresh(true);
+                      x.PageSizes(new int[] { 10, 20, 50, 100 });
+                  })
+                  .Events(events => events.ExcelExport("excelExport").DataBound("onDataBound"))
+                  .Selectable(selectable => selectable
+                  .Mode(GridSelectionMode.Single))
+                  .Navigatable()
+                  .Sortable(sortable => sortable.AllowUnsort(false))
+                  .NoRecords()
+                  .DataSource(dataSource => dataSource
+                      .Ajax()
+                      .ServerOperation(true)
+                      .PageSize(ConfigItems.GridPageSize)
+                      .Model(model =>
+                      {
+                          model.Id(d => d.StagingDealId);
+                      })
+                    .Destroy(delete => delete.Action("DeleteStagingDeal", "StagingDeal"))
+                    .Read(read => read.Action("GetStagingDealList", "StagingDeal"))
+                    .Events(events => events.RequestEnd("onRequestEnd"))
+                  ))
+            </div>
+        </div>
+
+    </fieldset>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        kendoGridScroll();
+    });
+
+    $('.k-pager-refresh').click(function () {
+        $('.Search').val('');
+    });
+
+    $('#btnReset').click(function () {
+        $('.Search').val('');
+        $("#FromDate").data("kendoDatePicker").value(null);
+        $("#ToDate").data("kendoDatePicker").value(null);
+        $('#gridStagingDeal').data('kendoGrid').dataSource.read({ DealNo: $('#txtDealNo').val().trim(), CompanyName: $('#txtCompanyName').val().trim(), FromDate: $("#FromDate").data("kendoDatePicker").value(), ToDate: $("#ToDate").data("kendoDatePicker").value() });
+    });
+
+    $("#btnSearch").click(function () {
+        //if ($('#txtsearch').val() !== "") {
+        $('#gridStagingDeal').data('kendoGrid').dataSource.read({ DealNo: $('#txtDealNo').val().trim(), CompanyName: $('#txtCompanyName').val().trim(), FromDate: $("#FromDate").data("kendoDatePicker").value(), ToDate: $("#ToDate").data("kendoDatePicker").value() });
+        //}
+    });
+
+    $('.Search').keypress(function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $('#gridStagingDeal').data('kendoGrid').dataSource.read({ DealNo: $('#txtDealNo').val().trim(), CompanyName: $('#txtCompanyName').val().trim(), FromDate: $("#FromDate").data("kendoDatePicker").value(), ToDate: $("#ToDate").data("kendoDatePicker").value() });
+        }
+    });
+
+    //Shows the notifications
+    function onRequestEnd(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridStagingDeal').data('kendoGrid').dataSource.read({ DealNo: $('#txtDealNo').val().trim(), CompanyName: $('#txtCompanyName').val().trim(), FromDate: $("#FromDate").data("kendoDatePicker").value(), ToDate: $("#ToDate").data("kendoDatePicker").value() });
+        }
+        DisplayResponseMessage(para);
+    }
+
+
+    function onDataBound(e) {
+        var grid = this;
+        var currentRecords = grid.dataSource.view();
+
+        for (var i = 0; i < currentRecords.length; i++) {
+            if (!currentRecords[i].ClientId) {
+                grid.tbody.find("tr[data-uid='" + currentRecords[i].uid + "']").addClass("ClsNoClient");
+            }
+        }
+    }
+
+    function onInsert(e) {
+        var stagingDealId = 0;
+        if (e != 0) {
+            e.preventDefault();
+            var tr = $(e.target).closest("tr");
+            var data = this.dataItem(tr);
+
+            if (data != null) {
+                stagingDealId = data.StagingDealId;
+            }
+        }
+
+        var urllink = '@Url.Action("ManageStagingDeal", "StagingDeal")';
+        window.location.href = urllink + "?StagingDealId=" + stagingDealId;
+    }
+
+    function excelExport(e) {
+        if (e.sender._exporting === undefined) {
+            e.sender._exporting = true;
+        }
+        if (e.sender._exporting) {
+            e.sender.hideColumn(0);
+            e.preventDefault();
+
+            e.sender._exporting = false;
+            e.sender.saveAsExcel();
+
+        } else {
+            e.sender._exporting = true;
+            e.sender.showColumn(0);
+        }
+    };
+
+    function openImportStagingDealPopUp() {
+        var urllink = '@Url.Action("ImportDealWindow", "StagingDeal")';
+        var window = $("#ImportDealWindow").data("kendoWindow");
+        window.refresh({
+            url: urllink
+        });
+        window.center();
+        window.open();
+    };
+
+    function ManageStagingDeal(StagingDealId, ClientId, IsDuplicate) {
+        var urllink = '@Url.Action("ManageStagingDeal", "StagingDeal")';
+        window.open(urllink + '?StagingDealId=' + StagingDealId);
+    };
+
+    function DiscardDeal(StagingDealId) {
+        var urllink = '@Url.Action("DiscardStagingDeal", "StagingDeal")';
+        window.location.href = urllink + "?StagingDealId=" + StagingDealId;
+    };
+
+
+    function ProceedDeal(StagingDealId) {
+        bootbox.confirm("Are your sure you want Proceed Deal?", function (result) {
+            if (result) {
+                var urllink = '@Url.Action("ProceedStagingDeal", "StagingDeal")';
+                window.location.href = urllink + "?StagingDealId=" + StagingDealId;
+            }
+        });
+    };
+
+
+    function ViewDuplicateDeal(DealNo, StagingDealId) {
+        var urllink = '@Url.Action("OpenDuplicateStagingDealPopUp", "StagingDeal")';
+        var window = $("#DuplicateDealWindow").data("kendoWindow");
+        window.refresh({
+            url: urllink
+        });
+        window.center();
+        window.open();
+    };
+
+    function SaveUploadValidate(e) {
+        var selectedfiles = $("#ImportStagingDeal").parent().siblings("ul").length;
+        if (selectedfiles <= 0) {
+            ShowErrorMessageImport('Must Select File To Import');
+            return false;
+        } 
+        else {
+            var window = $('#ImportDealWindow').data('kendoWindow');
+            var formData = new FormData($('#formUpload').get(0));
+            $.ajax({
+                url: '@Url.Action("UploadStagingDeal", "StagingDeal")',
+                async: false,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.ErrorMessage == "" || data.ErrorMessage == null) {
+                        $('#gridStagingDeal').data('kendoGrid').dataSource.read({ DealNo: $('#txtDealNo').val().trim(), CompanyName: $('#txtCompanyName').val().trim(), FromDate: $("#FromDate").data("kendoDatePicker").value(), ToDate: $("#ToDate").data("kendoDatePicker").value() });
+                        ShowSuccessMessage('Staging Deal Records imported successfully.')
+                        window.close();
+                    }
+                    else {
+                        ShowErrorMessage(data.ErrorMessage);
+
+                    }
+                }
+            });
+        }
+    };
+</script>

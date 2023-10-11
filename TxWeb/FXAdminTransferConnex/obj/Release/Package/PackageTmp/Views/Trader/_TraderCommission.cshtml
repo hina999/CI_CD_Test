@@ -1,0 +1,97 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+
+
+
+
+
+
+@(Html.Kendo().Grid<TraderCommissionModel>()
+                  .Name("gridTraderCommission")
+                  .Columns(columns =>
+                  {
+                      columns.Bound(m => m.TraderId).Visible(false);
+                      columns.Bound(m => m.DealFromAmt).Width(150);
+                      columns.Bound(m => m.DealToAmt).Width(150);
+                      columns.Bound(m => m.Commission);
+                      if (WebHelper.CanEdit() || WebHelper.CanDelete())
+                      {
+                          columns.Command(command =>
+                          {
+                              if (WebHelper.CanEdit())
+                              {
+                                  command.Edit().CancelText("Cancel").Text(" ").UpdateText("Save");
+                              }
+                              if (WebHelper.CanDelete())
+                              {
+                                  command.Destroy().Text(" ");
+                              }
+                          })
+                              .HeaderHtmlAttributes(Common.CenterColumnStyle)
+                              .HtmlAttributes(Common.CenterColumnStyle)
+                              .Title("Action")
+                              .Width(150);
+                      }
+                  })
+                  .ToolBar(toolbar =>
+                  {
+                      if (WebHelper.CanAdd())
+                      {
+                          toolbar.Create().Text("Add Commission");
+                      }
+                  })
+                  .Editable(e => e.Mode(GridEditMode.PopUp))
+                  .Pageable(x =>
+                  {
+                      x.Refresh(true);
+                      x.PageSizes(new int[] { 10, 20, 50, 100 });
+                  })
+                  .Events(x => x.Edit("onEdit"))
+                  .Selectable(selectable => selectable
+                  .Mode(GridSelectionMode.Single))
+                  .Navigatable()
+                  .Sortable(sortable => sortable.AllowUnsort(false))
+                  .NoRecords()
+                  .DataSource(dataSource => dataSource
+                      .Ajax()
+                      .ServerOperation(false)
+                      .PageSize(ConfigItems.GridPageSize)
+                      .Model(model =>
+                      {
+                          model.Id(d => d.TraderCommissionId);
+                      })
+                    .Create(update => update.Action("SaveTraderCommission", "Trader"))
+                    .Update(update => update.Action("SaveTraderCommission", "Trader"))
+                    .Destroy(delete => delete.Action("DeleteTraderCommission", "Trader"))
+                    .Read(read => read.Action("GetTraderCommissionList", "Trader").Data("paraTraderId"))
+                    .Events(events => events.RequestEnd("onRequestEndComm"))
+                  ))
+
+<script>
+    $(document).ready(function () {
+        kendoGridScroll();
+    });
+
+    function paraTraderId() {
+        return {
+            TraderId: $('#TraderId').val()
+        }
+    }
+
+    function onEdit(e) {
+        if (e.model.isNew()) {
+            e.model.set("TraderId", $('#TraderId').val());
+        }
+    }
+
+    //Shows the notifications
+    function onRequestEndComm(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridTraderCommission').data('kendoGrid').dataSource.read();
+        }
+        DisplayResponseMessage(para);
+    }
+
+</script>

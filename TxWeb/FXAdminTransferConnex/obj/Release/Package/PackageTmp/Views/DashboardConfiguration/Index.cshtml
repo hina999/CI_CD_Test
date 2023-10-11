@@ -1,0 +1,216 @@
+﻿@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnex.Entities;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <legend>User Dashboard Configuration</legend>
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+
+            <div class="panel panel-default client-registration">
+                <div class="panel-heading cursor-pointer mb-20" data-toggle="collapse" data-target="#div1">
+                    <h4 class="panel-title">
+                        <span class="fa fa-minus mr-10"></span>
+                        Admin/Management/Broker Selection
+                    </h4>
+                </div>
+                @if(ProjectSession.LoginUserDetails.UserTypeId == 1 || ProjectSession.LoginUserDetails.UserTypeId == 2)
+                {
+                <div id="div1" class="collapse panel-body collapse in">
+                    <div class="col-md-12" id="divagentcommission">
+
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @(Html.Kendo().DropDownList()
+                              .Name("Id")
+                              .OptionLabel("--Select Admin/Management/Broker--")
+                              .DataTextField("UserName")
+                              .DataValueField("UserId").HtmlAttributes(new { @style = "width:100% !important;" })
+                              .Events(e => e.Change("OnUserIdChange"))
+                              .Value(ProjectSession.LoginUserDetails.UserId.ToString())
+                              .DataSource(source =>
+                              {
+                                  source.Read(read =>
+                                  {
+                                      read.Action("GetUserList", "DashboardConfiguration");
+                                  })
+                                  .Custom()
+                                  .Group(b => b.Add("UserTypeName", typeof(string), System.ComponentModel.ListSortDirection.Ascending));
+                              }))
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+                
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        @(Html.Kendo().Grid<UserDashboardConfigurationModel>()
+                        .Name("gridUserConfig")
+                       .Columns(columns =>
+                      {
+                          columns.Bound(m => m.Visibility).Width(50)
+                          .ClientTemplate("<input type=\"checkbox\" name=\"Visibility_#=WizardId#\" onchange='StatusChanged(this,#=WizardId#)' id=\"Visibility_#=WizardId#\" class=\"k-checkbox chkStatus\" value=#= (Visibility == 1)? 'Visible' : 'NotVisible'#  #= (Visibility == 1)? checked='checked' : ''# ><label class=\"control-label k-checkbox-label\" for=\"Visibility_#=WizardId#\"></label> ")
+                          .HtmlAttributes(Common.CenterColumnStyle)
+                          .HeaderHtmlAttributes(Common.CenterColumnStyle)
+                          .Title("Visibility").Sortable(false);
+
+                          columns.Bound(m => m.WizardName).Title("Wizard Name");
+                          //.HeaderHtmlAttributes(Common.CenterColumnStyle);
+
+                          columns.Bound(m => m.WizardId).Width(150)
+                          .ClientTemplate("##<a class='k-button k-button-icontext' id='upaarow' onclick='SwapWizardDisplayOrder(#=WizardId#,true)' title='Move Up'><span class='fa fa-long-arrow-up'></span></a>##<a class='k-button k-button-icontext' id='downaarow' onclick='SwapWizardDisplayOrder(#=WizardId#, false)' title='Move Down'><span class='fa fa-long-arrow-down'></span></a>##").Title("Action")
+                          .Locked(true)
+                          .HtmlAttributes(Common.CenterColumnStyle)
+                          .HeaderHtmlAttributes(Common.CenterColumnStyle);
+
+
+                      })
+
+
+                  .Pageable(x =>
+                  {
+                      x.Refresh(false);
+                      x.PageSizes(true);
+                  })
+
+                  .Navigatable()
+
+                  .NoRecords()
+
+                  .DataSource(dataSource => dataSource
+                      .Ajax()
+                      .ServerOperation(false)
+                      .PageSize(10)
+                      .Model(model =>
+                      {
+                          model.Id(d => d.WizardId);
+                      })
+
+                      .Read(read => read.Action("GetWizardList", "DashboardConfiguration").Data("additionalData"))
+
+                          ).Events(e => e.DataBound("OnDataBound")))
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function OnDataBound(e){
+
+        var grid = $("#gridUserConfig").data("kendoGrid");
+        var firstRow =  grid.element.find('tbody tr:first');
+        //var count = grid.row.count();
+        //var lastrow = grid.element.find('tbody tr:eq(count)');
+
+        $(firstRow).find("#upaarow").hide();
+
+        var lastRow =  grid.element.find('tbody tr:last');
+
+        $(lastRow).find("#downaarow").hide();
+
+        //lastrow.data($("#downaarow").hide());
+    }
+
+    function OnUserIdChange(e)
+    {
+        $('#gridUserConfig').data('kendoGrid').dataSource.read();
+        arrowvisibility();
+    }
+
+    function additionalData()
+    {
+        var userId  = 0;
+        if(@ProjectSession.LoginUserDetails.UserTypeId == 3)
+        {
+            userId = @ProjectSession.LoginUserDetails.UserId;
+        }
+        else
+        {
+            userId = $("#Id").val();
+        }
+        return {
+            UserId : userId
+        }
+    }
+
+    function SwapWizardDisplayOrder(WizardId, isMoveUp) {
+        var userId  = 0;
+        if(($("#Id").val()) > 0 || @ProjectSession.LoginUserDetails.UserId > 0)
+        {
+
+            if(@ProjectSession.LoginUserDetails.UserTypeId == 3){
+                userId = @ProjectSession.LoginUserDetails.UserId;
+            }
+            else
+            {
+                userId = $("#Id").val();
+            }
+            $.ajax({
+                data: { "WizardId": WizardId, "IsMoveUp": isMoveUp, "UserId": userId },
+                // type: 'POST',
+                url: '@Url.Action("SwapWizardDisplayOrder", "DashboardConfiguration")',
+            }).done(function (data) {
+
+                if (data == 1) {
+                    OnUserIdChange(this)
+                    ShowSuccessMessage('Change Display Order successfully.');
+                }
+                else {
+                    ShowErrorMessage('Display Order can not be changed.')
+                }
+
+            });
+        }
+
+    }
+
+    function StatusChanged(e,WizardId) {
+
+        var status;
+        var userId  = 0;
+        var wizardId = WizardId;
+        if (e.value == "Visible")
+        {
+            status = false;
+        }
+        else
+        {
+            status = true;
+        }
+        if($("#Id").val() > 0 || @ProjectSession.LoginUserDetails.UserId > 0)
+        {
+            if(@ProjectSession.LoginUserDetails.UserTypeId == 3){
+                userId = @ProjectSession.LoginUserDetails.UserId;
+            }
+            else
+            {
+                userId = $("#Id").val();
+            }
+            $.ajax({
+                data: { "WizardId": wizardId, "status": status, "UserId": userId },
+                url: '@Url.Action("VisibilityChangeWizard", "DashboardConfiguration")',
+            }).done(function (data) {
+                if (data == 1) {
+                    OnUserIdChange(this)
+                    ShowSuccessMessage('Change Visibility status successfully.');
+                }
+                else {
+                    ShowErrorMessage('Visibility Status can not be changed.')
+                }
+            });
+        }
+
+    }
+</script>

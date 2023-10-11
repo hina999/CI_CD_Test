@@ -1,0 +1,44 @@
+﻿@using FXAdminTransferConnex.Entities
+@using Kendo.Mvc.UI
+
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h6 class="panel-title dashboard-title">
+            TRADER COMMISSIONS - TOTAL: <span id="Traderkamount"></span>
+            <span>
+                <span class="fa fa-file-pdf-o" type="button" title="Export PDF" onclick="ExportChart('#chartTraderCommissions','TraderCommission','PDF')"> </span>
+
+                <span class="fa fa-file-image-o" type="button" title="Export Image" onclick="ExportChart('#chartTraderCommissions', 'TraderCommission', 'PNG')"> </span>
+            </span>
+        </h6>
+    </div>
+
+    <div class="panel-body">
+        @(Html.Kendo().Chart<TraderCommissions>()
+                 .Name("chartTraderCommissions")
+                 .Legend(x => x.Labels(y => y.Template("#= kendo.format('{0:P}', percentage)# - #= text #")))
+                 .ChartArea(chartArea => chartArea.Background("transparent"))
+                 .SeriesDefaults(series => series.Donut().StartAngle(100)).Theme("material")
+                 .DataSource(ds => ds.Read(read => read.Action("GetTraderCommissions", "Dashboard")))
+                 .Series(series => { series.Donut("Amount", "Name").Padding(10).StartAngle(270); })
+                 .Tooltip(tooltip => tooltip.Visible(true).Template("#= category # - #= kendo.format('{0:P}', percentage) #")))
+    </div>
+</div>
+
+
+<script>
+    function getTraderKamount() {
+        var url = encodeURI('@Url.Action("gettotalkamount", "Dashboard", new { UserTypeId = SystemEnum.UserType.Trader.GetHashCode() })');
+        $.ajax({
+            url: url,
+            success: function (data) {
+                if (data.totalkamount != null) {
+                    $('#Traderkamount').text(" £ "+data.totalkamount);//data.totalkamount/1000 + 'K'
+                }
+            },
+            type: 'GET',
+            dataType: 'json'
+        });
+    };
+</script>

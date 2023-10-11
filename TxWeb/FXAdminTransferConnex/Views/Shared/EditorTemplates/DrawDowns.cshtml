@@ -1,0 +1,124 @@
+﻿
+@using FXAdminTransferConnex.Data.Models
+@model DrawDowns
+@using Kendo.Mvc.UI
+
+<div class="k-edit-form-container">
+
+
+    <table width="100%" style="width:100% !important">
+
+        <tr>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(x => x.dDrawDownDate)
+                </div>
+                <div class="editor-field">
+                    @Html.Kendo().DatePickerFor(x => x.dDrawDownDate).HtmlAttributes(new { @style = "width:100% !important" })
+                    @Html.ValidationMessageFor(x => x.dDrawDownDate)
+                </div>
+            </td>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(x => x.dSellAmount)
+                </div>
+                <div class="editor-field">
+                    @*@(Html.Kendo().NumericTextBoxFor(x => x.dSellAmount).Spinners(false).Events(e => e.Change("CalculateClientRateORNetProfit")).HtmlAttributes(new { @style = "width:100% !important" }).Decimals(6))*@
+                    @(Html.Kendo().NumericTextBoxFor(m => m.dSellAmount)
+                                 .HtmlAttributes(new { style = "width:100%" }).Spinners(false)
+                              
+                                 .Events(e => e.Change("CalculateClientRateORNetProfit"))
+                    )
+                    @Html.ValidationMessageFor(x => x.dSellAmount)
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(x => x.dSellAmountCcy)  
+                </div>
+                <div class="editor-field">
+                    @(Html.Kendo().NumericTextBoxFor(x => x.dSellAmountCcy).Spinners(false).Events(e => e.Change("CalculateClientRateORNetProfit")).HtmlAttributes(new { @style = "width:100% !important" }))
+
+                    @Html.ValidationMessageFor(x => x.dSellAmountCcy)
+                </div>
+            </td>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(x => x.dBuyAmount)
+                </div>
+                <div class="editor-field">
+                    @(Html.Kendo().NumericTextBoxFor(x => x.dBuyAmount).Spinners(false).Events(e => e.Change("CalculateClientRateORNetProfit")).HtmlAttributes(new { @style = "width:100% !important" }))
+                    @Html.ValidationMessageFor(x => x.dBuyAmount)
+                </div>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(x => x.dBuyAmountLp)
+                </div>
+                <div class="editor-field">
+                    @Html.Kendo().NumericTextBoxFor(x => x.dBuyAmountLp).Spinners(false).Events(e => e.Change("CalculateClientRateORNetProfit")).HtmlAttributes(new { @style = "width:100% !important" })
+                    @Html.ValidationMessageFor(x => x.dBuyAmountLp)
+                </div>
+            </td>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(x => x.dTransferCost)
+                </div>
+                <div class="editor-field">
+                    @Html.Kendo().NumericTextBoxFor(x => x.dTransferCost).Spinners(false).Events(e => e.Change("CalculateClientRateORNetProfit")).HtmlAttributes(new { @style = "width:100% !important" })
+                    @Html.ValidationMessageFor(x => x.dTransferCost)
+                </div>
+
+            </td>
+           
+        </tr>
+        <tr>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(x => x.dMarketRate)
+                </div>
+                <div class="editor-field">
+                    @Html.Kendo().NumericTextBoxFor(x => x.dMarketRate).Spinners(false).HtmlAttributes(new { @style = "width:100% !important" }).Decimals(6)
+                    @Html.ValidationMessageFor(x => x.dMarketRate)
+                </div>
+            </td>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(x => x.dGBPNetProfit)
+                </div>
+                <div class="editor-field">
+                    @Html.Kendo().NumericTextBoxFor(x => x.dGBPNetProfit).Spinners(false).HtmlAttributes(new { @style = "width:100% !important" })
+                    @Html.ValidationMessageFor(x => x.dGBPNetProfit)
+                </div>
+
+            </td>
+           
+        </tr>
+
+        <tr>
+            <td>
+            <div class="editor-label">
+                @Html.LabelFor(x => x.dClientRate)
+            </div>
+            <div class="editor-field">
+                @Html.Kendo().NumericTextBoxFor(x => x.dClientRate).Spinners(false).HtmlAttributes(new { @style = "width:100% !important" }).Decimals(6)
+                @Html.ValidationMessageFor(x => x.dClientRate)
+            </div>
+
+
+            </td>  
+            <td></td>
+        </tr>
+    </table>
+
+
+
+
+</div>
+

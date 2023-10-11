@@ -1,0 +1,18 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/TxService/TransferConnextDealImport/obj
+/TxService/WinService/bin/Debug
+/TxService/WinService/obj/Debug
+/TxWeb/FXAdminTransferConnex.Business/bin
+/TxWeb/FXAdminTransferConnex.Business/obj
+/TxWeb/FXAdminTransferConnex.Common/bin
+/TxWeb/FXAdminTransferConnex.Common/obj
+/TxWeb/FXAdminTransferConnex.Data/bin
+/TxWeb/FXAdminTransferConnex.Data/obj
+/TxWeb/FXAdminTransferConnex.Entities/bin
+/TxWeb/FXAdminTransferConnex.Entities/obj
+/TxWeb/TransferConnexChatApp/bin
+/TxWeb/TransferConnexChatApp/obj
+/TxWeb/FXAdminTransferConnex/bin

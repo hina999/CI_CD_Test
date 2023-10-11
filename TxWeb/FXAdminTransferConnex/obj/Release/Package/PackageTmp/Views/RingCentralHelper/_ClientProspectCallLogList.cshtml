@@ -1,0 +1,95 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+
+@(Html.Kendo().Grid<RingCentralModel>()
+    .Name("CallLogList")
+    .Columns(columns =>
+    {
+        columns.Bound(m => m.CallDirection).Visible(true).ClientTemplate(
+        "# if (CallDirection == 'Inbound') { #" +
+            "# if (CallResult == 'Missed') { #" +
+            "<i class='fa fa-long-arrow-down fa-2x' aria-hidden='true' style='color:rgb(227, 30, 30);transform: rotate(45deg);'></i>" +
+            "# } else { #" +
+            "<i class='fa fa-long-arrow-down fa-2x' aria-hidden='true' style='color:rgb(26, 133, 23);transform: rotate(45deg);'></i>" +
+            "# } #" +
+        "# } else { #" +
+        "<i class='fa fa-long-arrow-up fa-2x' aria-hidden='true' style='color:rgb(6, 121, 186);transform: rotate(45deg);'></i>" +
+        "# } #"
+        ).Title("").HtmlAttributes(new { @style = "text-align: center;" });
+        columns.Bound(m => m.CallFromName).Filterable(false).Sortable(false);
+        columns.Bound(m => m.CallFromNumber).Filterable(false).Sortable(false);
+        columns.Bound(m => m.CallToName).Filterable(false).Sortable(false);
+        columns.Bound(m => m.CallToNumber).Filterable(false).Sortable(false);
+        columns.Bound(m => m.CallStartTime).Filterable(false).Sortable(false).Format("{0:dd/MM/yyyy hh:mm:ss tt}").Title("Call Date");
+        columns.Bound(m => m.CallDuration).Filterable(false).Sortable(false).ClientTemplate("#=toHHMMSS(CallDuration)#");
+        //columns.Bound(m => m.CallType).Filterable(false).Sortable(false);
+        columns.Bound(m => m.CallDirection).Filterable(false).Sortable(false);
+        columns.Bound(m => m.CallAction).Filterable(false).Sortable(false);
+        columns.Bound(m => m.CallResult).Filterable(false).Sortable(false);
+    })
+    .Pageable(x =>
+      {
+          x.Refresh(true);
+          x.PageSizes(new int[] { 10, 20, 50, 100 });
+      })
+      .Selectable(selectable => selectable
+      .Mode(GridSelectionMode.Single))
+      .Navigatable()
+      .Sortable(sortable => sortable.AllowUnsort(false))
+      .NoRecords("No Call Log Entry found for this client")
+      .Events(grid => grid.DataBound("OndataboundClientCalllog"))
+      .DataSource(dataSource => dataSource
+          .Ajax()
+          .ServerOperation(false)
+          .PageSize(ConfigItems.GridPageSize)
+          .Model(model =>
+          {
+              model.Id(d => d.RingCentralCallId);
+          })
+            .Read(read => read.Action("GetClientProspectCallLogList", "RingCentralHelper").Data("ParamData"))
+      ))
+
+<script>
+
+    $(document).ready(function () {
+        kendoGridScroll();
+    });
+
+    function ParamData() {
+        var MobileNo = $('#MobileNo').val();
+        var AltMobileNo = $("#LandlineNo").val() == undefined ? $("#AltMobileNo").val() : $("#LandlineNo").val();
+
+        return {
+            MobileNo: MobileNo,
+            AltMobileNo: AltMobileNo,
+        }
+    }
+
+    function toHHMMSS(second) {
+        var sec_num = parseInt(second, 10); // don't forget the second param
+        var hours = Math.floor(sec_num / 3600);
+        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+        if (hours < 10) { hours = "0" + hours; }
+        if (minutes < 10) { minutes = "0" + minutes; }
+        if (seconds < 10) { seconds = "0" + seconds; }
+        return hours + ':' + minutes + ':' + seconds;
+    }
+    function onRequestEnd(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#CallLogList').data('kendoGrid').dataSource.read();
+        }
+        DisplayResponseMessage(para);
+    }
+    function OndataboundClientCalllog(e) {
+        var inboxGrid = $('#CallLogList').data("kendoGrid");
+        var gridData = inboxGrid.dataSource.total();
+        if (gridData <= 10) {
+            inboxGrid.pager.element.hide();   
+        }
+    }
+
+</script>

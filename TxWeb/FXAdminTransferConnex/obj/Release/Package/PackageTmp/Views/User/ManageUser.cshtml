@@ -1,0 +1,245 @@
+﻿@using Kendo.Mvc.UI;
+@using FXAdminTransferConnexApp
+@model FXAdminTransferConnex.Entities.UserModel
+
+@{
+    ViewBag.Title = "Manage User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .picture-container {
+        position: relative;
+        cursor: pointer;
+        text-align: center;
+        height: 130px;
+    }
+
+    .picture {
+        width: 130px;
+        height: 130px;
+        max-width: 130px;
+        max-height: 130px;
+        background-color: #999;
+        border: 4px solid #ccc;
+        color: #fff;
+        border-radius: 50%;
+        overflow: hidden;
+        transition: all .2s;
+        -webkit-transition: all .2s;
+    }
+
+    .picture-src {
+        width: 100%;
+        height: 100% !important;
+    }
+
+    .picture input[type=file] {
+        cursor: pointer;
+        display: block;
+        height: 100%;
+        left: 0;
+        opacity: 0 !important;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+</style>
+
+@using (Html.BeginForm("ManageUser", "User", FormMethod.Post, new { @id = "UserForm", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(m => m.UserId)
+    @Html.HiddenFor(m => m.ImageURL)
+    @Html.HiddenFor(m => m.ImageName)
+    <div class="content">
+        <legend>User Detail</legend>
+        <fieldset>
+            <legend></legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Title:</label>
+                                    @Html.TextBoxFor(m => m.UserTitle, new { @placeholder = "Title", @class = "form-control", @tabindex = "1" })
+                                    @Html.ValidationMessageFor(m => m.UserTitle)
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">First Name:</label>
+                                    @Html.TextBoxFor(m => m.FirstName, new { @placeholder = "First Name", @class = "form-control", @tabindex = "3" })
+
+                                    <div class="row" style="padding-left:14px">
+                                        @Html.ValidationMessageFor(m => m.FirstName)
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Email Address:</label>
+                                    @Html.TextBoxFor(m => m.EmailAddress, new { @placeholder = "Email Address", @class = "form-control", @tabindex = "5" })
+                                    @Html.ValidationMessageFor(m => m.EmailAddress)
+                                </div>
+                                <div class="form-group" id="divddlTrader">
+                                    <label class="control-label">Select Trader:</label>
+                                    @(Html.Kendo().DropDownListFor(d => d.TraderId)
+                                                    .HtmlAttributes(new { style = "width:100%;", id = "ddlTraderId" })
+                                                    .OptionLabel("Select Trader")
+                                                    .DataTextField("Text")
+                                                    .DataValueField("Value")
+                                                    .DataSource(source =>
+                                                    {
+                                                        source.Read(read =>
+                                                        {
+                                                            read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.Trader.GetHashCode() });
+                                                        });
+                                                    })
+                                    )
+                                    @Html.ValidationMessageFor(m => m.TraderId)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">User Type:</label>
+                                    @(Html.Kendo().DropDownList()
+                                                    .Name("UserTypeId")
+                                                    .OptionLabel("Select User Type")
+                                                    .Events(e => e.Change("onchangeusertype"))
+                                                    .HtmlAttributes(new { style = "width:100%;" })
+                                                    .DataTextField("Text")
+                                                    .DataValueField("Value").HtmlAttributes(new { @tabindex = "2", @class = "form-control", @style = "width:100% !important" })
+                                                    .BindTo(ViewBag.UserTypeList))
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Last Name:</label>
+                                    @Html.TextBoxFor(m => m.LastName, new { @placeholder = "Last Name", @class = "form-control", @tabindex = "4" })
+                                    <div class="row" style="padding-left:14px">
+                                        @Html.ValidationMessageFor(m => m.LastName)
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label" id="lblPassword">Password:</label>
+                                    @Html.TextBoxFor(m => m.Password, new { @placeholder = "Password", @class = "form-control", @id = "txtPassword", @tabindex = "6", @type = "password" })
+                                    @Html.ValidationMessageFor(m => m.Password)
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" id="lblPassword">Profile Picture:</label>
+                                    <div class="picture-container picture card-avatar">
+                                        <img class="picture-src" id="wizardPicturePreview" src="" title="" alt="">
+                                        <input id="wizard-picture" name="ImageFile" onchange="onFileChanged(event)" type="file" accept=".jpeg,.png,.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <a href="@Url.Action("Index","User")" class="btn btn-orange mt-5 mr-10 pull-right" tabindex="8">Cancel</a>
+                            <button class="btn btn-orange mt-5 mr-10 pull-right" type="submit" tabindex="7">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+}
+
+
+<script>
+    $(document).ready(function () {
+        checkAddeditPermission();
+        var validator = $("#UserForm").kendoValidator().data("kendoValidator");
+        if ($("#UserTypeId").data("kendoDropDownList").value() == 3) {
+            $("#txtPassword").hide();
+            $("#lblPassword").hide();
+        }
+        if ($("#UserTypeId").data("kendoDropDownList").value() != 4) {
+            $("#divddlTrader").hide();
+        }
+
+        let ImageName = $("#ImageName").val();
+        if (ImageName) {
+            let ImageURL = $("#ImageURL").val();
+            document.getElementById("wizardPicturePreview").setAttribute("src", ImageURL);
+        }
+    });
+
+    function onchangeusertype(e) {
+        var usertypeid = e.sender.value();
+        if (usertypeid == 1 || usertypeid == 4) {
+            $("#txtPassword").show();
+            $("#lblPassword").show();
+        }
+        else {
+            $("#txtPassword").hide();
+            $("#lblPassword").hide();
+        }
+        if (usertypeid == 4) {
+            $("#divddlTrader").show();
+        }
+        else {
+            $("#divddlTrader").hide();
+        }
+    }
+
+    $(function () {
+        var container = $("#UserForm");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+               
+                PasswordRule: function (input) {
+                    if (input.is("[name=Password]")) {
+                        if ((input.val() == undefined || input.val() == '') && (parseInt($('#UserTypeId').val()) == 1 || parseInt($('#UserTypeId').val()) == 4)) {
+                            return false;
+                        }
+                        else {
+                            return true;
+                        }
+                    }
+                    return true;
+                },
+                customRuleTrader: function (input) {
+                    //only 'Tom' will be valid value for the username input
+                    if (input.is("[id=ddlTraderId]")) {
+                        if ((input.val() == undefined || input.val() == '') && (parseInt($('#UserTypeId').val()) == 4)) {
+                            return false;
+                        }
+                        else {
+                            return true;
+                        }
+                    }
+                    return true;
+                }
+            },
+            messages: {
+                PasswordRule: "The Password field is required.",
+                customRuleTrader:"Please select Trader."
+            }
+        });
+    });
+    function checkAddeditPermission() {
+        var havePermission = "false";
+        if (@Model.UserId > 0) {
+            havePermission = '@WebHelper.CanEdit()';
+        } else {
+            havePermission = '@WebHelper.CanAdd()';
+        }
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+    }
+
+    function onFileChanged(event) {
+        if (event.target.files && event.target.files[0]) {
+            var reader = new FileReader();
+            var file;
+            reader.onload = function (e) {
+                file = e.target;
+                document.getElementById("wizardPicturePreview").setAttribute("src", file.result);
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    }
+</script>
+

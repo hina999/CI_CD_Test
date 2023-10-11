@@ -1,0 +1,59 @@
+﻿@using Kendo.Mvc.UI;
+@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnexApp
+@using FXAdminTransferConnex.Common
+
+@model FXAdminTransferConnex.Entities.CityMasterModel
+
+@{
+    ViewBag.Title = "ManageCity";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("ManageCity", "City", FormMethod.Post))
+{
+
+    @Html.HiddenFor(m => m.CityID)
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h2 class="category-title">
+                City Detail
+            </h2>
+
+            <div class="row">
+
+                <div class="col-sm-12">
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label class="control-label">City Name:</label>
+                            @Html.TextBoxFor(m => m.CityName, new { @placeholder = "City name", @class = "form-control", @tabindex = "1" })
+                            @Html.ValidationMessageFor(m => m.CityName)
+                            @(Html.Kendo().DropDownListFor(m => m.CountryID)
+                                    .Name("CountryID")
+                                    .OptionLabel("--Select Country --")
+                                    .DataTextField("CountryName")
+                                    .DataValueField("CountryID").HtmlAttributes(new { @style = "width:100% !important;", @tabindex = "6" })
+                                    .DataSource(source =>
+                                    {
+                                        source.Read(read =>
+                                        {
+                                            read.Action("GetCountryListForDisplay", "Country");
+                                        });
+                                    }))
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12">
+                    <a href="@Url.Action("Index","City")" class="btn btn-orange mt-5 mr-10 pull-right" tabindex="16">Cancel</a>
+                    <button class="btn btn-orange mt-5 mr-10 pull-right" type="submit" tabindex="15">Save</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+}
+

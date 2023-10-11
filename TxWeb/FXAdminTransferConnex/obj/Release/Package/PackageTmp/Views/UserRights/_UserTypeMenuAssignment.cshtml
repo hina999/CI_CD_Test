@@ -1,0 +1,156 @@
+﻿@using FXAdminTransferConnex.Entities
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+<style>
+    .k-edit-form-container {
+        width: 615px !important;
+    }
+</style>
+
+<div class="k-edit-form-container">
+    @(Html.Kendo().Grid<UserTypeMenuSearch>()
+          .Name("gvRoleMenus")
+          .Columns(columns =>
+          {
+              columns.Bound(x => x.MenuName).Title("Menus");
+              columns.Bound(x => x.IsView).Title("View")
+                  .ClientTemplate(@"<input type='checkbox' class='chkView'  value='#= IsView #' #= IsView ? checked='checked':'' #/>")
+                  .HtmlAttributes(WebHelper.StatusColumnStyle)
+                  .HeaderTemplate(@"View <br/><input type='checkbox' id='chkHeaderView'  onclick='checkAllView(this)'/>")
+                  .HeaderHtmlAttributes(WebHelper.StatusColumnStyle);
+              columns.Bound(x => x.IsEdit).Title("Edit")
+                  .ClientTemplate(@"<input type='checkbox' class= 'chkEdit'  value='#= IsEdit #' #= IsEdit ? checked='checked':'' #/>")
+                  .HtmlAttributes(WebHelper.StatusColumnStyle)
+                  .HeaderTemplate(@"Edit <br/><input type='checkbox' id='chkHeaderEdit' onclick='checkAllEdit(this)'></input>")
+                  .HeaderHtmlAttributes(WebHelper.StatusColumnStyle);
+              columns.Bound(x => x.IsAdd).Title("Add")
+                  .ClientTemplate(@"<input type='checkbox' class='chkAdd'  value='#= IsAdd #' #= IsAdd ? checked='checked':'' #/>")
+                  .HtmlAttributes(WebHelper.StatusColumnStyle)
+                  .HeaderTemplate(@"Add <br/><input  type='checkbox' id='chkHeaderAdd' onclick='checkAllAdd(this)'></input>")
+                  .HeaderHtmlAttributes(WebHelper.StatusColumnStyle);
+              columns.Bound(x => x.IsDelete).Title("Delete")
+                  .ClientTemplate(@"<input type='checkbox' class= 'chkDelete'  value='#= IsDelete #' #= IsDelete ? checked='checked':'' #/>")
+                  .HtmlAttributes(WebHelper.StatusColumnStyle)
+                  .HeaderTemplate(@"Delete <br/><input type='checkbox' id='chkHeaderDelete' onclick='checkAllDelete(this)'></input>")
+                  .HeaderHtmlAttributes(WebHelper.StatusColumnStyle);
+          })
+          .Editable(editable => editable.Mode(GridEditMode.InCell))
+          .Pageable(x => x.Enabled(false))
+          .NoRecords()
+          .Events(grid => grid.DataBound("dataBound"))
+          .DataSource(dataSource => dataSource
+              .Ajax()
+              .ServerOperation(false)
+              .Batch(true)
+              .Events(events => events.RequestEnd("onGridDataSourceRequestEnd"))
+              .Model(model =>
+              {
+                  model.Id(product => product.UserTypeMenuId);
+                  model.Field(product => product.MenuName).Editable(false);
+              })
+                     .Read(read => read.Action("ReadUserTypeAction", "UserRights").Data("additionalInfo"))
+          ))
+    <div class="k-edit-buttons k-state-default">
+        <a class="k-button k-button-icontext" href="#" title="Save" onclick="Save()">Save</a>
+        <a class="k-button k-button k-button-icontext" href="#" title="Reset" onclick="Reset()">Reset</a>
+        <a class="k-button k-button k-button-icontext" href="#" title="Cancel" onclick="ClosePopup()">Cancel</a>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#gvRoleMenus').on('click', '.chkView', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#gvRoleMenus').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            dataItem.set('IsView', checked);
+            CheckAllView();
+        });
+
+        $('#gvRoleMenus').on('click', '.chkEdit', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#gvRoleMenus').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            dataItem.set('IsEdit', checked);
+            CheckAllEdit();
+        });
+
+        $('#gvRoleMenus').on('click', '.chkAdd', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#gvRoleMenus').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            dataItem.set('IsAdd', checked);
+            CheckAllAdd();
+        });
+
+        $('#gvRoleMenus').on('click', '.chkDelete', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#gvRoleMenus').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            dataItem.set('IsDelete', checked);
+            CheckAllDelete();
+        });
+    });
+
+    function checkAllView(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#gvRoleMenus').data().kendoGrid;
+        $.each(grid.dataSource._data, function () {
+            if (this['IsView'] !== state)
+                this.dirty = true;
+            this['IsView'] = state;
+        });
+        grid.refresh();
+    }
+
+    function checkAllEdit(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#gvRoleMenus').data().kendoGrid;
+        $.each(grid.dataSource._data, function () {
+            if (this['IsEdit'] !== state)
+                this.dirty = true;
+            this['IsEdit'] = state;
+        });
+        grid.refresh();
+    }
+
+    function checkAllAdd(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#gvRoleMenus').data().kendoGrid;
+        $.each(grid.dataSource._data, function () {
+            if (this['IsAdd'] !== state)
+                this.dirty = true;
+            this['IsAdd'] = state;
+        });
+        grid.refresh();
+    }
+
+    function checkAllDelete(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#gvRoleMenus').data().kendoGrid;
+        $.each(grid.dataSource._data, function () {
+            if (this['IsDelete'] !== state)
+                this.dirty = true;
+            this['IsDelete'] = state;
+        });
+        grid.refresh();
+    }
+
+    function ClosePopup() {
+        closeKendoWindow("window");
+    }
+
+    function Save() {
+        var url = '@Url.Action("Save", "UserRights")';
+        var gridData = $("#gvRoleMenus").data("kendoGrid").dataSource.data();
+        var paramValue = kendo.stringify(gridData);
+        callwebservice(url, "model=" + paramValue, function (data) {
+            if (data == null || data === '') {
+                ClosePopup();
+            } else {
+                showMessageOnly(data);
+            }
+        }, true, datatypeEnum.text);
+
+    }
+</script>

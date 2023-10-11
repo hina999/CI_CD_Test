@@ -1,0 +1,290 @@
+﻿
+@using Kendo.Mvc.UI;
+@model FXAdminTransferConnex.Entities.DealModel
+@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common;
+@using FXAdminTransferConnexApp
+
+@{
+    ViewBag.Title = "Manage  Deal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("ManageDeal", "Deal", FormMethod.Post, new { @id = "DealForm" }))
+{
+    @Html.HiddenFor(m => m.DealId)
+    @Html.HiddenFor(m => m.DealNo)
+    <div class="content">
+        <h4>Deal Detail</h4>
+        <fieldset>
+            <legend></legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="col-sm-6">
+                                <h4 class="manage-deal-title"><b>Deal No. : @Model.DealNo</b></h4>
+                            </div>
+                            <div class="col-sm-6 btn-orange-back">
+                                <a href="@Url.Action("Index", "Deal")" class="btn btn-orange mt-5 mr-10 pull-right">Back</a>
+                                @*<button class="btn btn-orange mt-5 mr-10 pull-right" type="submit">Save</button>*@
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Contact/Account Name:</label>
+                                    @Html.TextBoxFor(m => m.ContactName, new { @placeholder = "Contact/Account Name", @class = "form-control", @tabindex = "1", disabled = "disabled" })
+                                    @Html.ValidationMessageFor(m => m.ContactName)
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Account Number:</label>
+                                    @Html.TextBoxFor(m => m.AccountId, new { @placeholder = "Account Number", @class = "form-control", disabled = "disabled" })
+                                    @Html.ValidationMessageFor(m => m.AccountNo)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Company Name:</label>
+                                    @Html.TextBoxFor(m => m.CompanyName, new { @placeholder = "Company Name", @class = "form-control", disabled = "disabled" })
+                                    @Html.ValidationMessageFor(m => m.CompanyName)
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="control-label">Source:</label>
+                                @Html.TextBoxFor(m => m.DealSource, new { @placeholder = "Source", @class = "form-control", disabled = "disabled" })
+                                @Html.ValidationMessageFor(m => m.DealSource)
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Trade Date:</label>
+                                    @(Html.Kendo()
+                                    .DatePickerFor(m => m.TradeDate)
+                                    .Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate)
+                                    .HtmlAttributes(new { @class = "dropdown", style = "width: 100%" })
+                                    )
+                                    @Html.ValidationMessageFor(m => m.TradeDate)
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Value Date:</label>
+                                    @(Html.Kendo()
+                                    .DatePickerFor(m => m.ValueDate)
+                                    .Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate)
+                                    .HtmlAttributes(new { @class = "dropdown", style = "width: 100%" })
+                                    )
+                                    @Html.ValidationMessageFor(m => m.ValueDate)
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Trade Type:</label>
+                                    @(Html.Kendo().DropDownListFor(d => d.TradeType)
+                                    .HtmlAttributes(new { style = "width:100%;" })
+                                    .OptionLabel("Select Trade Type")
+                                    .DataTextField("Text")
+                                    .DataValueField("Text")
+                                    .DataSource(source =>
+                                    {
+                                        source.Read(read =>
+                                        {
+                                            read.Action("GetTradeType", "Common");
+                                        });
+                                    })
+                                    )
+                                    @Html.ValidationMessageFor(m => m.TradeType)
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Transaction Status:</label>
+                                    @(Html.Kendo().DropDownListFor(d => d.TStatus)
+                                    .HtmlAttributes(new { style = "width:100%;" })
+                                    .OptionLabel("Select Transaction Status")
+                                    .DataTextField("Text")
+                                    .DataValueField("Text")
+                                    .DataSource(source =>
+                                    {
+                                        source.Read(read =>
+                                        {
+                                            read.Action("GetTransactionStatus", "Common");
+                                        });
+                                    })
+                                    )
+                                    @Html.ValidationMessageFor(m => m.TStatus)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <h4 class="pd-15">Client Sold Details</h4>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Sold CCY:</label>
+                                    @Html.TextBoxFor(m => m.ClientSoldCCY, new { @placeholder = "Sold CCY", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.ClientSoldCCY)
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Sold Amount:</label>
+                                    @Html.TextBoxFor(m => m.ClientSoldAmt, new { @placeholder = "Sold Amount", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.ClientSoldAmt)
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Sold Amount(GBP):</label>
+                                    @Html.TextBoxFor(m => m.ClientSoldGBP, new { @placeholder = "Sold Amount(GBP)", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.ClientSoldGBP)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <h4 class="pd-15">Client Bought Details</h4>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Bought CCY:</label>
+                                    @Html.TextBoxFor(m => m.ClientBoughtCCY, new { @placeholder = "Bought CCY", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.ClientBoughtCCY)
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Bought Amount:</label>
+                                    @Html.TextBoxFor(m => m.ClientBoughtAmt, new { @placeholder = "Bought Amount", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.ClientBoughtAmt)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <h4 class="pd-15">Profit Summary</h4>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Gross Comms GBP:</label>
+                                    @Html.TextBoxFor(m => m.GrossCommGBP, new { @placeholder = "Gross Comms GBP", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.GrossCommGBP)
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">WL Total Comm(GBP):</label>
+                                    @Html.TextBoxFor(m => m.WLTotalCommGBP, new { @placeholder = "WL Total Comm(GBP)", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.WLTotalCommGBP)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Gross Comms:</label>
+                                    @Html.TextBoxFor(m => m.GrossComm, new { @placeholder = "Gross Comms", @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Gross Comm CCY:</label>
+                                    @Html.TextBoxFor(m => m.GrossCommCurrency, new { @placeholder = "Gross Comm CCY", @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            @*<div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Gross Comms GBP Confirmed:</label>
+                                    @Html.TextBoxFor(m => m.GrossCommGBPFinal, new { @placeholder = "Gross Comms GBP Final", @class = "form-control" })
+                                </div>
+                            </div>*@
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Additional P&L:</label>
+                                    @Html.TextBoxFor(m => m.AdditionalPLAmount, new { @placeholder = "Additional P&L", @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    <div class="col-sm-12">
+                        
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label">Additional P&L Notes:</label>
+                                @Html.TextAreaFor(m => m.AdditionalPLNotes, new { @placeholder = "Additional P&L Notes", @class = "form-control", @rows = 3 })
+                            </div>
+                        </div>
+                    </div>
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+
+                            </div>
+                            @{
+                                if (ConfigItems.getAuthCanUpdateGrossCommsGBP != null && Convert.ToString(ConfigItems.getAuthCanUpdateGrossCommsGBP).Contains(ProjectSession.LoginUserDetails.Email))
+                                {
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <button class="btn btn-orange mt-5 mr-10 pull-right" type="submit">Update Commission</button>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            @*<div class="col-md-6">
+                                    <div class="form-group">
+                                        <button class="btn btn-orange mt-5 mr-10 pull-right" type="submit">Update Commission</button>
+                                    </div>
+                                </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+}
+
+
+<script>
+    $(document).ready(function () {
+        checkAddeditPermission();
+        var validator = $("#DealForm").kendoValidator().data("kendoValidator");
+    });
+    function checkAddeditPermission() {
+        var havePermission = "false";
+        if (@Model.DealId > 0) {
+            havePermission = '@WebHelper.CanEdit()';
+        } else {
+            havePermission = '@WebHelper.CanAdd()';
+        }
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+    }
+</script>

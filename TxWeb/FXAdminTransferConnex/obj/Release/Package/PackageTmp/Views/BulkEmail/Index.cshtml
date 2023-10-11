@@ -1,0 +1,349 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+<script src="~/Content/ckeditor/ckeditor.js"></script>
+<div class="content">
+    <legend>Send Bulk Email</legend>
+    <div class="panel panel-default">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-12" style="margin:10px 0">
+                            @(Html.Kendo().RadioButton().Name("Type1").Value("Client").Checked(true).HtmlAttributes(new { @name = "Type" }).Label("Client"))
+                            @(Html.Kendo().RadioButton().Name("Type2").Value("Admin").HtmlAttributes(new { @name = "Type" }).Label("Admin"))
+                            @(Html.Kendo().RadioButton().Name("Type3").Value("Trader").HtmlAttributes(new { @name = "Type" }).Label("Trader"))
+                            @(Html.Kendo().RadioButton().Name("Type4").Value("Affiliate").HtmlAttributes(new { @name = "Type" }).Label("Affiliate"))
+                            @(Html.Kendo().RadioButton().Name("Type5").Value("Sales_Person").HtmlAttributes(new { @name = "Type" }).Label("Sales Person"))
+                            @*@(Html.Kendo().RadioButton().Name("Type6").Value("Junior_Sales_Person").HtmlAttributes(new { @name = "Type" }).Label("Junior Sales Person"))*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 Client User">
+                            <div class="form-group">
+                                <label class="control-label client">Full Name:</label>
+                                <input id="txtFullName" type="text" placeholder="Full Name" class="k-textbox Search" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3 Client">
+                            <div class="form-group">
+                                <label class="control-label">Company Name:</label>
+                                <input id="txtCompanyName" type="text" placeholder="Company Name" class="k-textbox Search" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3 Client">
+                            <div class="form-group">
+                                <label class="control-label">Account Number:</label>
+                                <input id="txtAccountNo" type="text" placeholder="Account Number" class="k-textbox Search" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3 Client User">
+                            <div class="form-group">
+                                <label class="control-label">Email Address:</label>
+                                <input id="txtEmailAddress" type="text" placeholder="Email Address" class="k-textbox Search" />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3 Client">
+                            <div class="form-group">
+                                <label class="control-label">Awaiting Action:</label>
+                                @(Html.Kendo().DropDownList()
+                                        .Name("AwaitingAction")
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        //.OptionLabel("-- Status--")
+                                        .Value(ViewBag.IsAwaitingAction.ToString())
+                                        .BindTo(new List<SelectListItem>()
+                                        {
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "All",
+                                                            Value = "2"
+                                                        },
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "Yes",
+                                                            Value = "1"
+                                                        },
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "No",
+                                                            Value = "0"
+                                                        }
+                                        })
+                                        .HtmlAttributes(new { style = "width: 100%" })
+                                )
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3 Client">
+                            <div class="form-group">
+                                <label class="control-label">Market Order:</label>
+                                @(Html.Kendo().DropDownList()
+                                        .Name("MarketOrder")
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        //.OptionLabel("-- Status--")
+                                        .Value(ViewBag.IsMarketOrder.ToString())
+                                        .BindTo(new List<SelectListItem>()
+                                        {
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "All",
+                                                            Value = "2"
+                                                        },
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "Yes",
+                                                            Value = "1"
+                                                        },
+                                                        new SelectListItem()
+                                                        {
+                                                            Text = "No",
+                                                            Value = "0"
+                                                        }
+                                        })
+                                        .HtmlAttributes(new { style = "width: 100%" })
+                                )
+                            </div>
+                        </div>
+                        <div class="col-sm-6 pull-right">
+                            <div class="form-group pull-right">
+                                <button id="btnSearch" type="button" class="k-button btn-orange">Search</button>
+                                <button id="btnReset" type="button" class="k-button btn-orange">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* GRID HERE *@
+
+<fieldset>
+    <legend></legend>
+    <div class="panel panel-default" style="max-height:500px;overflow:auto;">
+        <div class="panel-body">
+
+            @(Html.Kendo().Grid<ClientMasterModel>()
+                        .Name("gridClient")
+                        .Columns(columns =>
+                        {
+                            columns.Bound(m => m)
+                                .ClientTemplate("<input type=\"checkbox\" name=\"#=ClientId#\" id=\"#=ClientId#\" class=\"k-checkbox chkcheckboxformail\"><label class=\"control-label k-checkbox-label\" for=\"#=ClientId#\"></label>")
+                                .HtmlAttributes(Common.CenterColumnStyle)
+                                .HeaderHtmlAttributes(Common.CenterColumnStyle)
+                                .HeaderTemplate("<input type=\"checkbox\" name=\"Master\" onchange='selectforMail(this)' id=\"chkMaster\" class=\"k-checkbox chkStatus\"><label class=\"control-label k-checkbox-label\" for=\"chkMaster\"></label>")
+                                .Sortable(false).Width(30);
+
+                            columns.Bound(m => m.FullName).Width(150);
+                            columns.Bound(m => m.EmailAddress);
+                        })
+                        .Editable(e => e.Mode(GridEditMode.PopUp))
+                        .Pageable(x =>
+                        {
+                            x.Refresh(true);
+                            x.PageSizes(false);
+                            x.PageSizes(new object[] { 500 });
+                        })
+                        .Filterable(f => f.Enabled(false))
+                        .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
+                        .Navigatable()
+                        .Sortable(sortable => sortable.AllowUnsort(false))
+                        .NoRecords()
+                        .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .ServerOperation(true)
+                            .PageSize(500)
+                            .Model(model =>
+                            {
+                                model.Id(d => d.ClientId);
+                            })
+                           .Read(read => read.Action("GetClientList", "BulkEmail").Data("ParaClientData"))
+                           .Events(events => events.RequestEnd("onRequestEnd"))
+                        ))
+        </div>
+    </div>
+</fieldset>
+
+    <legend>Mail Setup</legend>
+    <div class="panel panel-default">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label">Subject</label>
+                                <input id="txtMailSubject" type="text" placeholder="Subject" class="k-textbox" />
+                            </div>
+                        </div>
+                        @*<div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Company Name:</label>
+                                    <input id="txtCompanyName" type="text" placeholder="Company Name" class="k-textbox Search" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label">Account Number:</label>
+                                    <input id="txtAccountNo" type="text" placeholder="Account Number" class="k-textbox Search" />
+                                </div>
+                            </div>*@
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label">Email Body</label>
+                                <textarea rows="6" id="txtMailBody" class="k-textbox"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 pull-right">
+                            <div class="form-group pull-right">
+                                <button id="btnSendMail" type="button" class="k-button btn-orange">Send Mail</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var havePermission ='@WebHelper.CanView()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+        kendoGridScroll();
+    });
+
+    function ParaClientData() {
+        return {
+            FullName: $('#txtFullName').val().trim(),
+            EmailAddress: $('#txtEmailAddress').val().trim(),
+            CompanyName: $('#txtCompanyName').val().trim(),
+            AccountNo: $('#txtAccountNo').val().trim(),
+            AwaitingAction: $("#AwaitingAction").data("kendoDropDownList").value(),
+            MarketOrder: $("#MarketOrder").data("kendoDropDownList").value(),
+            SearchType: $('input[name="Type"]:checked').val()
+        }
+    }
+
+    $(document).on("change", "input[name='Type']", function () {
+        if (this.value == "Client") {
+            $(".Client").show();
+        }
+        else {
+            $(".Client").hide();
+            $(".User").show();
+        }
+        //$('#gridClient').data().kendoGrid.dataSource.page(1);
+        gridread();
+    });
+
+    function gridread() {
+        $('#gridClient').data('kendoGrid').dataSource.page(1).read();
+    };
+
+    $('#btnReset').click(function () {
+        $('.Search').val('');
+        $("#MarketOrder").data("kendoDropDownList").value(0)
+        $("#AwaitingAction").data("kendoDropDownList").value(0)
+        $('#gridClient').data('kendoGrid').dataSource.page(1).read();
+    });
+
+    $("#btnSearch").click(function () {
+        $('#gridClient').data('kendoGrid').dataSource.page(1).read();
+    });
+
+    //Shows the notifications
+    function onRequestEnd(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridClient').data('kendoGrid').dataSource.page(1).read();
+        }
+        DisplayResponseMessage(para);
+    }
+    
+    function selectforMail(e) {
+        var state = $(e).is(':checked');
+        $('.chkcheckboxformail').prop('checked', state);
+    }
+
+    var oldPageSize = 0;
+
+    function onChange(e) {
+        kendoConsole.log("The selected product ids are: [" + this.selectedKeyNames().join(", ") + "]");
+    };
+
+    function onClick(e) {
+        var grid = $("#grid").data("kendoGrid");
+
+        oldPageSize = grid.dataSource.pageSize();
+        grid.dataSource.pageSize(grid.dataSource.data().length);
+
+        if (grid.dataSource.data().length === grid.select().length) {
+            grid.clearSelection();
+        } else {
+            grid.select("tr");
+        };
+
+        grid.dataSource.pageSize(oldPageSize);
+    };
+
+
+    $('#btnSendMail').click(function () {
+        var Subject = $("#txtMailSubject").val();
+        var MailBody = CKEDITOR.instances.txtMailBody.getData();
+
+        var grid = $("#gridClient").data("kendoGrid");
+        // Get selected rows
+        var sel = $("input:checked", grid.tbody).closest("tr");
+        // Get data item for each
+        var items = [];
+        $.each(sel, function (idx, row) {
+            var item = grid.dataItem(row);
+            items.push(item.EmailAddress);
+        });
+
+
+        var status = true;
+
+        if (Subject == null || Subject == "") {
+            ShowErrorMessage('Mail subject is required');
+            status = false;
+            return;
+        }
+        if (MailBody == null || MailBody == "") {
+            ShowErrorMessage('Mail body is required');
+            status = false;
+            return;
+        }
+        if (items.length == 0) {
+            ShowErrorMessage('Please select at least one client.');
+            status = false;
+            return;
+        }
+
+        if (status) {
+            bootbox.confirm("You have selected - " + items.length + " emails. </br>Are you sure want to send email? ", function (result) {
+                if (result) {
+                    $.ajax({
+                        url: '@Url.Action("SendMail", "BulkEmail")',
+                        async: false,
+                        type: 'POST',
+                        data: { emaillist: items, subject: Subject, body: MailBody },
+                        success: function (data) {
+                            DisplayResponseMessageForAjax(data);
+                        }
+                    });
+                }
+            });
+        }
+    });
+</script>
+<script>
+    CKEDITOR.replace('txtMailBody');
+</script>

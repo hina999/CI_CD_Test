@@ -1,0 +1,11 @@
+﻿@using Kendo.Mvc.UI
+
+@model object
+
+
+@(Html.Kendo().DropDownListFor(m => m)
+              .Name("UserTypeId")
+              .BindTo(EnumHelper.GetSelectList(typeof(FXAdminTransferConnex.Entities.SystemEnum.UserType))
+
+))
+

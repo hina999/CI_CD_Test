@@ -1,0 +1,335 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnexApp
+@model List<FXAdminTransferConnex.Entities.ReconciliationTeamMemberModel>
+@{
+    ViewBag.Title = "ReconciliationTopReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var GetCurrentYear = (ReconciliationTeamModel)ViewData["ReconciliationTeamCurrentYearReport"];
+    var GetCurrentMonth = (ReconciliationTeamModel)ViewData["ReconciliationTeamCurrentMonthReport"];
+    var Lead = Model.Max(x => x.LeadCount);
+    var Reg = Model.Max(x => x.REGCount);
+    var Rnc = Model.Max(x => x.RNCCount);
+    var Ding = Model.Max(x => x.DingCount);
+}
+<style>
+    .panel-default > .panel-heading {
+        color: white;
+        background-color: #2c52ba;
+    }
+
+    .avatar {
+        border-radius: 50%;
+        font-size: 80px;
+        color: #fff;
+        text-align: center;
+        background: #337ab7
+    }
+
+    .container {
+        width: 80%;
+    }
+
+    .currentreport {
+        display: flex;
+        justify-content: center;
+    }
+
+    .detail {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    h3 {
+        font-size: 16px;
+        margin-left: 15px;
+    }
+</style>
+<div class="content">
+    <div class="container">
+        <div class="header">
+            @if (Model.Count != 0)
+            {
+                foreach (var item in Model)
+                {
+                    if (item.REGCount == Reg)
+                    {
+                        <div class="detail">
+                            @if (string.IsNullOrEmpty(item.ImageName))
+                            {
+                                <div class="avatar">
+                                    <span>AG</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <img src="@item.ImageURL" alt="" class="avatar" />
+                            }
+                            <div class="current-data">
+                                <h3>Top Reg</h3>
+                                <h3>@item.FullName</h3>
+                                <h3>@item.REGCount Reg</h3>
+                            </div>
+                        </div>
+                    }
+
+                    if (item.RNCCount == Rnc)
+                    {
+                        <div class="detail">
+                            @if (string.IsNullOrEmpty(item.ImageName))
+                            {
+                                <div class="avatar">
+                                    <span>AG</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <img src="@item.ImageURL" alt="" class="avatar" />
+                            }
+                            <div class="current-data">
+                                <h3>Top Rnc</h3>
+                                <h3>@item.FullName</h3>
+                                <h3>@item.RNCCount Rnc</h3>
+                            </div>
+                        </div>
+                    }
+
+                    if (item.DingCount == Ding)
+                    {
+                        <div class="detail">
+                            @if (string.IsNullOrEmpty(item.ImageName))
+                            {
+                                <div class="avatar">
+                                    <span>AG</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <img src="@item.ImageURL" alt="" class="avatar" />
+                            }
+                            <div class="current-data">
+                                <h3>Top Ding</h3>
+                                <h3>@item.FullName</h3>
+                                <h3>@item.DingCount Ding</h3>
+                            </div>
+                        </div>
+                    }
+
+                    if (item.LeadCount == Lead)
+                    {
+                        <div class="detail">
+                            @if (string.IsNullOrEmpty(item.ImageName))
+                            {
+                                <div class="avatar">
+                                    <span>AG</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <img src="@item.ImageURL" alt="" class="avatar" />
+                            }
+                            <div class="current-data">
+                                <h3>Top Leads</h3>
+                                <h3>@item.FullName</h3>
+                                <h3>@item.LeadCount Leads</h3>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                <span>No Data Available </span>
+            }
+        </div>
+        <hr />
+    </div>
+    <div class="currentreport">
+        <div>
+            <div class="panel panel-default text-center">
+                <div class="panel-heading">
+                    <h5>Current month</h5>
+                </div>
+            </div>
+            <table class="display" style="margin-left:5px;font-size:22px">
+                <thead>
+                    <tr style="border: 1px solid black">
+                        <th style="padding:6px 12px;">Name</th>
+                        <th style="padding:6px 12px;color:#7030A0;">Leads</th>
+                        <th style="padding:6px 12px;color:#2E72C4;">R/C</th>
+                        <th style="padding:6px 12px;color:#00B050;">Reg</th>
+                        <th style="padding:6px 12px;color:#FF0000;">Dings</th>
+                        <th style="padding:6px 12px;">Comms (£)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        long? traderId = 0;
+                        int RecordCount = 0;
+                        int LeadCount = 0;
+                        int RNCCount = 0;
+                        int REGCount = 0;
+                        int DingCount = 0;
+                        decimal Commission = 0;
+
+                        if (GetCurrentMonth != null)
+                        {
+                            foreach (var item in GetCurrentMonth.MemberList)
+                            {
+                                RecordCount = RecordCount + 1;
+                                LeadCount = LeadCount + item.LeadCount.Value;
+                                RNCCount = RNCCount + item.RNCCount.Value;
+                                REGCount = REGCount + item.REGCount.Value;
+                                DingCount = DingCount + item.DingCount.Value;
+                                Commission = Commission + item.Commission.Value;
+
+                                if (traderId != item.TraderId)
+                                {
+                                    if (traderId != 0)
+                                    {
+                                        var newList = GetCurrentMonth.MemberList.Where(x => x.TraderId == traderId);
+                                        <tr style="border-left: 1px solid black;border-right: 1px solid black;">
+                                            <td>@newList.Sum(x => x.LeadCount)</td>
+                                            <td>@newList.Sum(x => x.RNCCount)</td>
+                                            <td>@newList.Sum(x => x.REGCount)</td>
+                                            <td>@newList.Sum(x => x.DingCount)</td>
+                                            <td>@newList.Sum(x => x.Commission).Value.ToString("n2")</td>
+                                        </tr>
+                                    }
+                                    <tr style="border-left: 1px solid black;border-right: 1px solid black;">
+                                        <td style="padding: 1px 5px;">@item.FullName</td>
+                                        <td style="padding: 1px 5px;color:#7030A0;">@item.LeadCount</td>
+                                        <td style="padding: 1px 5px;color:#2E72C4;">@item.RNCCount</td>
+                                        <td style="padding: 1px 5px;color:#00B050;">@item.REGCount</td>
+                                        <td style="padding: 1px 5px;color:#FF0000;">@item.DingCount</td>
+                                        <td style="padding: 1px 5px;">@item.Commission.Value.ToString("n2")</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr style="border-left: 1px solid black;border-right: 1px solid black;">
+                                        <td style="padding: 1px 5px;">@item.FullName</td>
+                                        <td style="padding: 1px 5px;color:#7030A0;">@item.LeadCount</td>
+                                        <td style="padding: 1px 5px;color:#2E72C4;">@item.RNCCount</td>
+                                        <td style="padding: 1px 5px;color:#00B050;">@item.REGCount</td>
+                                        <td style="padding: 1px 5px;color:#FF0000;">@item.DingCount</td>
+                                        <td style="padding: 1px 5px;">@item.Commission.Value.ToString("n2")</td>
+                                    </tr>
+                                }
+                                traderId = item.TraderId;
+                            }
+                            <tr style="border-top: 1px solid black;">
+                                <td style="padding:10px 30px;" colspan="6"></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <div class="panel panel-default text-center">
+                <div class="panel-heading">
+                    <h5>Current Year</h5>
+                </div>
+            </div>
+            <table class="display" style="margin-left: 5px; font-size: 22px">
+                <thead>
+                    <tr style="border: 1px solid black">
+                        <th style="padding:6px 12px;">Name</th>
+                        <th style="padding:6px 12px;color:#7030A0;">Leads</th>
+                        <th style="padding:6px 12px;color:#2E72C4;">R/C</th>
+                        <th style="padding:6px 12px;color:#00B050;">Reg</th>
+                        <th style="padding:6px 12px;color:#FF0000;">Dings</th>
+                        <th style="padding:6px 12px;">Comms (£)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        long? traderIdd = 0;
+                        int RecordCountt = 0;
+                        int LeadCountt = 0;
+                        int RNCCountt = 0;
+                        int REGCountt = 0;
+                        int DingCountt = 0;
+                        decimal Commissionn = 0;
+
+                        if (GetCurrentYear != null)
+                        {
+                            foreach (var item in GetCurrentYear.MemberList)
+                            {
+                                RecordCountt = RecordCountt + 1;
+                                LeadCountt = LeadCountt + item.LeadCount.Value;
+                                RNCCountt = RNCCountt + item.RNCCount.Value;
+                                REGCountt = REGCountt + item.REGCount.Value;
+                                DingCountt = DingCountt + item.DingCount.Value;
+                                Commissionn = Commissionn + item.Commission.Value;
+
+                                if (traderIdd != item.TraderId)
+                                {
+                                    if (traderIdd != 0)
+                                    {
+                                        var newList = GetCurrentYear.MemberList.Where(x => x.TraderId == traderIdd);
+                                        <tr style="border-left: 1px solid black;border-right: 1px solid black;">
+                                            <td>@newList.Sum(x => x.LeadCount)</td>
+                                            <td>@newList.Sum(x => x.RNCCount)</td>
+                                            <td>@newList.Sum(x => x.REGCount)</td>
+                                            <td>@newList.Sum(x => x.DingCount)</td>
+                                            <td>@newList.Sum(x => x.Commission).Value.ToString("n2")</td>
+                                        </tr>
+                                    }
+                                    <tr style="border-left: 1px solid black;border-right: 1px solid black;">
+                                        <td style="padding: 1px 5px;">@item.FullName</td>
+                                        <td style="padding: 1px 5px;color:#7030A0;">@item.LeadCount</td>
+                                        <td style="padding: 1px 5px;color:#2E72C4;">@item.RNCCount</td>
+                                        <td style="padding: 1px 5px;color:#00B050;">@item.REGCount</td>
+                                        <td style="padding: 1px 5px;color:#FF0000;">@item.DingCount</td>
+                                        <td style="padding: 1px 5px;">@item.Commission.Value.ToString("n2")</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr style="border-left: 1px solid black;border-right: 1px solid black;">
+                                        <td style="padding: 1px 5px;">@item.FullName</td>
+                                        <td style="padding: 1px 5px;color:#7030A0;">@item.LeadCount</td>
+                                        <td style="padding: 1px 5px;color:#2E72C4;">@item.RNCCount</td>
+                                        <td style="padding: 1px 5px;color:#00B050;">@item.REGCount</td>
+                                        <td style="padding: 1px 5px;color:#FF0000;">@item.DingCount</td>
+                                        <td style="padding: 1px 5px;">@item.Commission.Value.ToString("n2")</td>
+                                    </tr>
+
+                                }
+                                traderIdd = item.TraderId;
+                            }
+                            <tr style="border-top: 1px solid black;">
+                                <td style="padding:10px 30px;" colspan="6"></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+        $(document).ready(function () {
+            var havePermission ='@WebHelper.CanView()';
+            if (havePermission.toLowerCase()=="false") {
+                var urllink = '@Url.Action("PermissionDenied", "Common")';
+                window.location.href = urllink;
+            }
+            $("#legend_header").hide();
+            $(".navbar").hide();
+            $(".sidebar").hide();
+            $(".chatWidget").hide();
+            setTimeout(function () {
+                $("#rc-widget").hide();
+                $("#back-to-top").hide();
+            }, 10000);
+        });
+</script>

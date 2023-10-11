@@ -1,0 +1,199 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+
+<div class="content">
+    <legend>DND Numbers</legend>
+    <div class="panel panel-default">
+        <div class="panel-body pb-0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-lg-3 col-sm-4">
+                            <div class="form-group">
+                                <input id="txtFullName" type="text" placeholder="Search Name" class="k-textbox" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-4">
+                            <div class="form-group">
+                                <input id="txtMobileNo" type="text" placeholder="Search Mobile No." class="k-textbox" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-4">
+                            <div class="form-group">
+                                <button id="search" type="button" class="k-button btn-orange">Search</button>
+                                <button id="btnReset" type="button" class="k-button btn-orange">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* GRID HERE *@
+
+    <fieldset>
+        <legend></legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                @(Html.Kendo().Grid<DNDNumbers>()
+                        .Name("gridDNDNumber")
+                        .Columns(columns =>
+                        {
+                            columns.Bound(m => m.FullName).Width(150);
+                            columns.Bound(m => m.MobileNo).Width(150);
+                            columns.Bound(m => m.Comments);
+                            columns.Command(command =>
+                            {
+                                if (WebHelper.CanEdit())
+                                {
+                                    command.Custom("Edit").Text("<span class='k-icon k-edit-white'></span>").Click("onInsert").HtmlAttributes(new { @style = "margin:2px;background: #0833b7;color:white;" });
+                                }
+                                if (WebHelper.CanDelete())
+                                {
+                                    command.Custom("Delete").Text("<span class='k-icon k-delete-white'></span>").Click("onDelete").HtmlAttributes(new { @style = "margin:2px;background:#ff1962;color:white;" });
+                                    //command.Destroy().Text(" ").HtmlAttributes(new { @style = "margin:2px" });
+                                }
+                            })
+                            .HeaderHtmlAttributes(Common.CenterColumnStyle)
+                            .HtmlAttributes(Common.CenterColumnStyle)
+                            .Title("Action")
+                            .Width(150);
+                        })
+                        .ToolBar(toolbar =>
+                        {
+                            if (WebHelper.CanAdd())
+                            {
+                                toolbar.Custom().Text("Add Number").Url(Url.Action("ManageNumber", "DNDNumber")).HtmlAttributes(new { @class = "k-button btn-orange" });
+                            }
+                        })
+                        .Editable(e => e.Mode(GridEditMode.PopUp))
+                        .Pageable(x =>
+                        {
+                            x.Refresh(true);
+                            x.PageSizes(new int[] { 10, 20, 50, 100 });
+                        })
+                        .Selectable(selectable => selectable
+                        .Mode(GridSelectionMode.Single))
+                        .Navigatable()
+                        .Sortable(sortable => sortable.AllowUnsort(false))
+                        .NoRecords()
+                        .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .ServerOperation(false)
+                        .PageSize(ConfigItems.GridPageSize)
+                        .Model(model =>
+                        {
+                            model.Id(d => d.DNDNumberID);
+                        })
+                        .Destroy(delete => delete.Action("DeleteDNDNumber", "DNDNumber"))
+                        .Read(read => read.Action("GetDNDList", "DNDNumber"))
+                        .Events(events => events.RequestEnd("onRequestEnd"))
+                        ))
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script>
+    $(document).ready(function () {
+        var havePermission ='@WebHelper.CanView()';
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+        kendoGridScroll();
+    });
+
+    $('#btnReset').click(function () {
+        $('#txtFullName').val('');
+        $('#txtMobileNo').val('');
+        $('#gridDNDNumber').data('kendoGrid').dataSource.read({
+            FullName: $('#txtFullName').val().trim(),
+            MobileNo: $('#txtMobileNo').val().trim()
+        });
+        $('#gridDNDNumber').data().kendoGrid.dataSource.page(1);
+    });
+
+    $("#search").click(function () {
+        $('#gridDNDNumber').data('kendoGrid').dataSource.read({
+            FullName: $('#txtFullName').val().trim(),
+            MobileNo: $('#txtMobileNo').val().trim()
+        });
+        $('#gridDNDNumber').data().kendoGrid.dataSource.page(1);
+    });
+
+    $(window).on('keypress', function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $("#search").click();
+        }
+    });
+
+    //Shows the notifications
+    function onRequestEnd(para) {
+        if (para.type == 'update' || para.type == 'create' || para.type == 'destroy') {
+            $('#gridDNDNumber').data('kendoGrid').dataSource.read();
+        }
+        DisplayResponseMessage(para);
+    }
+
+    function onInsert(e) {
+        var DNDNumberID = 0;
+
+        if (e != 0) {
+            e.preventDefault();
+            var tr = $(e.target).closest("tr");
+            var data = this.dataItem(tr);
+
+            if (data != null) {
+                DNDNumberID = data.DNDNumberID;
+            }
+        }
+        var urllink = '@Url.Action("ManageNumber", "DNDNumber")';
+        window.location.href = urllink + "?DNDNumberID=" + DNDNumberID;
+    }
+
+    function onDelete(e) {
+        var current = this;
+        bootbox.confirm("Are you sure you want to delete this record?",
+            function(result) {
+                if (result) {
+                    var dndNumberId = 0;
+
+                    if (e != 0) {
+                        e.preventDefault();
+                        var tr = $(e.target).closest("tr");
+                        var data = current.dataItem(tr);
+                        
+                        if (data != null) {
+                            dndNumberId = data.DNDNumberID;
+
+                            $.ajax({
+                                type: "POST",
+                                url: encodeURI('@Url.Action("DeleteDNDNumber", "DNDNumber")'),
+                                data: { dndNumberId: dndNumberId },
+                                cache: false,
+                                async: false,
+                                error: function (jqXHR, exception) {
+                                },
+                                success: function (data) {
+                                    if (data) {
+                                        DisplayResponseMessageForAjax(data);
+                                        $('#gridDNDNumber').data('kendoGrid').dataSource.read();
+                                    }
+                                }
+
+                            });
+                        }
+                    }
+
+                    
+                }
+            });
+       
+    }
+</script>

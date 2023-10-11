@@ -1,0 +1,864 @@
+﻿@using Kendo.Mvc.UI;
+@using FXAdminTransferConnexApp
+@model FXAdminTransferConnex.Entities.ClientMasterModel
+
+@{
+    ViewBag.Title = "Manage Client";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet" />
+<script src="~/Scripts/kendo.all.min.js"></script>
+@{
+    string actionName = "ManageClient";
+}
+
+<style>
+    div.k-edit-form-container {
+        /*width: auto;*/
+        height: 300px;
+    }
+
+    #cke_2_toolbox {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .customValidationAcc{
+    color:red;
+    }
+    .ClientFullName {
+        color: #0833b7;
+        margin-right:20px;
+    }
+    .ClientCompanyName {
+        color: #ff1962;
+    }
+</style>
+
+@if (Convert.ToInt32(FXAdminTransferConnex.Entities.ProjectSession.LoginUserDetails.UserTypeId) == FXAdminTransferConnex.Entities.SystemEnum.UserType.SuperAdmin.GetHashCode())
+{
+    actionName = "ManageClient";
+}
+else
+{
+    actionName = "SaveAwatingAction";
+}
+
+@using (Html.BeginForm(actionName, "Client", FormMethod.Post, new { @id = "ClientForm", onsubmit = "return submitfunction();" }))
+{
+    @Html.HiddenFor(m => m.ClientId)
+    @Html.HiddenFor(m => m.ClientSource)
+    <div class="content">
+        <h4>
+            Client Name :
+            <span class="ClientFullName">@Model.FullName</span>
+            Company Name :
+            <span class="ClientCompanyName">@Model.CompanyName</span>
+        </h4>
+        <fieldset>
+            <legend></legend>
+            <div class="panel panel-default" id="divClientPersonalDetail">
+                <div class="panel-heading cursor-pointer collapsed" id="pnlClientPersonalDetail" data-toggle="collapse" data-target="#div3">
+                    <h4 class="panel-title">
+                        <span class="fa fa-minus mr-10"></span>
+                        Client Personal Details
+                    </h4>
+                </div>
+                <div id="div3" class="panel-body collapse">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group Admin">
+                                    <label class="control-label">Full Name:</label>
+                                    @Html.TextBoxFor(m => m.FullName, new { @placeholder = "Full Name", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.FullName)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group Admin">
+                                    <label class="control-label">Company Name:</label>
+                                    @Html.TextBoxFor(m => m.CompanyName, new { @placeholder = "Company Name", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CompanyName)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group Admin">
+                                    <label class="control-label">Address Line1:</label>
+                                    @Html.TextAreaFor(m => m.AddressLine1, new { @placeholder = "Address Line1", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.AddressLine1)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group Admin">
+                                    <label class="control-label">Address Line2:</label>
+                                    @Html.TextAreaFor(m => m.AddressLine2, new { @placeholder = "Address Line2", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.AddressLine2)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group Admin">
+                                    <label class="control-label">City/Town:</label>
+                                    @Html.TextBoxFor(m => m.City_Town, new { @placeholder = "City/Town", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.City_Town)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group Admin">
+                                    <label class="control-label">State/County:</label>
+                                    @Html.TextBoxFor(m => m.State_County, new { @placeholder = "State/County", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.State_County)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group Admin">
+                                    <label class="control-label">Country:</label>
+                                    @Html.TextBoxFor(m => m.Country, new { @placeholder = "Country", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Country)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Mobile No:</label>
+                                    @Html.TextBoxFor(m => m.MobileNo, new { @placeholder = "Mobile No", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.MobileNo)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Mobile No (Alternate):</label>
+                                    @Html.TextBoxFor(m => m.AltMobileNo, new { @placeholder = "Mobile No (Alternate)", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.AltMobileNo)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Email Address:</label>
+                                    @Html.TextBoxFor(m => m.EmailAddress, new { @placeholder = "Email Address", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.EmailAddress)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group Admin">
+                                    <label class="control-label">Account Number:</label>
+                                    @Html.TextBoxFor(m => m.AccountNo, new { @placeholder = "Account Number", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.AccountNo)
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">GC Partner A/c No:</label>
+                                    @Html.TextBoxFor(m => m.GcPartnerClientId, new { @placeholder = "GC Partner Account Number", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.GcPartnerClientId)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group Admin">
+                                    <label class="control-label">ScioPay Account Number:</label>
+                                    @Html.TextBoxFor(m => m.ScioPayAccountId, new { @placeholder = "ScioPay Account Number", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.ScioPayAccountId)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <p id="customValidation" class="customValidationAcc">Please Fill any one out of Account Number / GC Partner A/c No / ScioPay Account Number </p>
+                                @*@Html.ValidationMessage("Please select One of the field", new { @class = "validation-message", @id = "customValidation" })*@
+                            </div>
+                           
+                           
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-group Admin">
+                                    <label class="control-label">Regiter Date:</label>
+                                    @(Html.Kendo()
+                                            .DatePickerFor(m => m.RegiterDate)
+                                            .Value(@Model.RegiterDate != null ? @Model.RegiterDate : DateTime.Now)
+                                            .HtmlAttributes(new { @class = "dropdown", style = "width: 100%" })
+                                    )
+                                    @Html.ValidationMessageFor(m => m.RegiterDate)
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group Admin" style="margin-top:20px">
+                                    <input id="IsActive" name="IsActive" value="@Model.IsActive" @(Model.IsActive ? "checked=\"checked\"" : "") class="k-checkbox" type="checkbox" />
+                                    <label class="control-label k-checkbox-label" for="IsActive" style="margin-top: 14px;">Active</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12" id="ClientSaveBtns">
+                            <a href="@Url.Action("Index", "Client")" class="btn btn-orange mt-5 mr-10 pull-right">Cancel</a>
+                            <button class="btn btn-orange mt-5 mr-10 pull-right btnsaveClientDetail" id="btnProspectSubmit1" type="submit">Save</button>
+                            @if (Model.ClientId > 0)
+                            {
+                                <button class="btn btn-orange mt-5 mr-10 pull-right" type="button" onclick="openClientTaskReminder()"><i class="fa fa-plus" aria-hidden="true"><span style="font-family:'robotoregular'"> Add Task Reminder</span> </i></button>
+                            }
+                        </div>
+                        <div class="col-md-12" id="ClientWarnLabel" style="display:none">
+                            <label class="pull-right">Button will be enable once call will be finished.</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default panel-divclientdetail" id="divClientDetail">
+                <div class="panel-heading cursor-pointer" data-toggle="collapse" data-target="#div4">
+                    <h4 class="panel-title">
+                        <span class="fa fa-minus mr-10"></span>
+                        Client Detail
+                    </h4>
+                </div>
+                <div id="div4" class="panel-body in">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">Default Margin:</label>
+                                @Html.TextAreaFor(m => m.DefaultMargin, new { @placeholder = "Default Margin", @class = "form-control", @rows = "5" })
+                                @Html.ValidationMessageFor(m => m.DefaultMargin)
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label class="control-label">Margin Posted:</label>
+                                    @Html.TextBoxFor(m => m.MarginPosted, new { @placeholder = "Margin Posted", @class = "form-control" })
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group Admin">
+                                        <label class="control-label">Trade Currencies:</label>
+                                        @(Html.Kendo().MultiSelectFor(m => m.Currencies)
+                                                                  .Name("Currencies")
+                                                                  .DataTextField("CCY")
+                                                                  .DataValueField("CCYId")
+                                                                  .Placeholder("Select Currencies")
+                                                                  .AutoBind(true)
+                                                                  .AutoClose(false)
+                                                                  .DataSource(source =>
+                                                                  {
+                                                                      source.Read(read =>
+                                                                      {
+                                                                          read.Action("GetCurrencyList", "Common");
+                                                                      });
+                                                                  })
+                                            )
+                                        @Html.ValidationMessageFor(m => m.Currencies)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group Admin">
+                                        <label class="control-label">Currencies Bought:</label>
+                                        @(Html.Kendo().MultiSelectFor(m => m.BoughtCurrencies)
+                                                    .Name("BoughtClientCurrencies")
+                                                    .DataTextField("CCY")
+                                                    .DataValueField("CCYId")
+                                                    .Placeholder("Select Currencies")
+                                                    .AutoBind(true)
+                                                    .AutoClose(false)
+                                                    .DataSource(source =>
+                                                    {
+                                                        source.Read(read =>
+                                                        {
+                                                            read.Action("GetCurrencyList", "Common");
+                                                        });
+                                                    })
+                                            )
+                                        @Html.ValidationMessageFor(m => m.BoughtCurrencies)
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group Admin">
+                                        <label class="control-label">Currencies Sold:</label>
+                                        @(Html.Kendo().MultiSelectFor(m => m.SoldCurrencies)
+                                                    .Name("SoldClientCurrencies")
+                                                    .DataTextField("CCY")
+                                                    .DataValueField("CCYId")
+                                                    .Placeholder("Select Currencies")
+                                                    .AutoBind(true)
+                                                    .AutoClose(false)
+                                                    .DataSource(source =>
+                                                    {
+                                                        source.Read(read =>
+                                                        {
+                                                            read.Action("GetCurrencyList", "Common");
+                                                        });
+                                                    })
+                                            )
+                                        @Html.ValidationMessageFor(m => m.SoldCurrencies)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group Admin">
+                                        <label class="control-label">Lead Category:</label>
+                                        @(Html.Kendo().DropDownListFor(x => x.LeadCategoryId)
+                                                .Name("LeadCategoryId")
+                                                .HtmlAttributes(new { style = "width:100%;" })
+                                                .OptionLabel("Select Category")
+                                                .DataTextField("LeadCategory")
+                                                .DataValueField("LeadId")
+                                                .DataSource(source =>
+                                                {
+                                                    source.Read(read =>
+                                                    {
+                                                        read.Action("GetLeadCategoryList", "Common");
+                                                    });
+                                                }).Enable(true))
+                                        @Html.ValidationMessageFor(m => m.LeadCategoryId)
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group Admin">
+                                        <label class="control-label">Select Sales Person:</label>
+                                        @(Html.Kendo().DropDownListFor(d => d.SalesPersonId)
+                                                              .HtmlAttributes(new { style = "width:100%;" })
+                                                              .OptionLabel("Select Sales Person")
+                                                              .DataTextField("Text")
+                                                              .DataValueField("Value")
+                                                              .DataSource(source =>
+                                                              {
+                                                                  source.Read(read =>
+                                                                  {
+                                                                      read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode() });
+                                                                  });
+                                                              })
+                                        )
+                                        @*@Html.ValidationMessageFor(m => m.SalesPersonId)*@
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group Admin">
+                                        <label class="control-label">Select Junior Sales Person:</label>
+                                        @(Html.Kendo().DropDownListFor(d => d.JuniorSalesPersonId)
+                                                              .HtmlAttributes(new { style = "width:100%;" })
+                                                              .OptionLabel("Select Junior Sales Person")
+                                                              .DataTextField("Text")
+                                                              .DataValueField("Value")
+                                                              .DataSource(source =>
+                                                              {
+                                                                  source.Read(read =>
+                                                                  {
+                                                                      read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode() });
+                                                                  });
+                                                              })
+                                        )
+                                        @*@Html.ValidationMessageFor(m => m.SalesPersonId)*@
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group Admin">
+                                        <label class="control-label">Select Trader:</label>
+                                        @(Html.Kendo().DropDownListFor(d => d.TraderId)
+                                                              .HtmlAttributes(new { style = "width:100%;" })
+                                                              .OptionLabel("Select Trader")
+                                                              .DataTextField("Text")
+                                                              .DataValueField("Value")
+                                                              .DataSource(source =>
+                                                              {
+                                                                  source.Read(read =>
+                                                                  {
+                                                                      read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.Trader.GetHashCode() });
+                                                                  });
+                                                              })
+                                        )
+                                        @Html.ValidationMessageFor(m => m.TraderId)
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group Admin">
+                                        <label class="control-label">Select Affiliate:</label>
+                                        @(Html.Kendo().DropDownListFor(d => d.AffiliateId)
+                                                              .HtmlAttributes(new { style = "width:100%;" })
+                                                              .OptionLabel("Select Affiliate")
+                                                              .DataTextField("Text")
+                                                              .DataValueField("Value")
+                                                              .DataSource(source =>
+                                                              {
+                                                                  source.Read(read =>
+                                                                  {
+                                                                      read.Action("GetUserByRole", "Common", new { UserTypeId = FXAdminTransferConnex.Entities.SystemEnum.UserType.Affiliate.GetHashCode() });
+                                                                  });
+                                                              })
+                                        )
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+
+                                    <div class="form-group Admin">
+
+                                        <label class="control-label">Select Category:</label>
+                                        @(Html.Kendo().DropDownListFor(d => d.CategoryId)
+                                                              .Name("CategoryId")
+                                                              .HtmlAttributes(new { style = "width:100%;" })
+                                                              .OptionLabel("Select Category")
+                                                              .DataTextField("CategoryName")/*CategoryName*/
+                                                              .DataValueField("CategoryId")/*CategoryId*/
+                                                              .DataSource(source =>
+                                                              {
+                                                                  source.Read(read =>
+                                                                  {
+                                                                      read.Action("GetCategoryList", "Common");
+                                                                  });
+                                                              })
+
+                                        )
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+
+                                    <div class="form-group Admin">
+
+                                        <label class="control-label">Select Sector Category:</label>
+                                        @(Html.Kendo().DropDownListFor(d=>d.SectorId)
+                                                              .Name("SectorId")
+                                                              .HtmlAttributes(new { style = "width:100%;" })
+                                                              .OptionLabel("Select Sector")
+                                                              .DataTextField("SectorName")/*CategoryName*/
+                                                              .DataValueField("SectorId")/*CategoryId*/
+                                                              .DataSource(source =>
+                                                              {
+                                                                  source.Read(read =>
+                                                                  {
+                                                                      read.Action("GetSectorList", "Common").Data("getCategoryID");
+                                                                  }).ServerFiltering(true);
+                                                              })
+                                                              .CascadeFrom("CategoryId")
+
+                                        )
+                                    </div>
+                                </div>
+
+
+                                <div class="col-sm-12">
+                                    @if (Model.ClientId > 0)
+                                    {
+                                        <div class="form-group">
+                                            <input id="IsAwaitingAction" name="IsAwaitingAction" value="@Model.IsAwaitingAction" @(Model.IsAwaitingAction ? "checked=\"checked\"" : "") class="k-checkbox" type="checkbox" />
+                                            <label class="control-label k-checkbox-label" for="IsAwaitingAction" style="margin-bottom: 10px;">Awaiting Action</label>
+                                            @Html.TextAreaFor(m => m.AwaitingAction, new { @class = "form-control", @rows = 3 })
+                                            @Html.ValidationMessageFor(m => m.AwaitingAction)
+
+                                        </div>
+                                        <div class="form-group">
+                                            <input id="IsMarketOrder" name="IsMarketOrder" value="@Model.IsMarketOrder" @(Model.IsMarketOrder ? "checked=\"checked\"" : "") class="k-checkbox" type="checkbox" />
+                                            <label class="control-label k-checkbox-label" for="IsMarketOrder" style="margin-bottom: 10px;">Market Order</label>
+                                            @Html.TextAreaFor(m => m.MarketOrder, new { @class = "form-control", @rows = 3 })
+                                            @Html.ValidationMessageFor(m => m.MarketOrder)
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <label class="control-label" style="width:100%;">
+                                    Enter past communication detail:
+                                    <span class="mob-dial-number">Mobile No.: <a onclick="dialNumber(this)" title="Click to call">@Model.MobileNo</a></span>
+                                    <span class="mob-dial-number">Landline No: <a onclick="dialNumber(this)" title="Click to call">@Model.AltMobileNo</a> &#160;</span>
+                                </label>
+                                @Html.TextAreaFor(m => m.PastCommDetail, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.PastCommDetail)
+                            </div>
+                        </div>
+                        <div class="col-md-12" id="ClientSaveBtns1">
+                            <a href="@Url.Action("Index", "Client")" class="btn btn-orange mt-5 mr-10 pull-right">Cancel</a>
+                            <button class="btn btn-orange mt-5 mr-10 pull-right btnsaveClientDetail" id="btnProspectSubmit" type="submit">Save</button>
+                            @if (Model.ClientId > 0)
+                            {
+                                <button class="btn btn-orange mt-5 mr-10 pull-right" type="button" onclick="openClientTaskReminder()"><i class="fa fa-plus" aria-hidden="true"><span style="font-family:'robotoregular'"> Add Task Reminder</span> </i></button>
+                                <button class="btn btn-orange mt-5 mr-10 pull-right" type="button" data-toggle="modal" data-target="#OutlookMeetingModalClient">Send Meeting Invitation</button>
+                                <button class="btn btn-orange mt-5 mr-10 pull-right" type="button" onclick="generateEML2Client()">Send Ebury Welcome Email</button>
+                                <button class="btn btn-orange mt-5 mr-10 pull-right" type="button" onclick="generateEML1Client()">Send CC Welcome Email</button>
+                                <button class="btn btn-orange mt-5 mr-10 pull-right" type="button" onclick="generateEMLBlankClient()">New Email</button>
+                            }
+                        </div>
+                        <div class="col-md-12" id="ClientWarnLabel1" style="display: none;">
+                            <label class="pull-right">Button will be enable once call will be finished.</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.ClientId > 0)
+            {
+                <div class="panel panel-default" id="divTaskreminder">
+                    <div class="panel-heading cursor-pointer collapsed" data-toggle="collapse" data-target="#div2">
+                        <h4 class="panel-title">
+                            <span class="fa fa-minus mr-10"></span>
+                            Task Reminders
+                        </h4>
+                    </div>
+                    <div id="div2" class="panel-body collapse">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @{
+                                    Html.RenderPartial("~/Views/Client/_TaskReminder.cshtml", Model);
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default" id="divMarkerOrder">
+                    <div class="panel-heading cursor-pointer collapsed" id="divMarkerOrderHeader" data-toggle="collapse" data-target="#divMarketOrder">
+                        <h4 class="panel-title">
+                            <span class="fa fa-minus mr-10"></span>
+                            Market Order
+                        </h4>
+                    </div>
+                    <div id="divMarketOrder" class="panel-body collapse">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @{
+                                    Html.RenderPartial("~/Views/Client/_MarketOrder.cshtml", Model);
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default" id="divClientDeal">
+                    <div class="panel-heading collapsed" data-toggle="collapse" data-target="#div1">
+                        <h4 class="panel-title">
+                            <span class="fa fa-minus mr-10"></span>
+                            Client Deals
+                        </h4>
+                    </div>
+                    <div id="div1" class="panel-body collapse">
+                        @Html.Partial("_ClientDeal", Model)
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading cursor-pointer collapsed" data-toggle="collapse" data-target="#div5">
+                        <h4 class="panel-title">
+                            <span class="fa fa-minus mr-10"></span>
+                            Call Log List
+                        </h4>
+                    </div>
+                    <div id="div5" class="panel-body collapse">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @{
+                                    Html.RenderPartial("~/Views/RingcentralHelper/_ClientProspectCallLogList.cshtml", Model);
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </fieldset>
+    </div>
+}
+
+<div class="modal fade" id="OutlookMeetingModalClient" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper table-responsive-box">
+        <div class="modal-dialog vertical-align-center">
+            <div class="modal-content" style="width:80%">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="ClearAllMeetinDataClient()">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">Meeting Detail</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Partial("_OutlookMeetingClient")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="sendOutlookMeeting()">Send Mail</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="ClearAllMeetinDataClient()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let form_data_changed = false;
+    $(document).ready(function () {
+        $("#customValidation").hide();
+        checkAddeditPermission();
+        var validator = $("#ClientForm").kendoValidator().data("kendoValidator");
+
+        CheckIsAdmin(@FXAdminTransferConnex.Entities.ProjectSession.LoginUserDetails.UserTypeId.GetHashCode())
+
+        //currencies
+        if ('@Model.Currencies' != "") {
+            var Currencies = '@Model.Currencies';
+            var SplitString = Currencies.split(',');
+            for (var i = 0; i < SplitString.length; i++) {
+                var multiselectItem = $('#Currencies').data('kendoMultiSelect');
+                var selected = multiselectItem.value();
+                var res = $.merge($.merge([], selected), [SplitString[i]]);
+                multiselectItem.value(res);
+            }
+        }
+        //Market Order Setting Popup
+        $('label[for=ToDate]').hide()
+        $("#ToDate").closest(".k-widget").hide();
+
+        var url_string = window.location.href
+        var url = new URL(url_string);
+        var c = url.searchParams.get("displayOnlyMarketOrder");
+        if (c != null) {
+            if (c.toLowerCase() === 'true') {
+                $("#divClientPersonalDetail").hide();
+                $("#divClientDetail").hide();
+                $("#divTaskreminder").hide();
+                $("#divClientDeal").hide();
+                $("#divMarkerOrderHeader").click();
+            }
+        }
+        if (@Model.ClientId > 0) {
+            $("#PastCommDetail").attr('rows', 40);
+        }
+        else { $("#PastCommDetail").attr('rows', 29);}
+
+        //BoughtCurrencies
+        if ('@Model.BoughtCurrencies' != "") {
+            var BoughtCurrencies = '@Model.BoughtCurrencies';
+            var SplitString = BoughtCurrencies.split(',');
+            for (var i = 0; i < SplitString.length; i++) {
+                var multiselectItem = $('#BoughtClientCurrencies').data('kendoMultiSelect');
+                var selected = multiselectItem.value();
+                var res = $.merge($.merge([], selected), [SplitString[i]]);
+                multiselectItem.value(res);
+            }
+        }
+
+        //SoldCurrencies
+         if ('@Model.SoldCurrencies' != "") {
+            var SoldCurrencies = '@Model.SoldCurrencies';
+            var SplitString = SoldCurrencies.split(',');
+            for (var i = 0; i < SplitString.length; i++) {
+                var multiselectItem = $('#SoldClientCurrencies').data('kendoMultiSelect');
+                var selected = multiselectItem.value();
+                var res = $.merge($.merge([], selected), [SplitString[i]]);
+                multiselectItem.value(res);
+            }
+        }
+
+        $('#ClientForm').on('change keyup keydown', 'input, textarea, select', function (e) {
+            form_data_changed = true;
+        });
+    });
+
+    $("#btnProspectSubmit").click(function () {
+         form_data_changed = false;
+    });
+
+    $("#btnProspectSubmit1").click(function () {
+        form_data_changed = false;
+    });
+
+    var beforeUnloadTimeout = 0;
+    $(window).on('beforeunload', function () {
+        beforeUnloadTimeout = setTimeout(function () {
+            $('.loader').hide();
+        }, 1000);
+        if (form_data_changed) {
+            return '';
+        }
+    });
+
+    $(window).bind('unload', function () {
+        if (typeof beforeUnloadTimeout !== 'undefined' && beforeUnloadTimeout != 0) {
+            clearTimeout(beforeUnloadTimeout);
+        }
+    });
+
+    function CheckIsAdmin(usertype) {
+        @*if (usertype != '@FXAdminTransferConnex.Entities.SystemEnum.UserType.SuperAdmin.GetHashCode()' &&
+            usertype != '@FXAdminTransferConnex.Entities.SystemEnum.UserType.Trader.GetHashCode()') {*@
+        if (usertype != '@FXAdminTransferConnex.Entities.SystemEnum.UserType.SuperAdmin.GetHashCode()') {
+
+            $(".Admin *").prop('disabled', true);
+
+            $("#SalesPersonId").data("kendoDropDownList").enable(false);
+            $("#JuniorSalesPersonId").data("kendoDropDownList").enable(false);
+            $("#TraderId").data("kendoDropDownList").enable(false);
+            $("#AffiliateId").data("kendoDropDownList").enable(false);
+            $("#Currencies").data("kendoMultiSelect").enable(false);
+            $("#BoughtClientCurrencies").data("kendoMultiSelect").enable(false);
+            $("#SoldClientCurrencies").data("kendoMultiSelect").enable(false);
+
+            $("#RegiterDate").data("kendoDatePicker").enable(false);
+
+            if (usertype == '@FXAdminTransferConnex.Entities.SystemEnum.UserType.SalesPerson.GetHashCode()')
+            {
+                $("#PastCommDetail").removeAttr('disabled');
+                $("#Currencies").data("kendoMultiSelect").enable(true);
+            }
+            if (usertype == '@FXAdminTransferConnex.Entities.SystemEnum.UserType.Trader.GetHashCode()') // --
+            {
+                $("#BoughtClientCurrencies").data("kendoMultiSelect").enable(true);
+                $("#SoldClientCurrencies").data("kendoMultiSelect").enable(true);
+            } // --
+        }
+    }
+
+    function onchangeNotifictionFilter(e) {
+        var selectedData = e.sender.value();
+        if (selectedData == "3") { //Range
+            $('label[for=StartDate]').text("Start Date");
+            $('label[for=EndDate]').show()
+            $("#EndDate").closest(".k-widget").show();
+        } else {
+            $('label[for=EndDate]').hide();
+            $("#EndDate").closest(".k-widget").hide();
+            $('label[for=StartDate]').text("Date");
+        }
+
+    }
+
+    function openClientTaskReminder() {
+        $("#clientTaskRemind").click();
+    }
+
+    $(".btnsaveClientDetail").click(function () {
+        if ($("#pnlClientPersonalDetail").hasClass("collapsed") == true) {
+            $("#pnlClientPersonalDetail").click();
+        }
+
+    });
+
+    function submitfunction() {
+        var accNo = $("#AccountNo").val();
+        var scioPayAccNo = $("#ScioPayAccountId").val();
+        var GCPartnerAccNo = $("#GcPartnerClientId").val();
+        var errorMessageElement = $("#customValidation");
+        if (accNo === "" && scioPayAccNo === "" && GCPartnerAccNo === "") {
+            errorMessageElement.show();
+            return false; // Prevent form submission
+        } else {
+            errorMessageElement.hide();
+            return true; // Allow form submission
+        }
+
+    }
+
+
+    function checkAddeditPermission() {
+        var havePermission = "false";
+        if (@Model.ClientId > 0) {
+            havePermission = '@WebHelper.CanEdit()';
+        } else {
+            havePermission = '@WebHelper.CanAdd()';
+        }
+        if (havePermission.toLowerCase()=="false") {
+            var urllink = '@Url.Action("PermissionDenied", "Common")';
+            window.location.href = urllink;
+        }
+    }
+
+    function generateEML1Client() {
+        bootbox.confirm("Are you sure want to send an email? ", function (result) {
+            if (result) {
+                var items = [];
+                items.push($("#EmailAddress").val());
+
+                $.ajax({
+                    url: '@Url.Action("GenerateDrafts", "BulkEmail")',
+                    async: false,
+                    type: 'POST',
+                    data: { emailTo: items, Subject: "", emailType: "EML1" },
+                    success: function (data) {
+                        if (data.Success) {
+                            var filePath = window.location.origin + data.Message;
+                            window.open(filePath);
+                        }
+                        else {
+                            ShowErrorMessage(data.Message);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function generateEML2Client() {
+        bootbox.confirm("Are you sure want to send an email? ", function (result) {
+            if (result) {
+                var items = [];
+                items.push($("#EmailAddress").val());
+
+                $.ajax({
+                    url: '@Url.Action("GenerateDrafts", "BulkEmail")',
+                    async: false,
+                    type: 'POST',
+                    data: { emailTo: items, Subject: "", emailType: "EML2" },
+                    success: function (data) {
+                        if (data.Success) {
+                            var filePath = window.location.origin + data.Message;
+                            window.open(filePath);
+                        }
+                        else {
+                            ShowErrorMessage(data.Message);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function generateEMLBlankClient() {
+        bootbox.confirm("Are you sure want to send an email? ", function (result) {
+            if (result) {
+                var items = [];
+                items.push($("#EmailAddress").val());
+
+                $.ajax({
+                    url: '@Url.Action("GenerateDrafts", "BulkEmail")',
+                    async: false,
+                    type: 'POST',
+                    data: { emailTo: items, Subject: "", emailType: "NEWBLANK" },
+                    success: function (data) {
+                        if (data.Success) {
+                            var filePath = window.location.origin + data.Message;
+                            window.open(filePath);
+                        }
+                        else {
+                            ShowErrorMessage(data.Message);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function getCategoryID() {
+        return {
+            CategoryId: $("#CategoryId").data("kendoDropDownList").value()
+        };
+
+    }
+</script>
+<script>
+    CKEDITOR.replace('PastCommDetail');
+    CKEDITOR.config.height = 685;
+</script>

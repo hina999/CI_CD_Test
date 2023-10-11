@@ -1,0 +1,61 @@
+﻿@using FXAdminTransferConnex.Entities;
+@using FXAdminTransferConnex.Common
+@using FXAdminTransferConnexApp
+@using Kendo.Mvc.UI
+@model TaskSchedulerModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="http://cdn.kendostatic.com/2013.3.1119/styles/kendo.common.min.css" rel="stylesheet" type="text/css" />
+    <link href="http://cdn.kendostatic.com/2013.3.1119/styles/kendo.rtl.min.css" rel="stylesheet" type="text/css" />
+    <link href="http://cdn.kendostatic.com/2013.3.1119/styles/kendo.default.min.css" rel="stylesheet" type="text/css" />
+    <link href="http://cdn.kendostatic.com/2013.3.1119/styles/kendo.dataviz.min.css" rel="stylesheet" type="text/css" />
+    <link href="http://cdn.kendostatic.com/2013.3.1119/styles/kendo.dataviz.default.min.css" rel="stylesheet" type="text/css" />
+    <link href="http://cdn.kendostatic.com/2013.3.1119/styles/kendo.mobile.all.min.css" rel="stylesheet" type="text/css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://cdn.kendostatic.com/2013.3.1119/js/kendo.all.min.js"></script>
+    <meta charset=utf-8 />
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/kendo.all.min.js"></script>
+</head>
+<body>
+    <div class="editor-label"><label for="Subject">Subject</label></div>
+    <div class="editor-field">
+
+        @Html.EditorFor(model => model.Title, "TextBox")
+        @Html.ValidationMessageFor(model => model.Title)
+    </div>
+    <div class="editor-label"><label for="Subject">Task Type</label></div>
+    <div class="editor-field">
+        @(Html.Kendo().DropDownListFor(m => m)
+                                                                      .Name("TaskTypeId")
+                                                                      .OptionLabel("Select Task Type")
+                                                                      .DataTextField("TaskType")
+                                                                      .DataValueField("TaskTypeId").HtmlAttributes(new { @style = "width:100% !important;" })
+                                                                      .DataSource(source =>
+                                                                      {
+                                                                          source.Read(read =>
+                                                                          {
+                                                                              read.Action("GetTaskTypeList", "Common");
+                                                                          });
+                                                                      }))
+    </div>
+
+    <div class="editor-label">
+        <label class="control-label">To Date:</label>
+    </div>
+    <div class="editor-field">
+        @Html.Kendo().DatePicker().Name("Start").Format(FXAdminTransferConnex.Common.ConfigItems.DateFormate).HtmlAttributes(new { style = "width:100%" })
+
+    </div>
+
+    <div class="editor-label"><label for="Subject">Subject</label></div>
+    <div class="editor-field">
+
+        @Html.TextAreaFor(model => model.Notes, "")
+        @Html.ValidationMessageFor(model => model.Title)
+    </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Link Expired</title>
+
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="~/Content/css/core.css" rel="stylesheet"/>
+
+    @*<link rel="stylesheet" href="~/Content/colors.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/style.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/kendo.common.min.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/kendo.common-material.min.css" type="text/css">*@
+
+</head>
+
+
+<body class="body-background">
+	<table class="link-Wrapper">
+		<tr>
+			<th></th>
+			<td align="left" valign="middle">Hello,</td>
+		</tr>
+		<tr>
+			<th></th>
+			<td>Your password recovery link has expired !</td>
+		</tr>
+		<tr>
+			<th></th>
+			<td>Your FX System password recovery link has expired. Please follow the forgot password
+			procedure again.</td>
+		</tr>
+		<tr>
+			<th></th>
+			<td>@Html.ActionLink("Go To Login", "Login", "Login", null, new { @class = "go-to-login", title = "Cancel" })</td>
+		</tr>
+		<tr>
+			<th></th>
+			<td>Thank You!<br>By FX System</td>
+		</tr>
+	</table>
+</body>
+
+</html>
+
+
+
+
+
