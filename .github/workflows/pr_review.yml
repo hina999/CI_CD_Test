@@ -1,0 +1,29 @@
+name: Code Style Check (.NET Framework 4.5)
+
+on:
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  stylecheck:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.3.1
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1
+
+    - name: Restore NuGet packages
+      run: nuget restore YourMvcSolution.sln
+
+    - name: Build solution
+      run: msbuild FXAdminTransferConnex.sln /p:Configuration=Release /p:TreatWarningsAsErrors=true
+
+    - name: Run StyleCop Analyzers
+      run: |
+        echo "Analyzers run during msbuild. If any rules in .editorconfig were violated, build will fail."
