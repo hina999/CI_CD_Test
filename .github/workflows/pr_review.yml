@@ -2,6 +2,7 @@ name: Code Style Check (.NET Framework 4.5)
 
 on:
   pull_request:
+    paths: 'TxWeb/**'
     branches: [ main, dev ]
 
 jobs:
@@ -21,6 +22,7 @@ jobs:
 
     - name: Restore NuGet packages
       run: nuget restore FXAdminTransferConnex.sln
+      working-directory: TxWeb
 
     - name: Install ReviewDog
       uses: reviewdog/action-setup@v1
@@ -37,3 +39,4 @@ jobs:
                       -level=warning \
                       -filter-mode=diff \
                       -fail-on-error=false
+      working-directory: TxWeb
