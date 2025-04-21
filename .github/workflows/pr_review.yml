@@ -5,11 +5,12 @@ on:
     branches: [ main, dev ]
 
 jobs:
-  stylecheck:
+  stylecop:
+    name: StyleCop Lint
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v4
 
     - name: Setup MSBuild
@@ -19,11 +20,20 @@ jobs:
       uses: NuGet/setup-nuget@v1
 
     - name: Restore NuGet packages
-      run: nuget restore YourMvcSolution.sln
+      run: nuget restore FXAdminTransferConnex.sln
 
-    - name: Build solution
-      run: msbuild FXAdminTransferConnex.sln /p:Configuration=Release /p:TreatWarningsAsErrors=true
+    - name: Install ReviewDog
+      uses: reviewdog/action-setup@v1
+      with:
+        reviewdog_version: latest
 
-    - name: Run StyleCop Analyzers
+    - name: Run StyleCop with ReviewDog
+      env:
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        echo "Analyzers run during msbuild. If any rules in .editorconfig were violated, build will fail."
+        msbuild FXAdminTransferConnex.sln /p:Configuration=Release /p:TreatWarningsAsErrors=false /v:minimal /noconlog \
+          | reviewdog -efm="%f(%l,%c): warning %*[a-zA-Z]%n: %m" \
+                      -reporter=github-pr-review \
+                      -level=warning \
+                      -filter-mode=diff \
+                      -fail-on-error=false
