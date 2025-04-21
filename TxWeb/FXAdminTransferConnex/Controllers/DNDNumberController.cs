@@ -1,4 +1,4 @@
-﻿using FXAdminTransferConnex.Business.Client;
+using FXAdminTransferConnex.Business.Client;
 using FXAdminTransferConnex.Common;
 using FXAdminTransferConnex.Entities;
 using FXAdminTransferConnex.Entities.LocalizationResource;
@@ -27,7 +27,7 @@ namespace FXAdminTransferConnexApp.Controllers
             return View();
         }
 
-        public ActionResult GetDNDList([DataSourceRequest]DataSourceRequest request, string FullName, string MobileNo)
+        public ActionResult GetDNDList_Fordndnumber([DataSourceRequest]DataSourceRequest request, string FullName, string MobileNo)
         {
             List<DNDNumbers> result = _clientService.GetDNDNumberlist(FullName, MobileNo);
             return Json(result.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
