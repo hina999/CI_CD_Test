@@ -2,6 +2,7 @@ name: Code Style Check (.NET Framework 4.5)
 
 on:
   pull_request:
+    paths: 'TxWeb/**'
     branches: [ main, dev ]
 
 jobs:
@@ -38,3 +39,4 @@ jobs:
                       -level=warning \
                       -filter-mode=diff \
                       -fail-on-error=false
+      working-directory: TxWeb
