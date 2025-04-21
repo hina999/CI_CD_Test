@@ -20,7 +20,7 @@ jobs:
       uses: NuGet/setup-nuget@v1
 
     - name: Restore NuGet packages
-      run: nuget restore FXAdminTransferConnex.sln
+      run: nuget restore TxWeb/FXAdminTransferConnex.sln
 
     - name: Install ReviewDog
       uses: reviewdog/action-setup@v1
@@ -28,10 +28,11 @@ jobs:
         reviewdog_version: latest
 
     - name: Run StyleCop with ReviewDog
+      shell: bash
       env:
         REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        msbuild FXAdminTransferConnex.sln /p:Configuration=Release /p:TreatWarningsAsErrors=false /v:minimal /noconlog \
+        msbuild TxWeb/FXAdminTransferConnex.sln /p:Configuration=Release /p:TreatWarningsAsErrors=false /v:minimal /noconlog \
           | reviewdog -efm="%f(%l,%c): warning %*[a-zA-Z]%n: %m" \
                       -reporter=github-pr-review \
                       -level=warning \
