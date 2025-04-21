@@ -1,5 +1,6 @@
 # To learn more about .editorconfig see https://aka.ms/editorconfigdocs
 
+root = true
 # All files
 [*]
 indent_style = space
@@ -8,3 +9,26 @@ dotnet_diagnostic.SA1649.severity=silent
 # Xml files
 [*.xml]
 indent_size = 2
+
+[*.cs]
+# Indentation and spacing
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+charset = utf-8
+
+# StyleCop rule examples
+dotnet_diagnostic.SA1300.severity = error     # Element names must begin with an uppercase letter
+dotnet_diagnostic.SA1200.severity = error     # Using directives must be placed correctly
+dotnet_diagnostic.SA1600.severity = warning   # Elements must be documented
+
+# Naming
+dotnet_naming_rule.private_fields_should_be_camel_case.severity = warning
+dotnet_naming_rule.private_fields_should_be_camel_case.symbols = private_fields
+dotnet_naming_rule.private_fields_should_be_camel_case.style = camel_case_style
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.accessibility = private
+
+dotnet_naming_style.camel_case_style.capitalization = camel_case
+dotnet_naming_style.camel_case_style.required_prefix = _
