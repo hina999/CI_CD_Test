@@ -28,7 +28,6 @@ jobs:
         msbuild TxWeb/FXAdminTransferConnex.sln `
           /p:Configuration=Release `
           /p:RunCodeAnalysis=true `
-          /p:CodeAnalysisRuleSet=TxWeb\CodeRules.ruleset `
           /v:minimal /nologo > buildlog.txt
       continue-on-error: true
 
