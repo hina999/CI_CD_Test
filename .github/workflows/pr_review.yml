@@ -30,11 +30,28 @@ jobs:
       run: |
         $ErrorActionPreference = "Continue"
         msbuild "TxWeb/FXAdminTransferConnex.sln" /p:Configuration=Release /p:RunCodeAnalysis=true /p:TreatWarningsAsErrors=true /v:minimal /nologo 2>&1 | Tee-Object -FilePath buildlog.txt
+
+        $log = Get-Content buildlog.txt
+        $styleCopErrors = $log | Where-Object { $_ -match 'SA\d{4}' }
+        $buildErrors = $log | Where-Object { $_ -match 'error ' -and $_ -notmatch 'SA\d{4}' }
+
         if ($LASTEXITCODE -ne 0) {
-          echo "### ❌ StyleCop or Build Errors (first 100 lines)" >> $env:GITHUB_STEP_SUMMARY
-          Get-Content buildlog.txt -TotalCount 100 | ForEach-Object { "``$_``" } >> $env:GITHUB_STEP_SUMMARY
+          echo "### ❌ Build Failed Summary" >> $env:GITHUB_STEP_SUMMARY
+          if ($styleCopErrors.Count -gt 0) {
+            echo "**⚠️ StyleCop Violations Found:**" >> $env:GITHUB_STEP_SUMMARY
+            $styleCopErrors | Select-Object -First 10 | ForEach-Object { "``$_``" } >> $env:GITHUB_STEP_SUMMARY
+          }
+          if ($buildErrors.Count -gt 0) {
+            echo "**💥 Build Errors:**" >> $env:GITHUB_STEP_SUMMARY
+            $buildErrors | Select-Object -First 10 | ForEach-Object { "``$_``" } >> $env:GITHUB_STEP_SUMMARY
+          }
+
+          echo "" >> $env:GITHUB_STEP_SUMMARY
+          echo "📝 _Showing first 10 issues per category. See full log for details._" >> $env:GITHUB_STEP_SUMMARY
+
           exit 1
         }
+
       
     - name: Upload full build log
       if: failure()
