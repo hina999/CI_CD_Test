@@ -2,25 +2,23 @@ name: 🚨 Code Formatting & Naming Convention Check (.NET Framework 4.5)
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, edited, ready_for_review]
+    types: [opened, synchronize, reopened, ready_for_review]
     branches: [main, dev]
 
 jobs:
-  code-formatting:
-    name: ✨ Code Formatting & Naming Check
+  code-check:
+    name: ✨ StyleCop & Naming Convention Review
     runs-on: windows-2019
     timeout-minutes: 10
     permissions:
       contents: read
       pull-requests: write
-      checks: write
-      statuses: write
 
     steps:
       - name: 📥 Checkout Code
         uses: actions/checkout@v4
 
-      - name: 🔍 Identify Changed Files
+      - name: 🔍 Get Changed Files
         id: changed-files
         uses: tj-actions/changed-files@v44
         with:
@@ -36,59 +34,92 @@ jobs:
         run: nuget restore TxWeb/FXAdminTransferConnex.sln
 
       - name: 🔎 Run StyleCop Analyzers (via MSBuild)
-        run: msbuild TxWeb/FXAdminTransferConnex.sln /p:RunCodeAnalysis=true /p:Configuration=Release
-
-      - name: 📝 Generate StyleCop Report (rudimentary)
-        run: |
-          echo "## StyleCop Report" > stylecop-report.md
-          echo "Generated on $(date /T) $(time /T)" >> stylecop-report.md
-          echo "If using analyzers, you may need to manually configure reporting for violations." >> stylecop-report.md
-
-      - name: 🔍 Manual Naming Convention Check
-        id: naming-check
+        id: stylecop
         continue-on-error: true
         run: |
-          echo "Checking naming conventions..."
-          $ErrorFound = 0
-          $ChangedFiles = "${{ steps.changed-files.outputs.all_changed_files }}".Split("`n") | Where-Object { $_.EndsWith(".cs") }
+          msbuild TxWeb/FXAdminTransferConnex.sln /p:RunCodeAnalysis=true /p:Configuration=Release > stylecop-output.txt
+          $violations = Get-Content stylecop-output.txt | Select-String -Pattern "SA\d{4}|warning" | Select-Object -First 10
+          $violations | Set-Content -Path stylecop-summary.txt
 
+      - name: 🚨 Manual Naming Convention Check
+        id: naming
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          $ChangedFiles = "${{ steps.changed-files.outputs.all_changed_files }}".Split("`n") | Where-Object { $_ -like "*.cs" }
+          $errors = @()
           foreach ($file in $ChangedFiles) {
-            Write-Host "Checking file: $file"
-
-            if (Select-String -Path $file -Pattern "class " -Quiet) {
-              if (-not (Select-String -Path $file -Pattern "class\s+[A-Z][a-zA-Z0-9]*" -Quiet)) {
-                Write-Output "::error file=$file::Class name should be PascalCase."
-                $ErrorFound = 1
+            if (Test-Path $file) {
+              $content = Get-Content $file
+              if ($content -match "class\s+\w+" -and -not ($content -match "class\s+[A-Z][a-zA-Z0-9]*")) {
+                $errors += "::error file=$file::Class name should be PascalCase."
+              }
+              if ($content -match "\s+[A-Z]{2,}\w*\s*=") {
+                $errors += "::error file=$file::Variable name should be camelCase."
               }
             }
-
-            if (Select-String -Path $file -Pattern "\s+[A-Z]{2,}\w*\s*=" -Quiet) {
-              Write-Output "::error file=$file::Variable name should be camelCase."
-              $ErrorFound = 1
-            }
           }
+          $errors | Set-Content -Path naming-summary.txt
+          echo "error_count=$($errors.Count)" >> $env:GITHUB_OUTPUT
+          if ($errors.Count -gt 0) { exit 1 }
 
-          echo "exit_code=$ErrorFound" >> $env:GITHUB_OUTPUT
-          if ($ErrorFound -eq 1) { exit 1 }
-
-      - name: 💬 Post Formatting Report
-        if: always()
+      - name: 💬 Post or Update PR Comment
         uses: actions/github-script@v7
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            let report = '## 📝 Manual Naming and Formatting Check\n\nChecked changed files for PascalCase class names and camelCase variables.\n';
-            report += '\nIf you want automated formatting, consider using tools like ReSharper CLI or Roslyn analyzers integrated into the build process.';
-            await github.rest.issues.createComment({
+            const stylecop = fs.existsSync('stylecop-summary.txt') ? fs.readFileSync('stylecop-summary.txt', 'utf8') : '';
+            const naming = fs.existsSync('naming-summary.txt') ? fs.readFileSync('naming-summary.txt', 'utf8') : '';
+
+            const body = `## 🛠 Code Style & Naming Convention Report
+
+### StyleCop (Top 10 Warnings):
+\`\`\`
+${stylecop || 'No issues found.'}
+\`\`\`
+
+### Naming Convention Issues:
+\`\`\`
+${naming || 'No issues found.'}
+\`\`\`
+
+---
+
+🔍 *Only the top 10 style violations are shown.*
+
+💡 For full analysis, run StyleCop locally or integrate ReSharper CLI.
+
+🚧 Merge is blocked until these issues are resolved.`;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: report
             });
 
-      - name: 🚫 Block Merge on Naming Issues
-        if: steps.naming-check.outputs.exit_code != '0'
+            const existing = comments.find(c => c.body && c.body.includes('## 🛠 Code Style & Naming Convention Report'));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                comment_id: existing.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body,
+              });
+            }
+
+      - name: 🚫 Block Merge if Issues Found
+        if: steps.naming.outcome == 'failure' || steps.stylecop.outcome == 'failure'
         run: |
-          echo "::error::Naming convention issues found. Please fix them before merging."
+          echo "::error::Style or naming violations detected. Please fix before merging."
           exit 1
