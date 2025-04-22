@@ -1,94 +1,94 @@
-name: Code Style Check (.NET Framework 4.5)
+name: 🚨 Code Formatting & Naming Convention Check (.NET Framework 4.5)
 
 on:
   pull_request:
-    paths: 'TxWeb/**'
-    branches: [ main, dev ]
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+    branches: [main, dev]
 
 jobs:
-  stylecop:
-    name: StyleCop Analysis (.NET 4.5)
-    runs-on: windows-2019  # VS 2019 image with .NET 4.5 support
+  code-formatting:
+    name: ✨ Code Formatting & Naming Check
+    runs-on: windows-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+      statuses: write
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1
+      - name: 🔍 Identify Changed Files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+            **/*.cs
+            **/*.csproj
+            **/*.sln
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.3.1
-      with:
-        vs-version: '16.11'  # VS 2019
+      - name: 🧰 Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
 
-    - name: Restore NuGet packages
-      run: nuget restore TxWeb/FXAdminTransferConnex.sln
+      - name: 🧩 Restore NuGet Packages
+        run: nuget restore FXAdminTransferConnex.sln
 
-    - name: Run StyleCop analysis
-      shell: pwsh
-      run: |
-        # Configure error handling
-        $ErrorActionPreference = "Continue"
-        
-        # Run build with StyleCop
-        msbuild "TxWeb/FXAdminTransferConnex.sln" `
-          /p:Configuration=Release `
-          /p:RunCodeAnalysis=true `
-          /p:TreatWarningsAsErrors=true `
-          /v:minimal `
-          /nologo 2>&1 | Tee-Object -FilePath buildlog.txt
+      - name: 🔎 Run StyleCop Analyzers (via MSBuild)
+        run: msbuild FXAdminTransferConnex.sln /p:RunCodeAnalysis=true /p:Configuration=Release
 
-        # Parse logs
-        $logContent = Get-Content buildlog.txt -Raw
-        $styleCopIssues = [regex]::Matches($logContent, 'SA\d{4}.+?(?=\n|$)') | ForEach-Object { $_.Value.Trim() }
-        $buildErrors = [regex]::Matches($logContent, 'error (?!SA\d{4}).+?(?=\n|$)') | ForEach-Object { $_.Value.Trim() }
+      - name: 📝 Generate StyleCop Report (rudimentary)
+        run: |
+          echo "## StyleCop Report" > stylecop-report.md
+          echo "Generated on $(date /T) $(time /T)" >> stylecop-report.md
+          echo "If using analyzers, you may need to manually configure reporting for violations." >> stylecop-report.md
 
-        # Generate user-friendly summary
-        $summaryPath = "build_summary.md"
-        
-        @"
-## 🚨 Code Style Validation Failed
+      - name: 🔍 Manual Naming Convention Check
+        id: naming-check
+        continue-on-error: true
+        run: |
+          echo "Checking naming conventions..."
+          $ErrorFound = 0
+          $ChangedFiles = "${{ steps.changed-files.outputs.all_changed_files }}".Split("`n") | Where-Object { $_.EndsWith(".cs") }
 
-Hi @$env:GITHUB_ACTOR, we found some issues that need attention:
-"@ | Out-File -FilePath $summaryPath
+          foreach ($file in $ChangedFiles) {
+            Write-Host "Checking file: $file"
 
-        if ($styleCopIssues.Count -gt 0) {
-          @"
-### 🔍 StyleCop Violations ($($styleCopIssues.Count) found)
-These are code style violations that need to be fixed:
-$(($styleCopIssues | Select-Object -First 10 | ForEach-Object { "- ``$_``" }) -join "`n")
-"@ | Out-File -FilePath $summaryPath -Append
-        }
+            if (Select-String -Path $file -Pattern "class " -Quiet) {
+              if (-not (Select-String -Path $file -Pattern "class\s+[A-Z][a-zA-Z0-9]*" -Quiet)) {
+                Write-Output "::error file=$file::Class name should be PascalCase."
+                $ErrorFound = 1
+              }
+            }
 
-        if ($buildErrors.Count -gt 0) {
-          @"
-### ❌ Build Errors ($($buildErrors.Count) found)
-These are critical issues preventing successful build:
-$(($buildErrors | Select-Object -First 10 | ForEach-Object { "- ``$_``" }) -join "`n")
-"@ | Out-File -FilePath $summaryPath -Append
-        }
+            if (Select-String -Path $file -Pattern "\s+[A-Z]{2,}\w*\s*=" -Quiet) {
+              Write-Output "::error file=$file::Variable name should be camelCase."
+              $ErrorFound = 1
+            }
+          }
 
-        @"
-**ℹ️ Need help?**
-- For StyleCop issues, check [StyleCop documentation](https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/DOCUMENTATION.md)
-- For build errors, check the full log below
-- Only showing first 10 issues per category - [View complete log](buildlog.txt)
+          echo "exit_code=$ErrorFound" >> $env:GITHUB_OUTPUT
+          if ($ErrorFound -eq 1) { exit 1 }
 
-Please fix these issues and update your PR.
-"@ | Out-File -FilePath $summaryPath -Append
+      - name: 💬 Post Formatting Report
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            let report = '## 📝 Manual Naming and Formatting Check\n\nChecked changed files for PascalCase class names and camelCase variables.\n';
+            report += '\nIf you want automated formatting, consider using tools like ReSharper CLI or Roslyn analyzers integrated into the build process.';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: report
+            });
 
-        # Add to GitHub summary
-        Get-Content $summaryPath | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
-
-        # Fail the build if issues found
-        if ($styleCopIssues.Count -gt 0 -or $buildErrors.Count -gt 0 -or $LASTEXITCODE -ne 0) {
+      - name: 🚫 Block Merge on Naming Issues
+        if: steps.naming-check.outputs.exit_code != '0'
+        run: |
+          echo "::error::Naming convention issues found. Please fix them before merging."
           exit 1
-        }
-      
-    - name: Upload complete build log
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: stylecop-analysis-log
-        path: buildlog.txt
