@@ -71,30 +71,36 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            const stylecop = fs.existsSync('stylecop-summary.txt') ? fs.readFileSync('stylecop-summary.txt', 'utf8') : 'No issues found.';
-            const naming = fs.existsSync('naming-summary.txt') ? fs.readFileSync('naming-summary.txt', 'utf8') : 'No issues found.';
+
+            const stylecop = fs.existsSync('stylecop-summary.txt')
+              ? fs.readFileSync('stylecop-summary.txt', 'utf8')
+              : 'No issues found.';
+
+            const naming = fs.existsSync('naming-summary.txt')
+              ? fs.readFileSync('naming-summary.txt', 'utf8')
+              : 'No issues found.';
 
             const body = [
-              '## 🛠 Code Style & Naming Convention Report',
-              '',
-              '### StyleCop (Top 10 Warnings):',
-              '```',
+              "## 🛠 Code Style & Naming Convention Report",
+              "",
+              "### StyleCop (Top 10 Warnings):",
+              "```",
               stylecop.trim(),
-              '```',
-              '',
-              '### Naming Convention Issues:',
-              '```',
+              "```",
+              "",
+              "### Naming Convention Issues:",
+              "```",
               naming.trim(),
-              '```',
-              '',
-              '---',
-              '',
-              '🔍 *Only the top 10 style violations are shown.*',
-              '',
-              '💡 For full analysis, run StyleCop locally or integrate ReSharper CLI.',
-              '',
-              '🚧 Merge is blocked until these issues are resolved.'
-            ].join('\n');
+              "```",
+              "",
+              "---",
+              "",
+              "🔍 *Only the top 10 style violations are shown.*",
+              "",
+              "💡 For full analysis, run StyleCop locally or integrate ReSharper CLI.",
+              "",
+              "🚧 Merge is blocked until these issues are resolved."
+            ].join("\n");
 
             const { data: comments } = await github.rest.issues.listComments({
               issue_number: context.issue.number,
@@ -102,7 +108,9 @@ jobs:
               repo: context.repo.repo,
             });
 
-            const existing = comments.find(c => c.body && c.body.includes('## 🛠 Code Style & Naming Convention Report'));
+            const existing = comments.find(c =>
+              c.body && c.body.includes("## 🛠 Code Style & Naming Convention Report")
+            );
 
             if (existing) {
               await github.rest.issues.updateComment({
