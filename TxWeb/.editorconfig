@@ -18,7 +18,7 @@ insert_final_newline = true
 charset = utf-8
 
 # StyleCop rule examples
-dotnet_diagnostic.SA1300.severity = warning     # Element names must begin with an uppercase letter
+dotnet_diagnostic.SA1300.severity = error     # Element names must begin with an uppercase letter
 # dotnet_diagnostic.SA1200.severity = error     # Using directives must be placed correctly/
 dotnet_diagnostic.SA1600.severity = warning   # Elements must be documented
 
