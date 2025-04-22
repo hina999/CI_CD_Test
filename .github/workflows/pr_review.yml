@@ -33,12 +33,13 @@ jobs:
       - name: 🧩 Restore NuGet Packages
         run: nuget restore TxWeb/FXAdminTransferConnex.sln
 
-      - name: 🔎 Run StyleCop Analyzers (via MSBuild)
+      - name: 🔎 Run StyleCop Analyzers
         id: stylecop
+        shell: pwsh
         continue-on-error: true
         run: |
-          msbuild TxWeb/FXAdminTransferConnex.sln /p:RunCodeAnalysis=true /p:Configuration=Release > stylecop-output.txt
-          $violations = Get-Content stylecop-output.txt | Select-String -Pattern "SA\d{4}|warning" | Select-Object -First 10
+          msbuild TxWeb/FXAdminTransferConnex.sln /p:RunCodeAnalysis=true /p:Configuration=Release | Tee-Object -FilePath stylecop-output.txt
+          $violations = Get-Content stylecop-output.txt | Select-String -Pattern 'SA\d{4}|warning' | Select-Object -First 10
           $violations | Set-Content -Path stylecop-summary.txt
 
       - name: 🚨 Manual Naming Convention Check
@@ -46,44 +47,43 @@ jobs:
         shell: pwsh
         continue-on-error: true
         run: |
-          $ChangedFiles = "${{ steps.changed-files.outputs.all_changed_files }}".Split("`n") | Where-Object { $_ -like "*.cs" }
+          $ChangedFilesRaw = "${{ steps.changed-files.outputs.all_changed_files }}"
+          $ChangedFiles = $ChangedFilesRaw -split "`n" | Where-Object { $_ -like "*.cs" }
           $errors = @()
           foreach ($file in $ChangedFiles) {
             if (Test-Path $file) {
               $content = Get-Content $file
-              if ($content -match "class\s+\w+" -and -not ($content -match "class\s+[A-Z][a-zA-Z0-9]*")) {
+              if ($content -match 'class\s+\w+' -and -not ($content -match 'class\s+[A-Z][a-zA-Z0-9]*')) {
                 $errors += "::error file=$file::Class name should be PascalCase."
               }
-              if ($content -match "\s+[A-Z]{2,}\w*\s*=") {
+              if ($content -match '\s+[A-Z]{2,}\w*\s*=') {
                 $errors += "::error file=$file::Variable name should be camelCase."
               }
             }
           }
           $errors | Set-Content -Path naming-summary.txt
-          echo "error_count=$($errors.Count)" >> $env:GITHUB_OUTPUT
+          echo "error_count=$($errors.Count)" | Out-File -Append $env:GITHUB_OUTPUT
           if ($errors.Count -gt 0) { exit 1 }
 
       - name: 💬 Post or Update PR Comment
         uses: actions/github-script@v7
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            const stylecop = fs.existsSync('stylecop-summary.txt') ? fs.readFileSync('stylecop-summary.txt', 'utf8') : '';
-            const naming = fs.existsSync('naming-summary.txt') ? fs.readFileSync('naming-summary.txt', 'utf8') : '';
+            const stylecop = fs.existsSync('stylecop-summary.txt') ? fs.readFileSync('stylecop-summary.txt', 'utf8') : 'No issues found.';
+            const naming = fs.existsSync('naming-summary.txt') ? fs.readFileSync('naming-summary.txt', 'utf8') : 'No issues found.';
 
             const body = `## 🛠 Code Style & Naming Convention Report
 
 ### StyleCop (Top 10 Warnings):
 \`\`\`
-${stylecop || 'No issues found.'}
+${stylecop.trim()}
 \`\`\`
 
 ### Naming Convention Issues:
 \`\`\`
-${naming || 'No issues found.'}
+${naming.trim()}
 \`\`\`
 
 ---
