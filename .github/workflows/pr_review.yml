@@ -35,8 +35,7 @@ jobs:
           Get-Content buildlog.txt -TotalCount 100 | ForEach-Object { "``$_``" } >> $env:GITHUB_STEP_SUMMARY
           exit 1
         }
-      continue-on-error: true
-
+      
     - name: Upload full build log
       if: failure()
       uses: actions/upload-artifact@v4
