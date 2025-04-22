@@ -8,7 +8,7 @@ on:
 jobs:
   code-formatting:
     name: ✨ Code Formatting & Naming Check
-    runs-on: windows-latest
+    runs-on: windows-2019
     timeout-minutes: 10
     permissions:
       contents: read
@@ -33,10 +33,10 @@ jobs:
         uses: microsoft/setup-msbuild@v2
 
       - name: 🧩 Restore NuGet Packages
-        run: nuget restore FXAdminTransferConnex.sln
+        run: nuget restore TxWeb/FXAdminTransferConnex.sln
 
       - name: 🔎 Run StyleCop Analyzers (via MSBuild)
-        run: msbuild FXAdminTransferConnex.sln /p:RunCodeAnalysis=true /p:Configuration=Release
+        run: msbuild TxWeb/FXAdminTransferConnex.sln /p:RunCodeAnalysis=true /p:Configuration=Release
 
       - name: 📝 Generate StyleCop Report (rudimentary)
         run: |
