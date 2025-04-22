@@ -35,22 +35,29 @@ jobs:
         $styleCopErrors = $log | Where-Object { $_ -match 'SA\d{4}' }
         $buildErrors = $log | Where-Object { $_ -match 'error ' -and $_ -notmatch 'SA\d{4}' }
 
+        # Create markdown summary
+        $mdPath = "build_summary.md"
+        Set-Content -Path $mdPath -Value "## ❌ Build Failed Summary`n"
+
+        if ($styleCopErrors.Count -gt 0) {
+          Add-Content -Path $mdPath -Value "`n### ⚠️ StyleCop Violations:"
+          $styleCopErrors | Select-Object -First 10 | ForEach-Object { Add-Content -Path $mdPath -Value ("- ``" + $_ + "``") }
+        }
+
+        if ($buildErrors.Count -gt 0) {
+          Add-Content -Path $mdPath -Value "`n### 💥 Build Errors:"
+          $buildErrors | Select-Object -First 10 | ForEach-Object { Add-Content -Path $mdPath -Value ("- ``" + $_ + "``") }
+        }
+
+        Add-Content -Path $mdPath -Value "`n_Only first 10 issues per category shown. [See full log](./buildlog.txt)._"
+
+        # Append to GitHub summary
+        Get-Content $mdPath | ForEach-Object { echo "$_" >> $env:GITHUB_STEP_SUMMARY }
+
         if ($LASTEXITCODE -ne 0) {
-          echo "### ❌ Build Failed Summary" >> $env:GITHUB_STEP_SUMMARY
-          if ($styleCopErrors.Count -gt 0) {
-            echo "**⚠️ StyleCop Violations Found:**" >> $env:GITHUB_STEP_SUMMARY
-            $styleCopErrors | Select-Object -First 10 | ForEach-Object { "``$_``" } >> $env:GITHUB_STEP_SUMMARY
-          }
-          if ($buildErrors.Count -gt 0) {
-            echo "**💥 Build Errors:**" >> $env:GITHUB_STEP_SUMMARY
-            $buildErrors | Select-Object -First 10 | ForEach-Object { "``$_``" } >> $env:GITHUB_STEP_SUMMARY
-          }
-
-          echo "" >> $env:GITHUB_STEP_SUMMARY
-          echo "📝 _Showing first 10 issues per category. See full log for details._" >> $env:GITHUB_STEP_SUMMARY
-
           exit 1
         }
+
 
       
     - name: Upload full build log
